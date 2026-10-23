@@ -29,6 +29,17 @@ Each managed online launch SHALL check the remote source and prepare a developme
 - **WHEN** the server reports unchanged content and the previous development copy contains local edits
 - **THEN** the next working copy is created from the untouched baseline and previous edits remain recoverable.
 
+### Requirement: Independent remote saves
+Periodic saves by other applications SHALL be allowed. A coherent successfully
+retrieved snapshot SHALL be sufficient for testing; equality between separate
+remote downloads and continuous synchronization SHALL NOT be required.
+
+#### Scenario: Remote automatically saved during local testing
+- **WHEN** another application periodically saves the remote portfolio
+- **THEN** the current local test copy remains fixed until the next managed
+  refresh, subsequent coherent snapshots may differ, and this workflow sends
+  no remote write requests.
+
 ### Requirement: Preserve previous test data
 Successful refresh SHALL preserve the immediately preceding development portfolio and associated local settings/backups before activating its replacement. Older generations SHALL be pruned only after successful refresh under a disclosed retention policy, with an explicit option to retain a generation longer. Local test edits SHALL never be merged into the remote source.
 

@@ -165,6 +165,16 @@ Traverse nested funds to a maximum of eight composition edges per path, detect c
 
 Accepted workflow: refresh before every managed test launch, preserve the previous local test copy, and never replace a portfolio while the development app is running. This is workspace tooling, independent of Eulerpool gates. Implement it early so each useful X-ray increment can be tested locally.
 
+Acceptance clarification during implementation on 2026-10-23: the production
+portfolio is saved automatically and periodically by an external process, which
+cannot be paused for this workflow. A coherent plausible local snapshot is
+sufficient; continuous synchronization and byte equality between separate
+remote downloads are not acceptance criteria. Verify source protection through
+the confirmed read-only credential, GET/HEAD-only transport and absence of local
+test edits in later downloads. Independent remote saves must not replace or
+invalidate a running local copy. Failed/incoherent downloads still fail closed,
+with explicit offline launch available for retained valid data.
+
 Observed `scripts/dev.sh app` builds through Docker and selects a macOS aarch64 app with bundled Java. `run-app` uses `open -n` with a separate `scratch/pp-dev-workspace`; it currently neither downloads nor selects a portfolio. `clean` removes build outputs and that workspace. `scratch/` is ignored. `ClientFactory` supports XML, ZIP and encrypted formats; copying only XML would be an incorrect assumption. No WebDAV integration was found in the inspected source trees.
 
 Extend the wrapper with a dedicated opt-in managed launch, proposed as `scripts/dev.sh run-app --webdav-copy`. Keep ordinary synthetic testing available. Build separately with `scripts/dev.sh app`; launch must identify the build revision and refuse a missing or incompatible app. Preserve a build manifest outside disposable target directories. Do not silently launch an older build when source revision or working-tree state differs. Architecture detection must select a matching packaged macOS runtime or fail clearly; the current aarch64 constant is not a universal macOS target.

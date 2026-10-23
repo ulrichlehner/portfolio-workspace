@@ -44,6 +44,11 @@ Commands:
 | One test class | `scripts/dev.sh test FinTechGroupBankPDFExtractorTest` |
 | macOS app with bundled Java, for manual tests | `scripts/dev.sh app` |
 | Start that app with its own workspace | `scripts/dev.sh run-app` |
+| Refresh and open a private WebDAV copy | `scripts/dev.sh run-app --webdav-copy` |
+| Explicitly open retained data offline | `scripts/dev.sh run-app --webdav-copy --offline` |
+| Synthetic tooling tests (no live credentials) | `scripts/dev.sh test-tools` |
+| Keep / recover a local generation | `scripts/dev.sh keep-data` / `scripts/dev.sh recover-data` |
+| Explicitly remove managed private test data | `scripts/dev.sh clean-data` |
 | PDF to text like PP does | `scripts/dev.sh pdftext scratch/file.pdf` |
 | Shell in the container | `scripts/dev.sh shell` |
 | Delete build output | `scripts/dev.sh clean` |
@@ -164,6 +169,29 @@ numbers, board members in the legal notice, BIC, SEPA creditor ID) is public and
 1. `scripts/dev.sh app` builds the macOS app with a bundled Java runtime (no Java on the host needed).
 2. `scripts/dev.sh run-app` starts it with its own workspace in `scratch/`, so the installed PP and its settings stay untouched.
 3. Test only with a copy of the user's portfolio file. Afterwards quit the app and run `scripts/dev.sh clean`.
+
+The managed WebDAV workflow is documented in `docs/local-testing.md`. Its private
+configuration is `scratch/pp-dev-secrets/webdav.json` (mode 600); it requires
+confirmed server-side read-only access. Never put its contents in chat or Git.
+The downloader runs only in Docker, uses verified HTTPS without redirects and
+implements no remote writes. The app receives only a separate local copy.
+
+Build manifests in `scratch/pp-dev-build/` identify the PP revision, dirty state,
+source-content fingerprint, architecture and packaged app. A stale or missing
+build must be rebuilt. A native kernel lock protects builds, launches, refresh
+and cleanup throughout the app's lifetime. Quit the app before those operations.
+Managed launches use a private resource-only Eclipse startup bundle and a fresh
+development workspace to open the exact local portfolio without PP code changes.
+
+Generations in `scratch/pp-dev-data/` retain an untouched baseline and a writable
+development copy with adjacent settings/backups. Successful refresh preserves the
+previous generation; `keep-data` prevents older experiments from being pruned.
+Ordinary `clean` preserves generations. Use `clean-data` explicitly after private
+testing; it removes only managed data and leaves unrelated scratch files and the
+private configuration alone. Workspace tooling never goes into upstream PP.
+Periodic remote saves by other applications are expected. A coherent local
+snapshot is sufficient; later remote changes do not invalidate or replace a
+running test copy, and remote downloads need not have equal digests.
 
 ## Writing texts
 

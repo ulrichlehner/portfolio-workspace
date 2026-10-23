@@ -8,7 +8,7 @@ FROM maven:3.9-eclipse-temurin-21
 RUN echo 'path-include=/usr/share/doc/fzf/*' > /etc/dpkg/dpkg.cfg.d/zz-fzf-keybindings \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
-        git ripgrep fzf zsh zsh-autosuggestions zsh-syntax-highlighting \
+        git ripgrep fzf zsh zsh-autosuggestions zsh-syntax-highlighting python3 \
     && rm -rf /var/lib/apt/lists/*
 
 # Starship prompt (.devcontainer/starship.toml), the official build for this CPU. Not the

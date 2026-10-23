@@ -64,6 +64,10 @@ The view SHALL state that current valuations are combined with available composi
 - **WHEN** only a synthetic fund's collateral basket is available
 - **THEN** its value remains unresolved with an unsupported-exposure reason, while other validated holdings remain visible.
 
+#### Scenario: Session-only composition storage
+- **WHEN** persistent caching is disabled by preference or provider policy
+- **THEN** the same validated compositions produce the same exposure results, while the data-status UI explains that reopening PP needs retrieval and offline fund analysis may be unavailable after restart.
+
 ### Requirement: Durable complete-coverage objective
 The ultimate objective SHALL remain 100% validated coverage of the declared scope. A partial first release SHALL NOT close it. Every outstanding coverage gap SHALL retain its category, missing evidence, proposed remedy and verification criterion in a maintained register. Release and archive review SHALL carry unresolved gaps into linked follow-up records and preserve this requirement in durable specs.
 

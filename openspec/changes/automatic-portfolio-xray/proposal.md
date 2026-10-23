@@ -11,6 +11,7 @@ Portfolio Performance should reveal current company exposure across directly hel
 - Accept transparent partial coverage for the first release while retaining 100% validated coverage as the ultimate objective. Outstanding gaps must remain tracked through later changes rather than being dismissed when the first release is complete.
 - Retrieve fund compositions automatically using individually configured provider credentials; prioritize free or affordable personal access.
 - Separate provider adapters, composition validation, instrument identity resolution and exposure calculations.
+- Make persistent composition caching an opt-out preference per provider/account where permitted. Keep analysis functional with session-only data when the user disables persistence or provider policy prohibits it or leaves permission unverified; disclose restart and offline limitations.
 - Show source, available dates, coverage and failures without treating a successful response or a 100% weight sum as proof of completeness.
 - Use Eulerpool as the initial provider, as selected during exploration. Retain Leeway and paid alternatives in the research record and keep the provider interface replaceable. Selection does not waive remaining licensing or data-quality release gates.
 - Analyze current positive-value securities, excluding account cash from the clearly labelled denominator. Refresh automatically at most once per day per fund while PP runs, with a quota-aware manual refresh.

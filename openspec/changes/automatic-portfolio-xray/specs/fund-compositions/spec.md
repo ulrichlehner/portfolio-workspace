@@ -12,11 +12,44 @@ The system SHALL retrieve compositions automatically after individual credential
 - **THEN** the system schedules eligible retrieval and reports its status without requesting a holdings file.
 
 ### Requirement: Licensed local use
-Provider release SHALL require verified permission for individual desktop display, adapter distribution with user-supplied keys, and the intended local retention. Persistent storage SHALL NOT be implemented before its permission is established. Incompatible terms SHALL require product review, without automatic subscription purchase.
+Provider release SHALL require verified permission for desktop display and adapter distribution with user-supplied keys. Persisting real provider data SHALL require verified permission and an applicable retention policy. Unverified or prohibited persistence SHALL select session-only operation if runtime use is permitted. Incompatible runtime use SHALL require product review, without automatic subscription purchase.
 
 #### Scenario: Free cache permission unresolved
 - **WHEN** API access succeeds but free local caching permission remains unverified
-- **THEN** persistent provider storage and provider release remain gated despite successful access.
+- **THEN** persistence remains disabled, session-only operation is available if runtime use is permitted, and release still requires the separate display/distribution and data-quality gates.
+
+### Requirement: Provider-specific persistence preference
+The system SHALL offer a local persistence preference per provider/account, defaulting on where permitted. Effective persistence SHALL require both user preference and provider policy approval. Policies SHALL distinguish permitted, prohibited and unverified persistence, including retention limits. Restrictions SHALL override the preference without disabling permitted session-only analysis or changing other providers' settings.
+
+#### Scenario: User opts out of caching
+- **WHEN** a user disables persistence for a provider
+- **THEN** retrieval, validation, look-through and refresh remain available using session-only results, with no requirement to restart PP.
+
+#### Scenario: Different provider permissions
+- **WHEN** one provider permits persistence and another prohibits it or has unverified permission
+- **THEN** the first can use its approved disk cache and the second uses session-only results, independently of each other.
+
+### Requirement: Session-only operation
+Session-only mode SHALL keep provider compositions, enrichment mappings and derived exposure results out of persistent storage, including portable settings and diagnostic payloads. It SHALL reuse permitted in-memory data while PP runs and discard it at exit. Portfolio, credential and preference storage SHALL remain independent of this choice. Analytical semantics and validation SHALL be identical in both storage modes.
+
+#### Scenario: Restart without persistent data
+- **WHEN** PP restarts in session-only mode with network access
+- **THEN** it schedules quota-aware initial retrieval and restores available fund analysis without requiring manual uploads or enabling disk caching.
+
+#### Scenario: Restart offline in session-only mode
+- **WHEN** PP starts without network access and no permitted retained composition is available
+- **THEN** direct analysis remains available and affected fund exposure is explicitly unresolved until retrieval succeeds.
+
+### Requirement: Persistence withdrawal and cleanup
+Disabling persistence or withdrawing its permission SHALL stop disk reads and writes for the affected provider/account and delete its retained provider data. Pending jobs SHALL NOT recreate it. Reduced retention SHALL delete expired data. Other providers' permitted caches and the portfolio SHALL remain untouched. Permitted in-memory analysis MAY continue; persistence SHALL NOT resume until both user preference and policy permit it.
+
+#### Scenario: Permission withdrawn during refresh
+- **WHEN** persistence permission is withdrawn while a refresh is pending
+- **THEN** the provider's disk cache is removed, the completed job cannot recreate it, and permitted results remain usable only in memory.
+
+#### Scenario: Persistence is re-enabled
+- **WHEN** a user re-enables persistence and the applicable policy permits it
+- **THEN** only eligible validated results within the permitted retention can populate the provider's cache, without changing analysis calculations.
 
 ### Requirement: Credential and portfolio privacy
 The system SHALL keep credentials outside portfolio files, exports and logs, using secure local storage or session-only entry. Requests SHALL contain only identifiers needed for retrieval or bounded enrichment, never quantities, balances or transactions.
@@ -78,6 +111,10 @@ Failed retrieval or validation SHALL NOT replace an existing usable snapshot wit
 #### Scenario: Failed refresh with retained data
 - **WHEN** refresh fails and a previous valid snapshot is within permitted retention
 - **THEN** the system uses that snapshot with a failed-refresh status and its original dates.
+
+#### Scenario: Failed refresh in session-only mode
+- **WHEN** refresh fails after a usable composition was retrieved during the current session
+- **THEN** the system retains that permitted in-memory snapshot with its original dates and a visible failed-refresh status, without writing it to disk.
 
 #### Scenario: Retention expires
 - **WHEN** retained data reaches its permitted retention limit

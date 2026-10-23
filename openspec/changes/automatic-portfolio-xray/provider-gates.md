@@ -5,6 +5,12 @@ This record contains public documentation evidence only. No portfolio was opened
 no authenticated provider request was made, no provider was contacted and no
 subscription or persistent provider cache was created during this review.
 
+Subsequent user decision on 2026-10-23: persistence is an opt-out preference per
+provider/account where permitted, with session-only operation when disabled,
+prohibited or unverified. This changes the delivery architecture, not the
+permission findings below. See the current design, specs and tasks for the
+effective storage rules; the review checkboxes are not newly completed.
+
 ## 1.1 Implementation checklist: complete
 
 Reviewed the workspace `AGENTS.md`, upstream `portfolio/AGENTS.md`,
@@ -72,9 +78,11 @@ The summary's feature bullets lose included/excluded icon distinctions in text
 extraction. Decisions above use the explicit FAQ prose, pricing scope and terms,
 not an apparent permission inferred from a flattened bullet list.
 
-No paid plan or alternate provider has been substituted. Tasks 4.3 and provider
-release remain gated. Provider-independent synthetic models and calculations
-in sections 2–3 can proceed separately.
+No paid plan or alternate provider has been substituted. Activation of real
+provider disk persistence remains gated. Generic session-only/persistent stores
+can be implemented with synthetic providers. Session-only provider release does
+not need disk-retention permission, but still needs runtime/display/distribution
+permission and data-quality acceptance. Sections 2–3 remain independent.
 
 ### Clarification draft: prepared, not sent
 
@@ -109,7 +117,8 @@ classification/company mappings. No new fund-level API comparison was completed
 in this review. Task 1.3 stays unchecked; no fund is newly certified as useful
 validated decomposition. Missing evidence remains in design gaps G1–G3.
 
-Pause the affected provider/storage work. To pass these gates, obtain applicable
-permission and perform a dated public physical-fund comparison covering the NAV
-basis, supported exposure, classification and company identities. Do not silently
-narrow the accepted behaviour to make the provider fit.
+Pause only work requiring an unpassed permission or data-quality gate. Obtain
+runtime/display/distribution permission and a dated public physical-fund
+comparison covering NAV, supported exposure, classification and company identity.
+Resolve persistence permission before activating disk storage of real data;
+otherwise use permitted session-only operation under the accepted storage design.

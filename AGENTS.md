@@ -198,10 +198,17 @@ running test copy, and remote downloads need not have equal digests.
 The repository checklist and public Eulerpool permission review are recorded in
 `openspec/changes/automatic-portfolio-xray/provider-gates.md` (2026-10-23).
 Free desktop cache retention and distribution of an adapter using individual
-keys remain unverified. Do not implement persistent provider storage or clear
-provider release until the recorded gates pass. Synthetic provider-independent
-models and calculations can proceed separately. Provider contact requires
-explicit user authorization; prepared questions have not been sent.
+keys remain unverified. Persistent caching is an opt-out preference per
+provider/account, defaulting on where permitted. Effective disk persistence
+requires both user preference and verified provider policy/retention. If disabled,
+prohibited or unverified, use permitted session-only analysis with the same
+calculations and disclose restart/offline limitations. Remove affected disk data
+and prevent pending jobs from recreating it when persistence is withdrawn.
+Other providers' modes/settings remain independent. Generic storage contracts,
+synthetic providers and calculations can be implemented before permission is
+settled; real provider payloads must not be persisted until approved. Session-only
+release still requires runtime/display/distribution and data-quality gates.
+Provider contact requires explicit user authorization; questions remain unsent.
 
 ## Writing texts
 

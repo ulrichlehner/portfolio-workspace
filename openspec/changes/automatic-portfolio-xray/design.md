@@ -111,14 +111,16 @@ Leeway's [analysis-plan page](https://leeway.tech/payment/plans?data=api) distin
 Implementation review on 2026-10-23: `provider-gates.md` records the repository
 checklist and current permission decision. Free personal display is supported
 in principle, but local cache retention and distribution of a user-key adapter
-remain unverified. Tasks 1.2 and 1.3 are not passed; persistent provider storage
-and provider release remain gated. The provider-independent work in sections
+remain unverified. Tasks 1.2 and 1.3 are not passed; activation of persistence
+for real provider data remains gated. Session-only release still requires the
+display/distribution and data-quality gates. The provider-independent work in sections
 2–3 remains available. Clarification questions are prepared but have not been
 sent; no provider contact is authorized by this record.
 
 | Question | What it blocks | Required resolution |
 | --- | --- | --- |
-| Free personal display, caching and retention in an open-source desktop client | Final persistence design and provider release | Obtain authoritative clarification covering user-supplied keys, local storage and derived display. Do not infer redistribution permission from API access. If caching is not allowed, return to product review rather than silently requiring payment. |
+| Free personal display and distribution with individual keys | Provider release in either storage mode | Establish permission for runtime use and adapter distribution; API access alone does not resolve all release rights. |
+| Per-provider/account persistence and retention | Enabling disk storage of that provider's data | Establish applicable permission and retention. Otherwise use permitted session-only operation; do not require payment or block the analysis merely because disk caching is unavailable. |
 | Weight denominator, completeness and physical versus synthetic exposure | Treating a particular fund as decomposed economic exposure | Validate issuer examples and provider semantics. A 100% sum is insufficient. Until validated, leave that fund unresolved in the exposure totals. |
 | Reliable identification of asset type and issuer/company | Correct aggregation of affected constituent rows | Establish automatic, evidence-backed mappings. Unsupported rows can remain unresolved; complete global identifier coverage is not a prerequisite to the engine. |
 | Public physical-fund acceptance example | Shipping a useful initial adapter | Demonstrate at least one independent public example with validated weight basis, asset classes and company identities. Passing parser tests alone is insufficient. |
@@ -146,6 +148,8 @@ The main view should show company, direct contribution, contribution through fun
 | Synthetic or otherwise unsupported exposure basis | Keep that fund unresolved. Do not substitute its collateral basket or another fund tracking a similar index. |
 | Effective holdings date absent | Show "Holdings date unavailable" and separately show provider refresh and local retrieval dates. A recent refresh is not evidence of recent holdings. |
 | Refresh fails with a valid licensed local snapshot | Keep the last valid snapshot with a visible failed-refresh/age status. Do not silently replace it with an empty result. |
+| User opts out or persistence is prohibited/unverified | Use session-only results with identical analysis; remove the affected disk cache and disclose restart/offline limitations. |
+| Refresh fails in session-only mode | Keep any permitted valid in-memory snapshot for this session with its dates and failure status. After exit, fund analysis needs retrieval again. |
 | Rate limit or expired key | Back off or stop the relevant requests; show an actionable status and preserve existing results where storage is allowed. No repeated prompts, silent provider switch or automatic purchase. |
 | Duplicate identifiers or signed weights | Preserve source rows during validation. Sum legitimate separate positions only after checking semantics; reject incompatible/malformed snapshots rather than dropping negatives or deduplicating blindly. |
 
@@ -155,13 +159,49 @@ Schedule automatic retrieval at most once per rolling 24 hours per fund while PP
 
 ### Implementation sequence and unresolved gates
 
-After a separate apply request, provider-independent models and offline calculations can proceed. Obtain authoritative licensing evidence before implementing persistent provider storage; do not release the provider until personal display, retention and adapter distribution are permitted. If permission is incompatible with the selected free-first workflow, stop affected tasks and revise the proposal instead of silently imposing payment. No contact with a provider is authorized by this plan.
+After a separate apply request, provider-independent models, storage abstractions and offline calculations can proceed with synthetic fixtures. Real provider persistence requires verified permission and retention; an adapter can operate without it in session-only mode if runtime use is permitted. Provider release still requires display/distribution permission and data-quality evidence. If runtime use is incompatible with the selected free-first workflow, stop the affected work rather than silently imposing payment. No contact with a provider is authorized by this plan.
 
 Before claiming usable fund decomposition, validate denominator, exposure basis, classification and identity against independent public examples. Unknown effective dates remain permitted and visible. Unsupported funds do not block the whole view, but a release consisting only of unresolved funds fails the public physical-fund acceptance gate.
 
 ### Storage, credentials and integration
 
-Observed `ClientInput.getPreferenceStoreFile` can place settings beside a portfolio or in plugin state; `PortfolioPlugin.getStateLocation` supplies local application storage. New compositions use a separate versioned, disposable cache in plugin state, never the portfolio file or its portable settings. Cache records contain one provider snapshot per fund, provenance and validation version, with atomic replacement and retention constrained by approved terms. Expired retention requires deletion, even if refresh fails. Do not blend providers or vintages to fill holes.
+Accepted storage decision on 2026-10-23: persistent caching is optional and
+defaults on where permitted, with an opt-out preference for each provider/account.
+The provider contract exposes persistence policy independently from the user's
+preference: permitted with applicable retention, prohibited, or unverified.
+Effective persistence requires both preference and policy approval. An unknown
+policy does not imply permission; it selects session-only operation if runtime
+use is allowed. This applies to Eulerpool and later providers without coupling
+their storage modes or settings. Existing permission findings are not cleared
+by choosing this architecture.
+
+Both modes feed the same composition validation and look-through engine.
+Session-only mode retains compositions, enrichment mappings and derived exposure
+results in memory while PP runs, discarding them at exit. It writes no provider
+payloads to caches, portfolio files, portable settings or diagnostic logs.
+Existing portfolio storage, secure credentials and the local preference are
+independent. Valid in-memory results can survive refresh failures in the same
+session within permitted use; after restart, initial retrieval is needed and
+offline fund exposure is unresolved until data becomes available. A redraw
+never triggers a request, and initial retrieval still respects quotas/backoff.
+
+Observed `ClientInput.getPreferenceStoreFile` can place settings beside a
+portfolio or in plugin state; `PortfolioPlugin.getStateLocation` supplies local
+application storage. When persistence is effective, use a separate versioned,
+disposable cache in plugin state, never the portfolio or its portable settings.
+Cache records contain one provider snapshot per fund, provenance and validation
+version, with atomic replacement and approved retention. Do not blend providers
+or vintages. The common storage contract and synthetic providers let tests
+compare identical calculations under both modes without storing real payloads.
+
+Opting out or withdrawing permission stops disk reads/writes and removes the
+affected provider/account's retained compositions, mappings and derived results.
+Invalidate pending persistence operations so a completed refresh cannot recreate
+deleted data. Reduced retention removes expired entries, including when refresh
+fails. Other providers' permitted caches and the portfolio remain intact.
+Permitted session results may continue in memory. Re-enabling persistence can
+store only validated eligible results within approved retention; it does not
+restore expired or previously forbidden files.
 
 Use local secure credential storage, with session-only entry if secure storage is unavailable; never fall back to plaintext portfolio preferences. Verify Equinox secure-storage availability in the target platform before adding the UI integration. No shared key ships with PP. Bearer headers keep secrets out of URLs; redact errors and logs. Send fund identifiers only, never quantities, values, transactions or the portfolio file.
 
@@ -222,7 +262,7 @@ Suggested provider questions, prepared but not sent: Does the free tier include 
 - Provider refresh mistaken for effective date -> retain separate fields and label unavailable effective dates.
 - Synthetic substitute basket mistaken for intended exposure -> require an explicit exposure basis before treating the decomposition as economic exposure.
 - Free quotas or contracts changing -> interchangeable adapters, bounded refresh budgets and visible provider failures.
-- Local cache prohibited -> resolve permission before relying on offline storage; do not silently redesign around a paid plan.
+- Local cache prohibited or unverified -> use permitted session-only operation with the same analysis; disclose restart/offline limits without silently requiring a paid plan.
 
 ## Migration Plan
 

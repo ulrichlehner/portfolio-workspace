@@ -123,6 +123,9 @@ numbers, board members in the legal notice, BIC, SEPA creditor ID) is public and
   on importer methods), do not let it push fixes.
 - The maintainer often merges by hand, so a merged PR may show as "Closed". He adds new contributors to
   `about.contributors.txt` himself.
+- A contribution may be folded into another contributor's PR (PR #6116 went into #5998). The commit then has the
+  other author; credit comes from "Includes the work by @<user> done in #<pr>" in the commit message and the
+  contributor list. Before closing such a PR, check that the test and sample arrived intact.
 - After merge: delete the branch, update `master` from upstream, delete the local branch with `git branch -D`.
 
 ## PDF importer knowledge

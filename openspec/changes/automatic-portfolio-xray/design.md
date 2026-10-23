@@ -108,6 +108,14 @@ Leeway's [analysis-plan page](https://leeway.tech/payment/plans?data=api) distin
 
 ### Remaining blockers and their scope
 
+Implementation review on 2026-10-23: `provider-gates.md` records the repository
+checklist and current permission decision. Free personal display is supported
+in principle, but local cache retention and distribution of a user-key adapter
+remain unverified. Tasks 1.2 and 1.3 are not passed; persistent provider storage
+and provider release remain gated. The provider-independent work in sections
+2–3 remains available. Clarification questions are prepared but have not been
+sent; no provider contact is authorized by this record.
+
 | Question | What it blocks | Required resolution |
 | --- | --- | --- |
 | Free personal display, caching and retention in an open-source desktop client | Final persistence design and provider release | Obtain authoritative clarification covering user-supplied keys, local storage and derived display. Do not infer redistribution permission from API access. If caching is not allowed, return to product review rather than silently requiring payment. |

@@ -193,6 +193,16 @@ Periodic remote saves by other applications are expected. A coherent local
 snapshot is sufficient; later remote changes do not invalidate or replace a
 running test copy, and remote downloads need not have equal digests.
 
+## Portfolio Lens provider gates
+
+The repository checklist and public Eulerpool permission review are recorded in
+`openspec/changes/automatic-portfolio-xray/provider-gates.md` (2026-10-23).
+Free desktop cache retention and distribution of an adapter using individual
+keys remain unverified. Do not implement persistent provider storage or clear
+provider release until the recorded gates pass. Synthetic provider-independent
+models and calculations can proceed separately. Provider contact requires
+explicit user authorization; prepared questions have not been sent.
+
 ## Writing texts
 
 - PRs and commits in English, the PP forum in German.

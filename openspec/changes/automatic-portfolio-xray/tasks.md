@@ -13,7 +13,7 @@ Planning only. All boxes describe future work after a separate apply request. Th
 
 ## 1. Repository and provider gates
 
-- [ ] 1.1 Recheck workspace and upstream AGENTS.md, CLAUDE.md, CONTRIBUTING.md, applicable path rules and target bundle formatting settings; record an implementation checklist confirming Docker-only builds, no unrelated formatting, core/UI boundaries and focused upstream increments.
+- [x] 1.1 Recheck workspace and upstream AGENTS.md, CLAUDE.md, CONTRIBUTING.md, applicable path rules and target bundle formatting settings; record an implementation checklist confirming Docker-only builds, no unrelated formatting, core/UI boundaries and focused upstream increments.
 - [ ] 1.2 Resolve Eulerpool free personal display, local caching/retention and user-key adapter distribution permissions using authoritative published terms or an explicitly authorized provider response; record source, date, allowed retention and a pass/fail decision. Do not implement persistent provider storage until passed; provider contact needs separate explicit authorization.
 - [ ] 1.3 Establish Eulerpool NAV denominator, completeness and exposure-basis evidence for at least one independent public physical-fund example; document issuer comparison, classification and company-mapping evidence and remaining gaps. Verify a useful validated decomposition, not merely endpoint success or a 100% sum; keep unsupported funds unresolved.
 

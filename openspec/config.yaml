@@ -1,0 +1,49 @@
+schema: spec-driven
+
+context: |
+  Features are for Portfolio Performance (Eclipse RCP, Java 21, Maven/Tycho). The code lives in the fork in
+  portfolio/ and goes upstream as pull requests to portfolio-performance/portfolio. These OpenSpec artifacts
+  stay in this workspace and never go upstream.
+  All builds and tests run in Docker via scripts/dev.sh. Never plan steps that install tools on the host.
+  Everything is public: artifacts must not contain personal or financial data (names, IBANs, account numbers,
+  amounts, holdings). Use anonymized examples only.
+  Follow the upstream conventions in portfolio/CONTRIBUTING.md and portfolio/.claude/rules/.
+
+rules:
+  proposal:
+    - Plan upstream pull requests that are small and focused on a single feature or fix
+    - State what is out of scope
+  tasks:
+    - Include tests for business logic, run with scripts/dev.sh test
+    - For PDF importers, include an anonymized test sample (see AGENTS.md, Rule 2)
+
+# Project context (optional)
+# Add only constraints that should guide OpenSpec artifacts and workflows.
+# Include constraints an agent cannot infer by reading the code.
+# Keep general project documentation and discoverable codebase facts out.
+# Example:
+#   context: |
+#     Designs and tasks must cover Windows, macOS, and Linux
+#     Write all artifacts in Spanish
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always state what is out of scope
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
+
+# Per-operation guidance (optional)
+# Add advisory guidance for how apply and archive work should be conducted.
+# This is separate from artifact rules above.
+# Example:
+#   operations:
+#     apply:
+#       guidance:
+#         - Keep test summaries concise
+#     archive:
+#       guidance:
+#         - Summarize the archive outcome before finishing

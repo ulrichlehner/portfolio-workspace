@@ -1,0 +1,7 @@
+# the fork, a separate git repository
+/portfolio/
+
+# private temporary files (real documents, debug texts, app workspace)
+/scratch/
+
+.DS_Store

@@ -12,7 +12,8 @@ All project-specific knowledge belongs in this file. Do not keep it only in an a
 portfolio-workspace/
 ├── AGENTS.md          this file, the rules for all agents
 ├── CLAUDE.md          imports this file for Claude Code
-├── .devcontainer/     the only dev environment (Java 21 + Maven)
+├── .devcontainer/     the only dev environment (Java 21, Maven, Node.js, OpenSpec, zsh)
+├── .vscode/           editor settings for the workspace (no format on save)
 ├── scripts/dev.sh     build, test, PDF and app commands, all run in Docker
 ├── scripts/openspec   the OpenSpec CLI, run in Docker
 ├── openspec/          feature specs and changes (OpenSpec), stay in this repo
@@ -47,6 +48,21 @@ Commands:
 | Shell in the container | `scripts/dev.sh shell` |
 | Delete build output | `scripts/dev.sh clean` |
 | Also remove image and volume | `scripts/dev.sh purge` |
+
+## Dev container
+
+Optional, for working in VS Code: "Dev Containers: Reopen in Container" builds `.devcontainer/` and installs
+the extensions there (Java, Eclipse PDE, Maven, XML, YAML, GitLens, GitHub, Claude Code, Codex and others).
+
+- The workspace is mounted at its host path and the host's Docker socket is shared, so `scripts/dev.sh` works
+  inside the container too. `mvn` and `openspec` also run directly in its terminal. `scripts/dev.sh run-app`
+  only works on the host (it starts the macOS app).
+- Shell: zsh with Oh My Zsh, Starship prompt (git status, Java version, command duration), history kept across rebuilds,
+  suggestions, syntax highlighting, fzf, completions for git, gh, docker, mvn and openspec.
+- gh, Claude Code and Codex keep their logins in shared volumes (`devcontainer-gh-config`,
+  `devcontainer-claude-config`, `devcontainer-codex-config`).
+- Never enable format on save. Upstream formats with the Eclipse settings in each bundle's `.settings/` and
+  PDF extractors are aligned by hand (see `.vscode/settings.json`).
 
 ## Planning features with OpenSpec
 

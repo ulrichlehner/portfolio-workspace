@@ -25,7 +25,8 @@ Run `scripts/dev.sh` without arguments for the list of commands, for example:
 scripts/dev.sh test FinTechGroupBankPDFExtractorTest
 ```
 
-Or open the folder in a dev container (`.devcontainer/`).
+Or open the folder in VS Code and choose "Dev Containers: Reopen in Container": Java, Maven, Node.js,
+OpenSpec, zsh with a Starship prompt and the matching extensions, all inside the container.
 
 New features are planned with [OpenSpec](https://openspec.dev). The CLI runs in Docker as well:
 `scripts/openspec list`. Specs and changes are in `openspec/` and stay in this repo.

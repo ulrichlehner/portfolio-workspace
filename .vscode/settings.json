@@ -1,0 +1,21 @@
+// Upstream formats Java with the Eclipse settings in each bundle's .settings/ folder and asks
+// not to reformat unrelated code. PDF extractors are aligned by hand and must never be
+// auto-formatted. So no format on save; format only the lines you changed.
+{
+  "editor.formatOnSave": false,
+  "files.trimTrailingWhitespace": false,
+  "files.insertFinalNewline": false,
+  // PDF test samples keep trailing spaces and must stay UTF-8.
+  "files.encoding": "utf8",
+  "files.exclude": {
+    "**/.DS_Store": true,
+    "**/target": true
+  },
+  "search.exclude": {
+    "**/target": true,
+    "scratch/**": true
+  },
+  "files.watcherExclude": {
+    "**/target/**": true
+  }
+}

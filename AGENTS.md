@@ -75,6 +75,12 @@ New features are planned with [OpenSpec](https://openspec.dev) before any code i
   `scripts/openspec <args>` wherever they say `openspec <args>`.
 - Workflow: explore, propose (planning only, no code), apply (implement the tasks), archive.
   Claude Code: `/opsx:propose`, `/opsx:apply` and so on. Codex: `$openspec-propose` and so on.
+- OpenSpec tracks the workflow; it does not perform or enforce Git operations itself. Include explicit implementation
+  tasks to create the branch, run required checks, scan the diff for private data, and create a focused commit per
+  planned upstream PR. Record verification results and commit references when completing those tasks.
+- Push branches and open PRs when authorized by the user; existing authorization remains valid. Track any publishing
+  steps still awaiting authorization as outstanding. Archive only after the agreed completion criteria are met.
+  Planning-only requests do not authorize implementation or publishing.
 - Project constraints for the artifacts are in `openspec/config.yaml`.
 - Telemetry is disabled in the image (`OPENSPEC_TELEMETRY=0`).
 - After changing `OPENSPEC_VERSION` in `.devcontainer/Dockerfile`, rebuild the image and run `scripts/openspec update`.
@@ -109,9 +115,17 @@ numbers, board members in the legal notice, BIC, SEPA creditor ID) is public and
 ## Rule 3: Contributing upstream
 
 - Remotes in `portfolio/`: `origin` is the fork, `upstream` is portfolio-performance/portfolio.
-  Keep the fork's `master` equal to upstream. Work on one branch per fix, created from `upstream/master`.
+  Keep the fork's `master` equal to upstream. Work on one branch per focused change, created from `upstream/master`.
+- Name branches `<type>/<openspec-change-name>`, using generic types such as `feature/`, `fix/` or `refactor/`.
+  Example: `feature/automatic-portfolio-xray`. Do not include chatbot or agent names in branch names.
+  For changes without OpenSpec, use a descriptive kebab-case name after the type. If one OpenSpec change needs
+  multiple focused PRs, append a descriptive scope suffix to its branch names.
 - One focused commit per PR, rebased on `upstream/master`. Never merge `master` into a branch.
-- Commit message: subject at most 50 characters, body wrapped at 72, explain what and why.
+- Use Conventional Commits in both this workspace and the PP fork: `<type>(<optional-scope>): <description>`.
+  Use types such as `feat`, `fix`, `docs`, `refactor`, `test`, `build`, `ci` or `chore` according to the change.
+  Mark breaking changes with `!` before the colon and explain them in a `BREAKING CHANGE:` footer.
+  Example for planning artifacts: `docs(openspec): plan automatic portfolio xray`.
+- Commit message: subject at most 50 characters including type and scope, body wrapped at 72, explain what and why.
   Link forum threads with `Issue: <url>` and GitHub issues with `Closes #<n>`.
 - No AI attribution in commits or PRs that go upstream (no `Co-Authored-By` for an AI, no "Generated with" footer).
   The maintainer removes them ("the code is mostly generated, but reviewed and signed off by a human", PR #5866).

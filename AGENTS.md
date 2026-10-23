@@ -42,6 +42,19 @@ apply for code style and conventions. Where they conflict with this file, this f
   debugging, and consequential review. Exact model/variant overrides require user
   authorization where the agent harness requires it. Subscription quota is not inferable
   from catalog API prices; do not claim quota savings or remaining balances without evidence.
+- Before every delegation, deliberately select the model and effort for the task;
+  do not silently inherit the orchestrator's model. State the assignment and a brief
+  rationale. Check available model IDs/variants and harness authorization before
+  applying an override; if an override is unavailable or requires further authorization,
+  disclose that limitation rather than claiming optimized routing.
+- Current user-approved routing baseline: OpenAI Sol 6.1 at low effort for bounded
+  exploration and medium effort for bounded implementation/review, where available.
+  Escalate only when complexity, risk, or observed failures justify it, and explain why.
+  Reassess this baseline as models and task requirements change; it is not evidence
+  that Sol consumes less subscription quota than Astra.
+- Apply the same explicit, task-appropriate selection and billing constraints to any
+  future authorized LLM/provider. Provider authorization does not authorize paid API
+  usage. The orchestrator owns these decisions without requiring user reminders.
 - Handle trivial tasks directly. Give each delegated task a narrow objective, relevant
   OpenSpec artifacts, file ownership, acceptance criteria, required checks, and applicable
   workspace/upstream rules. Subagents start with fresh context; provide the context needed
@@ -53,6 +66,14 @@ apply for code style and conventions. Where they conflict with this file, this f
 - Require concise handoffs: changed files, checks and results, unresolved issues, and
   decisions needing review. The orchestrator reviews the actual diff and verifies results
   before marking OpenSpec tasks complete.
+- Commit coherent, verified milestones proactively under the user's implementation
+  authorization. Commit workspace planning/progress separately from PP code; do not
+  leave completed milestones uncommitted across handoffs without recording why.
+  Run relevant checks and privacy review first, stage explicit paths, and exclude
+  unrelated user changes. Keep one focused upstream commit per planned PR; accumulate
+  related tasks into that increment rather than making a commit per checkbox.
+  Record commit references and outstanding verification in the progress artifact.
+  Publishing still requires authorization under Rule 3.
 - Keep durable progress, decisions, verification evidence, and next steps in the relevant
   OpenSpec artifacts; keep reusable project knowledge here. Do not rely on a long-running
   session's memory. On resuming, inspect the artifacts and current Git state first.
@@ -230,7 +251,13 @@ running test copy, and remote downloads need not have equal digests.
 The repository checklist and public Eulerpool permission review are recorded in
 `openspec/changes/automatic-portfolio-xray/provider-gates.md` (2026-10-23).
 Free desktop cache retention and distribution of an adapter using individual
-keys remain unverified. Persistent caching is an opt-out preference per
+keys remain unverified. The user confirmed a development-only assumption of Eulerpool
+runtime/display and adapter distribution permission on 2026-10-23. Implementation
+and local development may proceed under that assumption; it is not verified
+permission. The task 6.3 pre-publish checklist must verify runtime/display,
+source/binary distribution, attribution/other obligations and optional retention
+before publication. Real-data disk persistence stays disabled until permission
+and retention are verified. Persistent caching is an opt-out preference per
 provider/account, defaulting on where permitted. Effective disk persistence
 requires both user preference and verified provider policy/retention. If disabled,
 prohibited or unverified, use permitted session-only analysis with the same

@@ -44,7 +44,18 @@ bundles' `.settings/` compiler, formatter and encoding preferences.
 This checklist records implementation constraints, not tests of feature code
 that has not yet been written.
 
-## 1.2 Permission decision: not passed
+## 1.2 Development assumption recorded; publication permission unverified
+
+User-confirmed decision on 2026-10-23: assume runtime/personal display and
+user-key adapter distribution permission for implementation and local development.
+Task 1.2 now records this assumption, not completion of the permission research.
+The evidence findings below remain unverified where indicated. Actual permission
+verification is the mandatory pre-publish checklist in task 6.3, covering runtime,
+display, source/binary adapter distribution, attribution/other obligations and
+optional persistence/retention. Record authoritative sources, dates and decisions
+before publishing. Real-data disk persistence remains disabled until permission
+and retention are verified; local development uses session-only data. No provider
+contact or purchase is authorized.
 
 This is a release-gate assessment, not a conclusion that all personal caching
 is prohibited. The selected free personal desktop workflow lacks explicit
@@ -53,7 +64,7 @@ published permission for every required use.
 | Required use | Public evidence | Decision |
 | --- | --- | --- |
 | Personal noncommercial display | The pricing and licensing pages describe free personal/evaluation use and public attribution requirements. | Supported in principle; preserve attribution requirements. |
-| Local response caching and offline fallback on Free | The licensing FAQ expressly permits product caching on paid plans. It does not establish Free desktop caching rights. | Unresolved; no persistent provider storage implementation. |
+| Local response caching and offline fallback on Free | The licensing FAQ expressly permits product caching on paid plans. It does not establish Free desktop caching rights. | Unresolved; no activation of real-data disk persistence. Synthetic storage implementation may proceed. |
 | Allowed cache retention | No applicable Free desktop retention period was established in the reviewed API terms. | Unknown, not zero or unlimited; do not invent a duration. |
 | Open-source adapter distributed without data, using each user's own key | The reviewed documents do not explicitly resolve this distribution model. | Unresolved; provider release remains gated. |
 

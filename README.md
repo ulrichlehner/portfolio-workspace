@@ -67,6 +67,13 @@ are coordinated. Stronger reasoning is reserved for architecture, difficult debu
 and consequential reviews. Subagents also consume subscription quota; the agent cannot
 infer remaining quota from model pricing metadata.
 
+Before each delegation, the orchestrator states the selected model, effort and reason;
+it does not silently inherit its own model. The current routing baseline is Sol 6.1
+with low effort for bounded exploration and medium effort for bounded implementation
+or review, subject to availability. Escalations need a task-specific reason. The same
+selection discipline applies to any future authorized provider; subscription-only
+billing remains the default. See `AGENTS.md` for the maintained routing policy.
+
 Keep decisions, task completion, verification results, and pending work in the OpenSpec
 artifacts, and reusable project knowledge in `AGENTS.md`. A new session should be able
 to resume from these files without relying on the previous conversation. Planning,

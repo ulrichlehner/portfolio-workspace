@@ -18,6 +18,13 @@ Provider release SHALL require verified permission for desktop display and adapt
 - **WHEN** API access succeeds but free local caching permission remains unverified
 - **THEN** persistence remains disabled, session-only operation is available if runtime use is permitted, and release still requires the separate display/distribution and data-quality gates.
 
+### Requirement: Development permission assumption
+Implementation and local development MAY proceed under an explicitly recorded development-only assumption of runtime/display and adapter distribution permission. That assumption SHALL NOT establish verified permission, enable real-data disk persistence or satisfy the pre-publish permission checklist.
+
+#### Scenario: Development permission assumed
+- **WHEN** development proceeds under the recorded permission assumption
+- **THEN** real provider data remains session-only until persistence and retention are verified, and publication remains blocked until runtime/display, adapter distribution and applicable attribution obligations are verified.
+
 ### Requirement: Provider-specific persistence preference
 The system SHALL offer a local persistence preference per provider/account, defaulting on where permitted. Effective persistence SHALL require both user preference and provider policy approval. Policies SHALL distinguish permitted, prohibited and unverified persistence, including retention limits. Restrictions SHALL override the preference without disabling permitted session-only analysis or changing other providers' settings.
 

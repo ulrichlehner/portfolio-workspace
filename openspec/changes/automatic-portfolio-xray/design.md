@@ -108,10 +108,18 @@ Leeway's [analysis-plan page](https://leeway.tech/payment/plans?data=api) distin
 
 ### Remaining blockers and their scope
 
+Confirmed development decision on 2026-10-23: assume runtime/display and
+user-key adapter distribution permission for implementation and local development.
+This is a working assumption, not a verified grant. Task 1.2 records this decision;
+actual permission verification moves to the pre-publish checklist in task 6.3.
+Do not publish the adapter until that checklist passes. Real provider data must
+remain session-only until persistence permission and retention are verified.
+No provider contact or paid plan is authorized by this decision.
+
 Implementation review on 2026-10-23: `provider-gates.md` records the repository
 checklist and current permission decision. Free personal display is supported
 in principle, but local cache retention and distribution of a user-key adapter
-remain unverified. Tasks 1.2 and 1.3 are not passed; activation of persistence
+remain unverified. The permission evidence and task 1.3 are not passed; activation of persistence
 for real provider data remains gated. Session-only release still requires the
 display/distribution and data-quality gates. The provider-independent work in sections
 2–3 remains available. Clarification questions are prepared but have not been
@@ -159,7 +167,7 @@ Schedule automatic retrieval at most once per rolling 24 hours per fund while PP
 
 ### Implementation sequence and unresolved gates
 
-After a separate apply request, provider-independent models, storage abstractions and offline calculations can proceed with synthetic fixtures. Real provider persistence requires verified permission and retention; an adapter can operate without it in session-only mode if runtime use is permitted. Provider release still requires display/distribution permission and data-quality evidence. If runtime use is incompatible with the selected free-first workflow, stop the affected work rather than silently imposing payment. No contact with a provider is authorized by this plan.
+After apply authorization, models, storage abstractions, offline calculations and the adapter can proceed under the confirmed development-only permission assumption. Real provider persistence requires verified permission and retention; local development uses session-only real data until then. Provider publication still requires runtime/display/distribution permission and data-quality evidence under task 6.3. If verified terms contradict the development assumption, revisit affected work rather than silently imposing payment. No contact with a provider is authorized by this plan.
 
 Before claiming usable fund decomposition, validate denominator, exposure basis, classification and identity against independent public examples. Unknown effective dates remain permitted and visible. Unsupported funds do not block the whole view, but a release consisting only of unresolved funds fails the public physical-fund acceptance gate.
 

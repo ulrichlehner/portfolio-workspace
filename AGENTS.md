@@ -1,6 +1,6 @@
 # Portfolio Performance workspace
 
-Instructions for AI coding agents (Codex, Claude Code and others) and for humans.
+Instructions for AI coding agents (OpenCode, Codex, Claude Code and others) and for humans.
 This repository wraps a fork of [Portfolio Performance](https://github.com/portfolio-performance/portfolio)
 (PP) and holds everything that must not go upstream: agent rules, the dev container and helper scripts.
 
@@ -26,6 +26,38 @@ portfolio-workspace/
 Start agents in this folder, not in `portfolio/`, so these rules are loaded.
 The upstream files `portfolio/AGENTS.md`, `portfolio/CLAUDE.md` and `portfolio/CONTRIBUTING.md`
 apply for code style and conventions. Where they conflict with this file, this file wins.
+
+## Agent orchestration (default workflow)
+
+- Use one main session as the orchestrator and the user's single point of contact.
+  It owns the big picture, OpenSpec consistency, task dependencies, review, integration,
+  and final reporting. Delegation to subagents is authorized by default for approved work.
+- Use only OpenAI models through subscription-backed access unless the user explicitly
+  changes this policy. Do not use pay-per-token APIs, paid fallbacks, or other providers.
+  A model ID does not prove subscription billing; if the connection mode is uncertain,
+  ask the user to confirm it. On quota exhaustion, pause rather than switch billing routes.
+- Discover available models and effort variants before choosing them; do not hard-code
+  assumed model availability. Use lightweight models/lower effort for bounded exploration
+  and routine work, stronger models/higher effort for complex implementation, architecture,
+  debugging, and consequential review. Exact model/variant overrides require user
+  authorization where the agent harness requires it. Subscription quota is not inferable
+  from catalog API prices; do not claim quota savings or remaining balances without evidence.
+- Handle trivial tasks directly. Give each delegated task a narrow objective, relevant
+  OpenSpec artifacts, file ownership, acceptance criteria, required checks, and applicable
+  workspace/upstream rules. Subagents start with fresh context; provide the context needed
+  rather than assuming they know the parent conversation.
+- Parallelize only independent work. Avoid concurrent edits to the same files. Coordinate
+  shared Docker builds, tests, app launches, and cleanup centrally. Subagents must not
+  switch shared branches, commit, push, or open PRs unless explicitly assigned that action
+  within the user's authorization.
+- Require concise handoffs: changed files, checks and results, unresolved issues, and
+  decisions needing review. The orchestrator reviews the actual diff and verifies results
+  before marking OpenSpec tasks complete.
+- Keep durable progress, decisions, verification evidence, and next steps in the relevant
+  OpenSpec artifacts; keep reusable project knowledge here. Do not rely on a long-running
+  session's memory. On resuming, inspect the artifacts and current Git state first.
+- These defaults do not authorize implementation of a planning-only request or publishing.
+  All Docker, privacy, provider-gate, and contribution rules apply equally to subagents.
 
 ## Rule 1: Docker only, nothing on the host
 

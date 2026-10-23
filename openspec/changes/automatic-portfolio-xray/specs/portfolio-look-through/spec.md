@@ -4,6 +4,13 @@ Explain current company exposure across direct securities and fund constituents 
 
 ## ADDED Requirements
 
+### Requirement: Feature identity
+The analysis SHALL be presented as Portfolio Lens within Portfolio Performance. It SHALL retain the existing PP application identity and portfolio compatibility rather than requiring a separately branded application.
+
+#### Scenario: Open the analysis
+- **WHEN** a user navigates to the look-through analysis
+- **THEN** the feature is labelled Portfolio Lens within the existing PP application.
+
 ### Requirement: Current securities scope
 The analysis SHALL use current PP valuations in the reporting currency for selected positive-value securities. Percentages SHALL use that selected securities value as denominator, explicitly excluding account cash. Zero positions SHALL contribute nothing. Unsupported negative positions SHALL be disclosed as excluded rather than silently changing the denominator.
 

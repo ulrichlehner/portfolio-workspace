@@ -6,6 +6,7 @@ Portfolio Performance should reveal current company exposure across directly hel
 
 ## What Changes
 
+- Name the feature **Portfolio Lens** within Portfolio Performance. Retain the existing OpenSpec change identifier and PP application identity.
 - Introduce current portfolio look-through with direct and indirect contributions and visible unresolved exposure.
 - Accept transparent partial coverage for the first release while retaining 100% validated coverage as the ultimate objective. Outstanding gaps must remain tracked through later changes rather than being dismissed when the first release is complete.
 - Retrieve fund compositions automatically using individually configured provider credentials; prioritize free or affordable personal access.
@@ -14,6 +15,7 @@ Portfolio Performance should reveal current company exposure across directly hel
 - Use Eulerpool as the initial provider, as selected during exploration. Retain Leeway and paid alternatives in the research record and keep the provider interface replaceable. Selection does not waive remaining licensing or data-quality release gates.
 - Analyze current positive-value securities, excluding account cash from the clearly labelled denominator. Refresh automatically at most once per day per fund while PP runs, with a quota-aware manual refresh.
 - Define testable incomplete-data behaviour and gated implementation tasks. Provider permission and evidence requirements remain explicit; planning completion does not clear them.
+- Provide local macOS test builds with an isolated development portfolio refreshed from WebDAV before each test launch. Preserve the previous local copy and never write back to the source.
 
 Out of scope for the first release: historical exposure reconstruction, manual uploads as a required workflow, a centrally operated redistribution service, trading recommendations, and general derivatives risk analytics. Sector/country and overlap views are potential follow-ups rather than confirmed first-release scope.
 
@@ -23,6 +25,7 @@ Out of scope for the first release: historical exposure reconstruction, manual u
 
 - `fund-compositions`: Automatic provider retrieval, validation, provenance, freshness and coverage of fund compositions.
 - `portfolio-look-through`: Current direct and indirect company exposure with traceable contributions and explicit unresolved portions.
+- `development-portfolio-testing`: Local macOS testing against a safely refreshed, private WebDAV copy, with source protection and recoverable local test changes.
 
 ### Modified Capabilities
 
@@ -35,3 +38,5 @@ Expected integration areas are the core model, online provider infrastructure, p
 Plan focused upstream increments: composition/calculation foundations, a validated provider integration, then reporting UI. Additional providers should be separate contributions. This change currently authorizes planning only.
 
 Repository coding and contribution rules remain binding throughout planning, implementation and review. The design records the applicable sources and validation gates; OpenSpec does not replace them.
+
+The test launcher, WebDAV retrieval and their tests/documentation belong in this workspace, not upstream PP. Reuse the Docker build and bundled-runtime macOS launch flow. Bidirectional synchronization, production portfolio editing, and live replacement during a test session are out of scope.

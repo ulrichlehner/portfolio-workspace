@@ -190,3 +190,29 @@
   enforce retention even when retrieval is deferred. Evidence-backed resolutions
   are supplied separately, not serialized. Tasks 4.5/5.2 own application wiring.
 - No private data included or publishing performed. Next: task 4.4 credentials.
+
+## 2026-10-24: credential setup (task 4.4)
+
+- Sol 6.1 medium implemented credentials, Equinox backend, masked preferences
+  page and synthetic tests. Parent reviewed all code/tests/documentation and
+  corrected message ordering using the upstream sorter in Docker.
+- PP checkpoint: `1882e6d1a`. Only the 11 reviewed feature files were included;
+  no real keys, private data or unrelated Eclipse metadata were committed.
+- Core command selecting CompositionCredentialsTest,
+  EquinoxCompositionCredentialStoreTest and EulerpoolFundCompositionProviderTest:
+  31 tests passed, zero failures/errors/skips; Checkstyle passed.
+- Focused EulerpoolPreferencePageTest via the Docker UI reactor (including REST
+  and bootstrap): one test passed; Checkstyle passed.
+- `scripts/dev.sh app` initially failed canonical message ordering after UI
+  compilation. After sorting, the complete build and packaging passed, including
+  managed-resource checks and Checkstyle. Tests are skipped by this app command.
+- Existing target/product supplies Equinox security and OS-specific fragments;
+  only the provider-hints package import was added. Encrypted writes verify the
+  round trip and flush. Failure permits explicit session entry, never plaintext
+  fallback. Unconfirmed deletion is reported and blocks old access this session.
+- Native unlocking and isolated-app setup/restart/replacement/deletion checks
+  remain for integration/manual verification (6.2); mock tests do not prove OS
+  keychain behavior. Translation work remains in 5.3.
+- Task 5.2 must construct the credential-enabled provider explicitly and forward
+  the account's non-secret credential revision to configurationChanged before
+  refresh. Discovery remains unconfigured. Next: task 4.5 persistence preferences.

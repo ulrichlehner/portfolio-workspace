@@ -216,3 +216,12 @@
 - Task 5.2 must construct the credential-enabled provider explicitly and forward
   the account's non-secret credential revision to configurationChanged before
   refresh. Discovery remains unconfigured. Next: task 4.5 persistence preferences.
+
+## 2026-10-24: checkpoint before free-model routing
+
+- The user authorized continuing with the free models of the `opencode` provider.
+  The routing baseline in the workspace `AGENTS.md` was updated accordingly.
+- Rollback checkpoint: workspace tag `lens-checkpoint-before-free-models` and fork
+  tag `lens-checkpoint-before-free-models` on PP commit `1882e6d1a` (task 4.4).
+- State at the checkpoint: 19/30 tasks complete, all recorded checks green, no
+  pushes or pull requests, publication gates still open.

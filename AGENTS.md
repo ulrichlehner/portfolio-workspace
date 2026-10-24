@@ -32,10 +32,11 @@ apply for code style and conventions. Where they conflict with this file, this f
 - Use one main session as the orchestrator and the user's single point of contact.
   It owns the big picture, OpenSpec consistency, task dependencies, review, integration,
   and final reporting. Delegation to subagents is authorized by default for approved work.
-- Use only OpenAI models through subscription-backed access unless the user explicitly
-  changes this policy. Do not use pay-per-token APIs, paid fallbacks, or other providers.
-  A model ID does not prove subscription billing; if the connection mode is uncertain,
-  ask the user to confirm it. On quota exhaustion, pause rather than switch billing routes.
+- Use only subscription-backed access or catalog-listed free models unless the user
+  explicitly changes this policy. On 2026-10-24 the user authorized continuing with the
+  free models of the `opencode` provider. Do not use pay-per-token APIs or paid fallbacks.
+  A model ID does not prove billing mode; if the connection mode is uncertain, ask the
+  user to confirm it. On quota exhaustion, pause rather than switch billing routes.
 - Discover available models and effort variants before choosing them; do not hard-code
   assumed model availability. Use lightweight models/lower effort for bounded exploration
   and routine work, stronger models/higher effort for complex implementation, architecture,
@@ -47,11 +48,11 @@ apply for code style and conventions. Where they conflict with this file, this f
   rationale. Check available model IDs/variants and harness authorization before
   applying an override; if an override is unavailable or requires further authorization,
   disclose that limitation rather than claiming optimized routing.
-- Current user-approved routing baseline: OpenAI Sol 6.1 at low effort for bounded
-  exploration and medium effort for bounded implementation/review, where available.
+- Current user-approved routing baseline (2026-10-24): free `opencode` models, with
+  higher effort for implementation/review and lower effort for bounded exploration.
   Escalate only when complexity, risk, or observed failures justify it, and explain why.
-  Reassess this baseline as models and task requirements change; it is not evidence
-  that Sol consumes less subscription quota than Astra.
+  Reassess this baseline as models and task requirements change; free-model availability
+  and quality must be verified per task rather than assumed.
 - Apply the same explicit, task-appropriate selection and billing constraints to any
   future authorized LLM/provider. Provider authorization does not authorize paid API
   usage. The orchestrator owns these decisions without requiring user reminders.

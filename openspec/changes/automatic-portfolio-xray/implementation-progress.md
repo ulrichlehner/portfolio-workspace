@@ -118,3 +118,19 @@
 - Next core increment: contribution aggregation, residuals and bounded nested
   traversal (tasks 3.2–3.4). Keep focused milestone commits; consolidate the core
   increment to one commit per upstream PR before publishing as required.
+
+## 2026-10-24: exposure engine (tasks 3.2–3.4)
+
+- Sol 6.1 medium implemented the related tasks together. Parent reviewed all
+  four added files; no additional review agent was needed for this increment.
+- Exact decimal minor-unit contributions reconcile across company, ungrouped
+  equity, cash/other and unresolved categories. Paths preserve duplicate source
+  occurrences and provenance. Cycles are identity-based and path-local; leaves
+  at edge eight are usable, while expansion to edge nine stops that branch.
+- `scripts/dev.sh test LookThroughEngineTest`: 13 tests passed, no failures,
+  errors or skips; Checkstyle passed. Includes the exact 80%/20% example.
+- PP checkpoint: `afbe745cb`. Only the four reviewed engine/test files were
+  staged; no provider payloads, private data or Eclipse metadata were included.
+- Full core verification remains required before publishing the combined core
+  increment. No publishing performed. Next: task 4.1 adapter, preserving unknown
+  denominator/exposure/classification rather than claiming task 1.3 acceptance.

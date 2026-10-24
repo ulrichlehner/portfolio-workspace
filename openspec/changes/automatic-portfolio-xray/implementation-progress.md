@@ -340,3 +340,34 @@
   refresh/cancel and the status pane cannot be performed. Supplying the provider,
   credentials, coordinator, store and selected funds to `LookThroughCompositionSource`
   and the calculated result to the view remains open application wiring.
+
+## 2026-10-24: application composition wiring
+
+- PP commit `60932f64f` assembles the backend per client: the discovered
+  Eulerpool adapter with the application-lifetime credentials, a conservative
+  request budget, the refresh coordinator and a session-only composition store.
+  `PortfolioLensCompositionService` exposes it as the optional
+  `LookThroughCompositionSource`; the view falls back to it when no source is
+  injected.
+- The store is the read source and receives every coordinated attempt, so the
+  status displays the same retained data a later calculation uses. A ticket is
+  taken before the asynchronous work and completed with the actual attempt.
+- Refresh candidates are the explicitly selected securities with an ISIN. The
+  portfolio model has no fund classification, so unselected holdings never reach
+  the provider; sending every holding ISIN would disclose portfolio composition
+  and the provider contract forbids it. Enrichment lookups stay at zero because
+  no verified evidence service exists, so nothing is resolved from a guess.
+- Limits are placeholders, not provider entitlements: 100 requests per rolling
+  24 hours, 15 minute failure backoff, two pending requests. Real-data disk
+  storage stays off because the provider reports unverified persistence
+  permission.
+- A retry hint now appears whenever the coordination knows the next possible
+  attempt, so deferred quota and the automatic cadence are visible, not only
+  rate limits.
+- Verification: 42 UI tests green through the Docker UI reactor including the
+  REST and bootstrap bundles, Checkstyle clean, message and label validation
+  passed.
+- Still open for task 5.2: an interactive check in the isolated app (select
+  funds, refresh, cancel) cannot be performed by the agent because it needs
+  user interface interaction; the wiring compiles and its SWT-free parts are
+  tested.

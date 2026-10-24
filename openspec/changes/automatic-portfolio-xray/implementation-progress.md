@@ -225,3 +225,37 @@
   tag `lens-checkpoint-before-free-models` on PP commit `1882e6d1a` (task 4.4).
 - State at the checkpoint: 19/30 tasks complete, all recorded checks green, no
   pushes or pull requests, publication gates still open.
+
+## 2026-10-24: composition persistence preference (task 4.5)
+
+- Bounded implementation ran on a free `opencode` model; the parent reviewed the
+  entire diff, rewrote the assertions and fixed the compile, notification and
+  message-ordering defects found during verification.
+- `CompositionPersistencePolicy` now reports an `EffectiveMode` with mode and
+  reason (`PERMITTED`, `USER_OPT_OUT`, `POLICY_PROHIBITED`,
+  `POLICY_UNVERIFIED`); `effectiveMode` remains the consistent shorthand.
+- `CompositionPersistencePreferences` is a non-secret, per-account interface with
+  an in-memory test implementation and a listener binder returning an
+  `AutoCloseable` handle. The desktop implementation uses Eclipse instance-scope
+  preferences, keyed by hex-encoded provider/account identifiers; a single
+  preference-change notification path reconfigures the affected account only.
+- The Eulerpool preference page shows the effective mode and reason, disables the
+  retain control while permission is unverified and enables it from the injected
+  policy. New strings are externalized and canonically sorted.
+- Toggling off deletes only that account's retained files, invalidates pending
+  writes and keeps the current in-memory analysis usable; toggling on writes
+  nothing retroactively; preference-on with unverified policy stays session-only
+  and creates no cache directory.
+- PP commit `01686706c` contains only the 11 reviewed feature files; unrelated
+  `.project` and m2e preference changes remain excluded.
+- Core command selecting CompositionStoreTest, CompositionStorePreferenceToggleTest,
+  CompositionPersistencePolicyTest and CompositionPersistencePreferencesTest:
+  41 tests passed, zero failures/errors/skips; Checkstyle passed.
+- Focused EclipseCompositionPersistencePreferencesTest and
+  EulerpoolPreferencePageTest via the Docker UI reactor (including REST and
+  bootstrap bundles): 2 tests passed; UI and test-bundle Checkstyle passed.
+- `docs/portfolio-lens-credentials.md` describes the preference, instance scope,
+  deletion behaviour and session-only restart/offline limits.
+- Remainder: provider permission and retention stay unverified, so the control is
+  disabled and real-data disk persistence stays off until task 6.3 completes.
+  Native platform and integrated-app checks remain in tasks 5.x/6.x.

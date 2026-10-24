@@ -259,3 +259,44 @@
 - Remainder: provider permission and retention stay unverified, so the control is
   disabled and real-data disk persistence stays off until task 6.3 completes.
   Native platform and integrated-app checks remain in tasks 5.x/6.x.
+
+## 2026-10-24: Portfolio Lens view (task 5.1)
+
+- Bounded implementation ran at maximum effort on a free `opencode` model; the
+  parent reviewed the full diff and corrected the completeness rule, the
+  composition lookup and the share-column label.
+- New package `name.abuchen.portfolio.ui.views.lookthrough`: a thin
+  `LookThroughView` that performs no retrieval, holds no credentials, starts no
+  jobs and persists no analysis, plus an SWT-free `LookThroughViewPresenter`
+  that carries every presentation rule.
+- Columns are company/instrument, source, direct, indirect, total and share.
+  Company rows expand into their contributions with the direct/indirect flag and
+  the fund path. Coverage categories (ungrouped equity, cash/other, unresolved)
+  and valuation exclusions are always listed, including zero values, so a
+  missing row cannot read as full coverage.
+- Shares come only from `LookThroughResult.denominator()`; the label names the
+  selected positive securities value and the account-cash exclusion. Without a
+  denominator no percentage is rendered at all.
+- Complete coverage requires a present denominator, a complete and fully
+  supported valuation, exactly zero unresolved and ungrouped value, and an
+  affirmative `Completeness.COMPLETE` on every composition used along a path.
+  The validator treats completeness metadata as unverified, so anything below an
+  affirmative declaration stays partial. The engine keeps the validation on the
+  path edges of decomposed rows and only failed/shortfall rows carry it
+  directly; the first implementation read the wrong field and the new test
+  caught it.
+- `Portfolio Lens` and all new labels are externalized in `Messages` and
+  canonically sorted. `Navigation` registers the view in the reports section.
+  No bundle, application or portfolio-format identifier changed and no image
+  asset was added.
+- PP commit `82052b608` contains only the six reviewed feature files.
+- Core look-through suite, all ten test classes under
+  `snapshot/lookthrough`: passed with zero failures and clean Checkstyle.
+- Focused `LookThroughViewPresenterTest` through the Docker UI reactor
+  including the REST and bootstrap bundles: 9 tests passed, UI and test-bundle
+  Checkstyle clean.
+- Message and label validation passed through `:portfolio-build-tools-check`,
+  which the `local-dev` profile does not cover.
+- Synthetic data only: no network access, no credentials, no persistence and no
+  real values. The view shows the no-result state until task 5.2 supplies
+  results, cancellable refresh and the data-status panel.

@@ -300,3 +300,43 @@
 - Synthetic data only: no network access, no credentials, no persistence and no
   real values. The view shows the no-result state until task 5.2 supplies
   results, cancellable refresh and the data-status panel.
+
+## 2026-10-24: look-through data status (task 5.2, in progress)
+
+- Split into two increments so the state machine stays testable without SWT.
+- Part 1 committed as PP commit `046847761`: `LookThroughDataStatus` renders
+  per-fund provenance, freshness, source declaration, latest attempt and the
+  global storage mode with its restart limitation; `LookThroughRefreshController`
+  dispatches one coalesced manual request per account/identifier map.
+- Freshness is a display fact: a retrieval exactly 24 hours old is fresh, one
+  second older is stale. Holdings dates are never substituted by refresh or
+  retrieval dates, provider refresh and local retrieval stay distinct, and a
+  failed attempt keeps the retained dates beside it.
+- Excluded positions are not duplicated in the status; they stay with
+  `LookThroughViewPresenter` as the single source of truth.
+- A superseded wait used to be dropped silently, which would have left a caller
+  unable to learn that a refresh had ended. It now reports `CANCELLED`, and
+  `refresh` returns the number of outcomes the caller will receive.
+- Verification part 1: `LookThroughDataStatusTest` (11) and
+  `LookThroughRefreshControllerTest` (10) through the Docker UI reactor including
+  the REST and bootstrap bundles, Checkstyle clean, message and label validation
+  through `:portfolio-build-tools-check` passed.
+- Part 2 committed as PP commit `902f138dc`: SWT-free `LookThroughStatusModel`
+  owns the current facts, the busy state and the memory-only status build; the
+  view offers Refresh and Cancel, pushes the status into a new
+  `LookThroughDataStatusPane` and re-pushes it after the information pane
+  exists, because the first push happens before the pane is created.
+- The composition source stays optional: without a backend the view shows no
+  status and offers no refresh. Only the Refresh action calls `refresh()`, so a
+  redraw, a resize, a recalculation or a selection change cannot cause provider
+  traffic. Cancelling ends the wait immediately, and outcomes of the superseded
+  call are ignored.
+- Verification part 2: `LookThroughStatusModelTest` (7), `LookThroughDataStatusTest`
+  (11), `LookThroughRefreshControllerTest` (10) and `LookThroughViewPresenterTest`
+  (9) through the Docker UI reactor including the REST and bootstrap bundles:
+  37 tests, no failures, Checkstyle clean, message and label validation passed.
+- Task 5.2 stays unchecked: no composition source is supplied in the running
+  application yet, so the required isolated-app check of responsive
+  refresh/cancel and the status pane cannot be performed. Supplying the provider,
+  credentials, coordinator, store and selected funds to `LookThroughCompositionSource`
+  and the calculated result to the view remains open application wiring.

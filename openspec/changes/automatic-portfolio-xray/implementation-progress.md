@@ -149,3 +149,20 @@
 - Task 4.2 is delegated to Sol 6.1 medium for budgeting, coalescing and refresh
   control. Parent coordinates verification. Full integration checks and focused
   upstream commit consolidation remain outstanding; no publishing performed.
+
+## 2026-10-24: budgeted refresh (task 4.2)
+
+- Parent reviewed both core classes and both synthetic test classes supplied by
+  Sol 6.1 medium. PP checkpoint: `4f0a6e840`; no private data included.
+- `scripts/dev.sh test 'CompositionRequestBudgetTest,CompositionRefreshCoordinatorTest'`:
+  23 tests passed, zero failures/errors/skips; Checkstyle passed.
+- Shared weighted allowance covers retrieval and bounded enrichment; identical
+  account/identifier requests coalesce. Automatic eligibility uses 24 rolling
+  hours from admitted attempts, including failed/manual attempts. Manual refresh
+  bypasses cadence only. Retry-After protects the provider allowance; auth and
+  entitlement suspension is account-local and needs a configuration revision.
+- Reads never request data. Task 5.2 must supply initial/periodic eligibility
+  calls from application-lifetime background jobs and wire cancellation.
+  Close discards queued/late work but cannot interrupt synchronous transport.
+- Next: task 4.3 policy-gated composition storage with synthetic providers.
+  Full integration verification and publication gates remain outstanding.

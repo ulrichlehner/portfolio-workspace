@@ -134,3 +134,18 @@
 - Full core verification remains required before publishing the combined core
   increment. No publishing performed. Next: task 4.1 adapter, preserving unknown
   denominator/exposure/classification rather than claiming task 1.3 acceptance.
+
+## 2026-10-24: Eulerpool adapter (task 4.1)
+
+- Sol 6.1 medium implemented the adapter; parent reviewed the implementation
+  and synthetic tests. Injected credentials, transport and clock support
+  identifier-only requests, Bearer authentication and sanitized failures.
+- `scripts/dev.sh test EulerpoolFundCompositionProviderTest`: 16 tests passed,
+  zero failures/errors/skips and zero Checkstyle violations.
+- PP checkpoint: `350c4ae41`. Only the adapter, service descriptor and synthetic
+  tests were committed after review; no live payloads or private data included.
+- Denominator, exposure basis, completeness and effective date remain unknown.
+  Persistence policy remains unverified; task 1.3 is still open.
+- Task 4.2 is delegated to Sol 6.1 medium for budgeting, coalescing and refresh
+  control. Parent coordinates verification. Full integration checks and focused
+  upstream commit consolidation remain outstanding; no publishing performed.

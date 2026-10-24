@@ -395,3 +395,38 @@
   4:06 minutes and produced a 231 MB app with the bundled Zulu 21 JRE. The core jar
   holds 1043 classes and the UI jar 1581, including 45 look-through classes, so the
   build output is complete again.
+
+## 2026-10-24: label translation (task 5.3)
+
+- Externalization was already complete: the look-through package contains no
+  hardcoded user-visible text, the view name comes from `LabelPortfolioLens`, and
+  the status, category, reason, preference and limitation texts all use
+  `Messages`. No icon was added, so the CC0, iconmonstr, SVG sizing and `Images`
+  registration rules do not apply to this change.
+- Upstream practice decided the translation scope: recent feature commits by
+  external contributors change 17 or 18 `messages_*.properties` files, and
+  `CONTRIBUTING.md` asks code contributors to translate new labels. The user chose
+  that route over English-only keys.
+- 83 new keys (view, data status, preferences, setup and limitation texts,
+  missing-date states) are translated into all 18 supported languages and
+  appended to the family through the managed properties tool, which produced the
+  canonical order, escaping and alignment. The properties files stay pure ASCII
+  with `\uXXXX` escapes, sorted, without duplicate keys.
+- Reviewed and corrected before insertion: German needs the dative after `vor`
+  (`einer Stunde`), Russian uses an abbreviation in the age formatter because
+  MessageFormat cannot express Slavic plurals, Russian and Polish name the
+  originating security instead of the underlying asset or the source column,
+  Czech and Slovak say "or" rather than "and" for cash or other assets, and
+  German uses `Barmittel` because PP's German does not use `Barschaft`.
+- Verification: all 18 files carry exactly the reviewed 83 values with matching
+  `{0}`/`{1}` counts and an intact `choice` pattern, the family passes
+  `:portfolio-build-tools-check`, and `scripts/dev.sh app` finished with
+  `BUILD SUCCESS` in 3:40 minutes. The packaged `messages_de`, `_zh`, `_ru` and
+  `_tr` files are byte-identical to the sources, so the translations are in the
+  built bundles. An earlier build was rejected by the build metadata check with
+  "Sources changed during build", which confirms that guard works.
+- Committed as PP commit `85709c513`.
+- Task 5.4 documentation is PP commit `b82bc5a76`: `docs/portfolio-lens.md`
+  describes scope, coverage rules, refresh and budget, data status, persistence,
+  session-only limits and local data removal. Its isolated-app workflow checks
+  stay open until the interactive run below.

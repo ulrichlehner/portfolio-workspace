@@ -166,3 +166,27 @@
   Close discards queued/late work but cannot interrupt synchronous transport.
 - Next: task 4.3 policy-gated composition storage with synthetic providers.
   Full integration verification and publication gates remain outstanding.
+
+## 2026-10-24: composition stores (task 4.3)
+
+- Sol 6.1 medium implemented the stores and corrected a parent-identified
+  portability limitation. Parent reviewed all five files and synthetic tests.
+- `scripts/dev.sh test CompositionStoreTest`: 25 tests passed, no failures,
+  errors or skips; Checkstyle passed. PP checkpoint: `125b8802d`.
+- Session and disk modes share bounded validation; tests compare exact engine
+  results after restart. Versioned records preserve dates, decimal text and
+  duplicate rows. Failed refreshes preserve last-valid data within retention.
+- Account policy/preference generations invalidate pending disk writes after
+  withdrawal/deletion, including re-enable races. Real Eulerpool policy remains
+  unverified and cannot activate persistence.
+- Portable file operations require an application-owned private directory;
+  observed links are rejected. This is not protection against hostile concurrent
+  replacement of directory ancestors. Atomic replacement is mandatory; failure
+  preserves the previous file and exposes DISK_FAILURE with session analysis.
+  No SecureDirectoryStream or POSIX capability is required. Capability-fallback
+  tests ran in Linux Docker; native Windows/macOS verification is outstanding.
+- Integration must share one store ticket per coalesced retrieval, complete it
+  with the actual attempt, and read active funds during eligibility passes to
+  enforce retention even when retrieval is deferred. Evidence-backed resolutions
+  are supplied separately, not serialized. Tasks 4.5/5.2 own application wiring.
+- No private data included or publishing performed. Next: task 4.4 credentials.

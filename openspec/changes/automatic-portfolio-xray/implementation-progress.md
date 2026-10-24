@@ -102,3 +102,19 @@
 - PP code is uncommitted pending the corrected valuation tests, full core checks
   and a focused composition/calculation milestone. Workspace progress is committed
   independently; unrelated Eclipse metadata is excluded.
+
+## 2026-10-23: verified core milestone committed
+
+- Workspace planning/progress checkpoint: `abefb43`.
+- PP foundation milestone: `929e5e11e` (`feat: add portfolio look-through foundations`).
+  Includes tasks 2.1–2.3 and 3.1, synthetic tests and service discovery only;
+  unrelated Eclipse metadata was excluded. No push or PR was performed.
+- Parent reviewed the corrected valuation check order and regression tests.
+  `scripts/dev.sh test`: 4,917 tests, zero failures/errors, one skipped;
+  Checkstyle passed, including all 17 valuation tests. Task 3.1 is complete.
+- Valuation follows PP joint net security positions and monetary rounding.
+  Malformed null-currency portfolios can fail during PP snapshot construction;
+  the adapter's guard does not establish support for that upstream failure.
+- Next core increment: contribution aggregation, residuals and bounded nested
+  traversal (tasks 3.2–3.4). Keep focused milestone commits; consolidate the core
+  increment to one commit per upstream PR before publishing as required.

@@ -25,7 +25,7 @@ Unchecked boxes describe work remaining after the completed milestones. Task 1.2
 
 ## 3. Exposure engine
 
-- [ ] 3.1 Integrate current ClientSnapshot valuations and reporting-currency conversion with the selected positive-securities denominator; test account cash exclusion, zero/negative positions, empty selection and missing valuations/conversion using synthetic inputs through scripts/dev.sh test.
+- [x] 3.1 Integrate current ClientSnapshot valuations and reporting-currency conversion with the selected positive-securities denominator; test account cash exclusion, zero/negative positions, empty selection and missing valuations/conversion using synthetic inputs through scripts/dev.sh test.
 - [ ] 3.2 Implement direct/indirect aggregation and inspectable contribution paths; test direct-plus-multiple-fund overlap, duplicate legitimate paths and no parent double counting. Verify the four coverage categories reconcile to selected value before display rounding.
 - [ ] 3.3 Implement partial-composition residuals and unsupported-fund states; test missing funds, unknown denominator, unknown classification, ungrouped equity and unsupported synthetic exposure. Verify the specification's 80% resolved / 20% unresolved example exactly.
 - [ ] 3.4 Implement nested traversal with path-specific cycle detection and an eight-edge limit; test boundary depth, cycles and repeated funds on independent paths. Verify only affected branches become unresolved and document the limit.

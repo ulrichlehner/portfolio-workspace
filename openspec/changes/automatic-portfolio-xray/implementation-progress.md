@@ -371,3 +371,27 @@
   funds, refresh, cancel) cannot be performed by the agent because it needs
   user interface interaction; the wiring compiles and its SWT-free parts are
   tested.
+
+## 2026-10-24: Java language server broke builds
+
+- `scripts/dev.sh app` produced a macOS app whose core jar contained no classes.
+  The same command was flaky (1043 classes once, then 35, 247 and 294 classes),
+  and `-Dprotobuf.execution.phase=none` only avoided it by timing. No Maven task
+  reported a failure, so the result looked like a successful build.
+- Cause: the VS Code dev container's Java language server imports the fork through
+  m2e and uses each bundle's `target/classes` as output folder. Its background build
+  deletes those folders while `scripts/dev.sh` compiles into them. Its log records
+  `Error occurred while deleting: /name.abuchen.portfolio/target/classes/name`
+  followed by `BatchImageBuilder.cleanOutputFolders`.
+- Fix: `java.autobuild.enabled` is off in `.vscode/settings.json` (workspace commit
+  `22986a6`). Editing and navigation still work; building is an explicit action.
+- The same import rewrites the tracked `*/.project` files with the m2e builder,
+  nature and language server filters. They were restored, not committed, and the
+  rule is recorded in `AGENTS.md`. The `.tycho-consumer-pom.xml` files that every
+  Maven build writes per bundle, and the m2e preference file, are untracked
+  artifacts and are excluded in `portfolio/.git/info/exclude`, because the fork's
+  `.gitignore` must stay equal to upstream.
+- Verification after the fix: `scripts/dev.sh app` finished with `BUILD SUCCESS` in
+  4:06 minutes and produced a 231 MB app with the bundled Zulu 21 JRE. The core jar
+  holds 1043 classes and the UI jar 1581, including 45 look-through classes, so the
+  build output is complete again.

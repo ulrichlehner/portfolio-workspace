@@ -108,6 +108,11 @@ Commands:
 | Delete build output | `scripts/dev.sh clean` |
 | Also remove image and volume | `scripts/dev.sh purge` |
 
+Generated files never go upstream and never change the fork's `.gitignore`, because fork `master`
+must stay equal to `upstream/master`. Local-only exclusions live in `portfolio/.git/info/exclude`:
+m2e `org.eclipse.m2e.core.prefs` and the `.tycho-consumer-pom.xml` that every Maven build writes
+into each bundle. Modified tracked `*/.project` files are restored, not committed (see Dev container).
+
 ## Dev container
 
 Optional, for working in VS Code: "Dev Containers: Reopen in Container" builds `.devcontainer/` and installs
@@ -122,6 +127,13 @@ the extensions there (Java, Eclipse PDE, Maven, XML, YAML, GitLens, GitHub, Clau
   `devcontainer-claude-config`, `devcontainer-codex-config`).
 - Never enable format on save. Upstream formats with the Eclipse settings in each bundle's `.settings/` and
   PDF extractors are aligned by hand (see `.vscode/settings.json`).
+- Java autobuild stays off (`java.autobuild.enabled` in `.vscode/settings.json`). The container's Java language
+  server imports the fork through m2e and uses each bundle's `target/classes` as output folder. Its background
+  build deletes those classes while `scripts/dev.sh` compiles into them, which produced incomplete bundles and
+  jars without any error message. Building is an explicit action. Editing and navigation still work.
+- The same import adds the m2e builder, nature and language server filters to the tracked `*/.project` files.
+  Those changes are tooling artifacts: never commit them, and restore them with
+  `git checkout -- '**/.project'` in `portfolio/` before a commit if they reappear.
 
 ## Planning features with OpenSpec
 

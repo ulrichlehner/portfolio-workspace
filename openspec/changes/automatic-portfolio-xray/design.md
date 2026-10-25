@@ -37,6 +37,28 @@ supply fund-level metadata and an instrument type, but no constituent
 classification or company identity. One lookup per constituent is
 budget-infeasible, so company grouping is not attempted.
 
+### Revision 2026-10-25 (issuer x-ray via provider classification)
+
+The user requires a complete, functional x-ray, not an unverified-weights
+placeholder. The provider does classify individual instruments: `/equity/search`
+returns a type for stocks, ETFs and funds, and `/bonds/list` confirms bonds. The
+constituent list already carries each holding's identifier, ticker and name.
+These are combined into an issuer-level x-ray:
+
+- Every held instrument and every fund constituent is classified once per
+  session (security search, then bond list for non-equities). Classifications are
+  cached and shared across overlapping funds.
+- A classified equity is grouped by its security identifier and shown as a
+  company / instrument row with direct and indirect exposure; a classified fund
+  is traversed; a bond or cash-like position becomes other assets; an
+  unclassifiable position stays unresolved.
+- The strict allocation-semantics gate and task 1.3 are unchanged: the issuer
+  breakdown is provider data, but the weights are still unvalidated, so coverage
+  stays partial and a notice states that.
+
+Share classes of one company are not merged into a company graph; the grouping
+key is the security identifier. This is stated in the view and documentation.
+
 Observed PP integration points in the local checkout:
 
 - `portfolio/name.abuchen.portfolio/src/name/abuchen/portfolio/snapshot/ClientSnapshot.java`: dated positions and valuations in the reporting currency.

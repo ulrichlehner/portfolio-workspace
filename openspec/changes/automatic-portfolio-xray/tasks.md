@@ -65,6 +65,17 @@ keeping validated coverage separate.
 - [x] 7.3 Update the user documentation, capability specs and task 1.3 record so a validated decomposition is not claimed and the unverified category is described as display-only; translate changed and new labels into all supported languages.
 - [ ] 7.4 Rebuild the isolated macOS app and have the user confirm that opening Portfolio Lens shows the complete portfolio with visible unverified fund positions and an explicit partial-coverage notice. Record the outcome; keep tasks 5.2 and 5.4 open until the interactive checks pass.
 
+## 8. Issuer x-ray via provider classification
+
+The user requires a complete, functional x-ray. The provider does classify
+individual instruments (`/equity/search` for stocks, ETFs and funds, and its
+bond list for bonds), and the holdings list already carries each holding's
+identifier, ticker and name. These are combined into an issuer-level x-ray.
+
+- [x] 8.1 Add provider-backed instrument classification and use it to resolve held instruments and fund constituents to issuers, funds, bonds and other assets; cache one answer per identifier per session.
+- [x] 8.2 Expand arithmetic-usable compositions into their classified constituents even when the allocation semantics are unvalidated; keep synthetic and derivative exposure unresolved, keep coverage partial and show an issuer-level company/instrument breakdown with a weights-not-validated notice.
+- [ ] 8.3 Update the documentation, capability specs and provider evidence record to describe the issuer-level x-ray, its share-class grouping limit and its unvalidated weights; rebuild the isolated app and have the user confirm the x-ray.
+
 ## Workflow follow-up
 
 - After implementation and review, use the archive workflow to synchronize the capability deltas into durable specs and archive this change.

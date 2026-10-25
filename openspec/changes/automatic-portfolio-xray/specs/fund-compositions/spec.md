@@ -73,7 +73,7 @@ Every composition SHALL identify its source, fund, retrieval time, available pro
 - **THEN** the result shows holdings date unavailable separately from retrieval and provider refresh times.
 
 ### Requirement: Verified allocation semantics
-Only validated fractions of total fund NAV with a supported exposure basis SHALL count as validated coverage. Unknown denominators, normalized top-only weights, synthetic collateral and unsupported derivatives SHALL leave the fund unvalidated. A 100% sum SHALL NOT prove completeness. An arithmetically usable but semantically unverified source MAY be displayed only in the separate unverified category; it SHALL NOT enter validated totals or company aggregation.
+Only validated fractions of total fund NAV with a supported exposure basis SHALL count as validated coverage. Unknown denominators, normalized top-only weights, synthetic collateral and unsupported derivatives SHALL leave the fund unvalidated. A 100% sum SHALL NOT prove completeness. An arithmetically usable but semantically unverified source MAY still expand into provider-classified constituents for an issuer-level display; it SHALL NOT enter validated coverage totals.
 
 #### Scenario: Top holdings normalized to 100 percent
 - **WHEN** returned weights sum to 100% but their total-fund denominator is unverified
@@ -81,7 +81,7 @@ Only validated fractions of total fund NAV with a supported exposure basis SHALL
 
 #### Scenario: Arithmetic usable, semantics unverified
 - **WHEN** a source has valid nonnegative weights but declares an unknown denominator or exposure basis
-- **THEN** the result exposes it as unverified display data, keeps coverage partial and does not claim validated company exposure.
+- **THEN** the result expands into provider-classified issuers for display, keeps coverage partial and does not claim validated company exposure.
 
 #### Scenario: Valid partial NAV fractions
 - **WHEN** verified nonnegative rows account for 80% of total fund NAV

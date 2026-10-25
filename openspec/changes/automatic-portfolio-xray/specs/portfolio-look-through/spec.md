@@ -52,22 +52,22 @@ Unavailable or unusable compositions SHALL leave the entire affected fund unreso
 - **THEN** resolved company exposure is 80% and unresolved exposure is 20% of the full securities denominator.
 
 ### Requirement: Separate coverage categories
-The view SHALL reconcile portfolio value across verified company contributions, identified equities with unverified company grouping, validated cash/other assets, unverified provider positions and unresolved portions. Unknown asset types SHALL remain unresolved. Coverage and composition freshness SHALL be reported separately; rounding SHALL NOT turn a nonzero unresolved remainder into a complete-coverage claim.
+The view SHALL reconcile portfolio value across company/instrument contributions, identified equities with unverified company grouping, cash/other assets and unresolved portions. Unknown asset types SHALL remain unresolved. Coverage and composition freshness SHALL be reported separately; rounding SHALL NOT turn a nonzero unresolved remainder into a complete-coverage claim.
 
 #### Scenario: Fund cash and ungrouped shares
 - **WHEN** a fund contains verified cash and an identified equity whose company grouping is unknown
 - **THEN** cash remains cash/other assets, the equity remains ungrouped, and neither is reported as fully grouped company exposure.
 
-### Requirement: Unverified provider positions
-A composition whose weights are arithmetically usable but whose allocation semantics are not validated SHALL be displayable in a separate unverified category. Each such position SHALL be listed with its weight-derived value, its fund path and an explicit note, and SHALL keep coverage partial. It SHALL NOT be aggregated into company exposure, SHALL NOT be counted as validated coverage and SHALL NOT be traversed recursively.
+### Requirement: Provider classification of constituents
+A held instrument and each constituent of a received composition SHALL be classified from the provider's own security data where available: equities grouped by security identifier, funds traversed, bonds and other non-equities shown as other assets, and unclassifiable positions unresolved. A composition whose weights are arithmetically usable but whose allocation semantics are not validated SHALL still expand into these classified constituents, with coverage kept partial and a visible notice.
 
-#### Scenario: Provider weights without verified semantics
-- **WHEN** a held fund returns nonnegative weights that sum to less than or equal to 100% while denominator and exposure basis remain unverified
-- **THEN** the affected values appear as unverified provider positions with a visible notice, the remaining value stays unresolved, and the result is labelled partial coverage.
+#### Scenario: Fund constituents classified into issuers
+- **WHEN** a held fund returns nonnegative weights that sum to 100 percent and the provider classifies its constituents as equities and other assets
+- **THEN** the constituents appear as company/instrument rows and other assets, the result is labelled partial coverage, and the notice states that the weights are not validated.
 
-#### Scenario: Artificially invalid weights
-- **WHEN** an unverified provider answer contains a missing, malformed, negative or overfull weight
-- **THEN** the entire affected fund value remains unresolved instead of being partially displayed.
+#### Scenario: Unclassifiable or invalid weights
+- **WHEN** a provider answer contains an unclassifiable constituent, or a missing, malformed, negative or overfull weight
+- **THEN** the affected value remains unresolved instead of being guessed or partially displayed.
 
 ### Requirement: Bounded nested look-through
 Nested funds SHALL be decomposed only with usable compositions. Cycles and branches beyond eight composition edges SHALL stop at the affected branch and preserve its value as unresolved. Repeated legitimate paths SHALL remain distinct contributions before company aggregation.

@@ -155,11 +155,14 @@ Consequences recorded for the implementation:
 
 - The provider cannot certify denominator, completeness or exposure basis through
   its API. Task 1.3 cannot be closed by endpoint evidence alone.
-- Per-constituent company identity would require one lookup per row, which is
-  neither budget-feasible nor evidence of a company mapping. It is not attempted.
-- Weights may still be shown as unverified positions when they are arithmetically
-  usable. That display is explicitly not validated coverage and keeps the
-  coverage status partial (task 7.2).
+- The provider does classify individual instruments through `/equity/search`
+  (stocks, ETFs, funds) and its bond list. A constituent and a held security can
+  therefore be classified and grouped by security identifier into an issuer-level
+  x-ray. That classification is real provider data, not a name heuristic; it does
+  not validate the allocation semantics of the fund weights.
+- Per-constituent company identity beyond the security identifier (for example a
+  company graph merging share classes) is not available. Issuers stay grouped by
+  their security identifier, which the view labels company / instrument.
 
 Pause only work requiring an unpassed permission or data-quality gate. Obtain
 runtime/display/distribution permission and a dated public physical-fund

@@ -645,3 +645,49 @@ The provider evidence record is extended in `provider-gates.md`: 1266 rows
 summing to 100 percent, `assetType` null throughout, 15 rows without identifier,
 no holdings-effective date, and a row-value/AUM mismatch. A validated
 decomposition is still not achieved.
+
+## 2026-10-25: issuer x-ray via provider classification
+
+The user requires a complete, functional x-ray, not an unresolved placeholder.
+The provider does classify individual instruments, so the x-ray is built from
+real provider data rather than a name heuristic.
+
+- `InstrumentClassifier` and its Eulerpool implementation classify an instrument
+  through `/equity/search` (stocks, ETFs, funds) with a `/bonds/list` fallback.
+  A stock becomes a grouped equity keyed by its ISIN, an ETF or fund becomes
+  traversable, a bond becomes other assets. Transport errors and unknown
+  instruments leave the position unresolved.
+- The coordinator now enriches the constituents of arithmetic-usable
+  compositions as well as verified ones, and `LookThroughEngine` expands them
+  into their classified children. Synthetic and derivative exposure stays
+  unresolved. The terminal unverified-positions category is superseded by the
+  issuer breakdown.
+- `PortfolioLensSession` classifies the held instruments themselves and caches
+  one answer per identifier for the whole session, shared across overlapping
+  funds. The analysis resolves owned securities and constituents from this
+  evidence and from the coordinator's resolutions.
+- The presenter labels each company/instrument row with the provider-supplied
+  issuer name and shows a weights-not-validated notice; coverage stays partial.
+- `docs/portfolio-lens.md`, the capability specs, the provider evidence record
+  and the design record the issuer-level x-ray, its share-class grouping limit
+  and the unvalidated weights.
+
+PP commit: `9588cc3ba` (`feat: classify fund constituents into issuers`).
+Nothing was pushed.
+
+Verification:
+
+- Focused core: engine 16, validator 16, coordinator 19, provider 21; all green.
+- `scripts/dev.sh test`: 5,037 tests, zero failures/errors, one skipped;
+  Checkstyle zero violations.
+- Focused UI reactor with REST and bootstrap bundles: 57 tests, zero
+  failures/errors; Checkstyle passed.
+- `git diff --check` passed; the diff contains no real identifiers or
+  credentials.
+- The isolated app is rebuilt and launched next for the user's check of
+  task 8.3 (and the earlier 5.2/7.4 confirmations).
+
+Remaining: a per-constituent request is issued serially, so the first x-ray of
+a broad fund can take a few minutes; classification results appear progressively
+and are cached for the session. The provider still reports no denominator,
+completeness or holdings date, so task 1.3 stays open and coverage stays partial.

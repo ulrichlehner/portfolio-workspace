@@ -549,3 +549,37 @@ categories should appear without waiting for a provider. Configure the personal
 key in preferences when needed to check automatic/manual retrieval and status.
 Verified company decomposition still depends on the open provider evidence gate;
 the 100% objective and all publication restrictions remain unchanged.
+
+## 2026-10-25: live test found a blocked refresh (task 5.2)
+
+- Symptom: in the isolated app a click on "Composition data: refresh" changed
+  nothing. The status pane showed the first fund with "no composition data" and
+  the remaining funds without an attempt.
+- Cause: an instrument-local provider answer (`UNAVAILABLE`, `UNSUPPORTED` or a
+  composition that the validator rejected) was recorded through the shared
+  request budget, which set an account-wide 15 minute failure backoff. Every
+  following fund was deferred before its attempt, and the serial session
+  (at most one pending request) never reached it. An individual stock in the
+  selection was enough to stop the whole refresh.
+- Fix, PP commit `c1e0e0e18`: instrument-local answers no longer touch the shared
+  budget. The budget keeps transport, authentication, entitlement and rate-limit
+  failures, which do affect the whole account. Covered by
+  `testMissingInstrumentDoesNotDelayOtherFunds` and
+  `testUnavailableAndUnvalidatedRowsDoNotStallSelection`.
+- Fix, PP commit `db458b0c2`: a composition that the provider delivered but the
+  validator rejected left the data status unchanged. The pane now shows the
+  received source's provenance, freshness and declarations without admitting it
+  to the calculation, moves attempt and retry next to the fund name and adds cell
+  tooltips.
+- Decision, user-approved: Portfolio Performance stores no fund classification
+  (`online.SecurityType` exists only for search results and is not persisted, the
+  legacy `Security.getType()` holds asset classes and is package-private). The
+  provider decides instead of a name heuristic: PP commit `4db5adfbe` asks an
+  instrument once per session and remembers a provider answer without a usable
+  composition as `Disposition.NO_COMPOSITION`. Such an instrument is skipped for
+  the rest of the session without a retry promise and never delays other funds. A
+  restart clears the memory. `docs/portfolio-lens.md` states the rule.
+- Verification: `CompositionRefreshCoordinatorTest` 18 tests green; the UI
+  look-through suite 54 tests green with 0 Checkstyle violations.
+- Still open: the interactive 5.2/5.4 check with a rebuilt app, and the actual
+  provider decomposition of a fund (task 1.3 evidence gate).

@@ -430,3 +430,79 @@
   describes scope, coverage rules, refresh and budget, data status, persistence,
   session-only limits and local data removal. Its isolated-app workflow checks
   stay open until the interactive run below.
+
+## Integration review fixes (2026-10-24)
+
+The user authorized immediate correction of the review findings in this chat.
+PP commit: `41e4d60` (`fix: complete Portfolio Lens refresh wiring`). This is a
+local integration milestone; nothing was pushed. Final upstream commit/PR
+consolidation remains part of task 6.5.
+
+This entry supersedes the earlier assessment that task 5.2 lacked only a manual
+check. The review found missing calculation wiring, missing credential revision
+forwarding, dropped multi-fund requests at the pending limit, and no automatic
+eligibility dispatcher. Corrections:
+
+- The view now calculates current selected securities values through
+  ClientSnapshot, SecuritiesValuationAdapter and LookThroughEngine on opening,
+  portfolio updates and refresh outcomes. A memory-only analysis bridge combines
+  retained evidence and compositions; missing evidence remains unresolved.
+- One application-wide provider session shares budgeting and coalescing across
+  clients. It serializes admission of distinct funds instead of returning BUSY
+  for the remainder of a selection. Provider quotas, suspension and backoff still
+  defer requests; the queue does not override these limits.
+- Credential state/revision is read on the background executor before dispatch
+  and forwarded to the coordinator. Corrected authentication can trigger a new
+  automatic attempt without waiting out the failed attempt's daily cadence.
+- Opening the analysis and a minute-based eligibility timer request automatic
+  refresh with manual=false. The coordinator enforces rolling 24-hour cadence.
+  Redraw/status reads never dispatch. Disposing the view removes its timer and
+  ignores late UI callbacks. Cancel ends the UI wait; provider work already
+  queued can continue, as documented.
+- Reapplying unchanged persistence preferences no longer invalidates pending
+  store tickets. Invalid source previews retain provenance for status display,
+  while only retained validated compositions enter calculation.
+- User documentation now describes automatic/manual behaviour and explicitly
+  states that the current real adapter lacks validated allocation and identity
+  evidence. The full direct-plus-fund path is verified with synthetic evidence;
+  this does not pass provider gate 1.3 or establish useful real-data coverage.
+
+Verification:
+
+- `scripts/dev.sh test`: 5,025 tests, zero failures/errors, one skipped;
+  Checkstyle passed.
+- Focused Docker UI reactor (`*LookThrough*Test,*PortfolioLens*Test`, including
+  REST and bootstrap): 51 tests, zero failures/errors/skips; Checkstyle passed.
+  Nine new regressions cover queued selections and coalescing, authentication
+  recovery, initial/rolling/manual refresh, memory-only reads, pending store
+  tickets, invalid-source provenance, selection valuation, exact direct/fund
+  overlap with residual, updated valuations and automatic status dispatch.
+- The first UI check identified an unused import; it was removed before the
+  successful run. All test data and credentials are synthetic. No live provider
+  requests or private portfolio reads were needed for these fixes.
+- Diff/privacy review and `git diff --check` passed. No portfolio format, WebDAV
+  tooling, credentials, translations or external permission assumptions changed.
+- `scripts/dev.sh app`: BUILD SUCCESS in 3:33, including integrated UI
+  compilation and macOS ARM64 packaging with bundled Java, at PP revision
+  `41e4d609f`. Packaging skips test execution; test results above come from
+  separate test runs. Retain the packaged app for the user's pending manual
+  check rather than cleaning it before that check can run.
+- Verification recorded on 2026-10-25: task 6.1 is complete. Task 5.2 still
+  requires interactive acceptance; a successful build does not establish it.
+
+Remaining acceptance:
+
+Task 5.2 stays open until the user checks the isolated macOS app. Run
+`scripts/dev.sh run-app --webdav-copy` from the macOS host, select securities,
+then open Portfolio Lens. Confirm current values/unresolved rows, data status,
+responsive refresh/cancel, credential replacement and revisiting the view.
+Use only the managed local copy and keep identifiers/values out of public
+records. Ordinary startup can retrieve selected identifiers once credentials
+are configured; no quantities, transactions or portfolio files are submitted.
+
+Task 1.3 and the task 6.3 permission/data-quality gates remain open. Unknown
+allocation semantics can also cause validation backoff; queued admission does
+not imply that every fund was fetched in a single pass. Real provider data stays
+session-only. The 100% validated-coverage objective remains unchanged and is not
+achieved by this integration milestone. Tasks 5.4, 6.2, 6.4 and 6.5 still need
+their respective acceptance, follow-up and publication preparation work.

@@ -506,3 +506,46 @@ not imply that every fund was fetched in a single pass. Real provider data stays
 session-only. The 100% validated-coverage objective remains unchanged and is not
 achieved by this integration milestone. Tasks 5.4, 6.2, 6.4 and 6.5 still need
 their respective acceptance, follow-up and publication preparation work.
+
+## First-open injection regression (2026-10-25)
+
+The user's isolated manual check failed: Portfolio Lens showed neither an
+analysis result nor composition status. This is an application-startup defect,
+not evidence of a provider timeout or incomplete coverage. Task 5.2 remains
+open; the earlier integration test suite did not exercise Eclipse injection.
+
+Root cause: the view declared its creatable composition service as an optional
+injection. In a fresh Eclipse context, optional lookup did not construct the
+service, leaving the view without its backend. Required injection now creates
+it; the redundant null guard no longer silently skips application wiring.
+
+PP fix: `63f7fad` (`fix: initialize Portfolio Lens on first open`). The new
+PortfolioLensInjectionTest uses Eclipse's actual ContextInjectionFactory on the
+real view's annotated fields, with Mockito skipping SWT control construction.
+It does not claim to test rendering or interactive behaviour.
+
+Verification:
+
+- All 52 focused look-through/Lens UI tests passed with the correction;
+  Checkstyle passed.
+- The same new regression test was run against the original optional-injection
+  view and failed with the expected missing-backend assertion (one failure,
+  zero errors). The corrected view was restored before committing.
+- No core logic changed in this correction. The preceding 5,025-test core run
+  remains the core verification evidence.
+- `scripts/dev.sh app`: BUILD SUCCESS in 3:39 against `63f7fad`, with
+  bundled-runtime macOS ARM64 packaging. App packaging skips test execution;
+  the 52-test result above is from the separate focused test run. The initial
+  packaging attempt was stopped to wrap the commit body correctly, then
+  restarted against the final commit. The build is retained for manual testing.
+- Strict OpenSpec validation and `git diff --check` passed.
+- Diff review found no private identifiers, credentials or portfolio data.
+  The user screenshot and local logs were not copied into repository artifacts.
+
+Manual retest: launch from the macOS host with
+`scripts/dev.sh run-app --webdav-copy`. Select the securities to include in a
+securities view, then open Portfolio Lens. Current valuation and unresolved
+categories should appear without waiting for a provider. Configure the personal
+key in preferences when needed to check automatic/manual retrieval and status.
+Verified company decomposition still depends on the open provider evidence gate;
+the 100% objective and all publication restrictions remain unchanged.

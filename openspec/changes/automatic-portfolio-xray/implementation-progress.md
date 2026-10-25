@@ -736,3 +736,21 @@ rejected and never rescaled.
 PP commit: `27439e406` (`fix: reconcile accepted rounding excess`).
 Verification: validator 17, engine 17, UI 57; Checkstyle zero violations.
 The spec and design record the proportional correction instead of "no scaling".
+
+## 2026-10-25: live acceptance of the issuer x-ray
+
+The user ran the isolated app with their own key. The view showed the complete
+portfolio and an issuer-level breakdown: Apple with a direct holding and
+contributions from both the MSCI World and the NASDAQ 100 fund, plus the other
+issuers. The accepted-rounding fix removed the repeated `IllegalArgumentException`;
+the log shows no exception after the restart. The loading line showed the fund
+count and disappeared quickly on the cached second pass, which is expected.
+
+The user accepted the current state ("looks better now"). They did not perform an
+exact numeric spot-check of one issuer total; the direct-plus-two-fund
+aggregation is covered by the synthetic presenter test, and the decomposition
+reconciles exactly to the portfolio value.
+
+Task 8.6 is complete. Task 5.2 remains open only for the explicit cancel-refresh
+check and task 5.4 for the re-read of the documented workflows; the core view,
+loading feedback and the absence of an upload or mapping step were observed live.

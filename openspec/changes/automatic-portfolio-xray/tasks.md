@@ -77,7 +77,7 @@ identifier, ticker and name. These are combined into an issuer-level x-ray.
 - [x] 8.3 Accept a provider rounding excess of up to one millionth above 100% without scaling any row, with evidence from a public fund whose weights sum to 100.00000001%; keep larger overfull totals unusable.
 - [x] 8.4 Show a loading line with completed fund count while a refresh or classification pass runs, and translate the label into all supported languages.
 - [ ] 8.5 Align the Eulerpool preference page with the other API-key pages (masked key field, key link, simpler structure); low priority, no functional change.
-- [ ] 8.6 Update the documentation, capability specs and provider evidence record to describe the issuer-level x-ray, its share-class grouping limit and its unvalidated weights; rebuild the isolated app and have the user confirm the x-ray.
+- [x] 8.6 Update the documentation, capability specs and provider evidence record to describe the issuer-level x-ray, its share-class grouping limit and its unvalidated weights; rebuild the isolated app and have the user confirm the x-ray.
 
 ## Workflow follow-up
 

@@ -362,6 +362,31 @@ support does not prove automatic retrieval of newly discovered child funds.
 
 Suggested provider questions, prepared but not sent: Does the free tier include complete UCITS holdings? What does each request cost? Are underlying identifiers and holdings-effective dates available? What is returned for synthetic funds? Are signed weights and derivatives included? May an individual cache responses locally for offline use in PP, and for how long? Does distributing an adapter with user-supplied keys require a separate agreement?
 
+### Evidence-based acceptance of allocation semantics (2026-10-25)
+
+Eulerpool publishes no denominator, completeness or exposure-basis declaration.
+Requiring such a declaration would block the feature indefinitely; assuming it
+would be unverified. The accepted middle path is a documented, revocable rule:
+
+- Weights are treated as fractions of total fund NAV when complete, dated,
+  independent issuer snapshots agree with the provider's rows for at least two
+  public physical funds, fund by fund and row by row by exact ISIN, within the
+  combined published rounding.
+- The acceptance record names sources, retrieval date, effective date, method and
+  the exact validated scope. It is evidence-based acceptance, not a provider
+  guarantee or a certification.
+- The validated scope is the identified physical sleeve only. Known omissions,
+  notably derivative overlays with zero market value and positive notional, stay
+  outside it and remain visible as a gap.
+- A contradiction in a later comparison, or failure of the rule, withdraws the
+  acceptance for affected funds. It then reverts to unvalidated.
+- No runtime coupling to issuer endpoints is introduced: the issuer interface is
+  an undocumented product-page API, unsuitable as a product dependency, and it
+  covers only one issuer. Verification stays in workspace tooling.
+- The holdings-effective date remains unknown because the provider supplies only
+  an update timestamp. Freshness and economic completeness are reported
+  separately from weight acceptance.
+
 ## Risks / Trade-offs
 
 - Incomplete or normalized responses -> preserve unknown exposure and validate against issuer disclosures.

@@ -233,7 +233,7 @@ or a claim that the provider's terms were independently cleared today.
 | Attribution and other applicable obligations | Unknown | Attribution is mentioned in the licensing summary; the applicable complete obligations have not been established |
 | Optional real-data persistence | Unknown; disabled | No verified Free-plan permission established |
 | Optional real-data retention | Unknown; disabled | No applicable retention period established |
-| Public physical-fund economic-exposure acceptance (1.3) | Partial evidence; not closed | All 1352 identified historical rows pass issuer ISIN/raw-weight comparison. Production use of issuer evidence, complete economic exposure and corporate grouping remain unfinished |
+| Public physical-fund economic-exposure acceptance (1.3) | Accepted for the identified physical sleeve under the documented rule | Two complete dated issuer comparisons (1251 and 101 exact-ISIN rows) agree within published rounding; issuer classifications available. Derivative overlay, completeness declaration, holdings-effective date and corporate grouping stay outside the accepted scope |
 | Freshness transparency | Pass for representation, not source freshness | Missing holdings-effective dates remain unknown; retrieval/update dates are not substituted |
 | Experimental source-only development fork | Authorized by user with notice | Explicitly confirmed on 2026-10-25; no rights verification, provider payloads, credentials or public binaries |
 | Official upstream integration / binary releases | Blocked | Runtime/display/distribution/obligations and data-quality gates are not passed; the development-fork exception does not establish provider rights |
@@ -313,3 +313,38 @@ The app currently does not retrieve or apply this issuer evidence. Task 1.3 stil
 requires a supported public decomposition using the corroborated evidence; the
 economic-overlay and company-grouping limits must remain explicit. The complete
 data objective is not replaced with acceptance of an unresolved placeholder.
+
+### Additional provider probes, 2026-10-25 (public identifiers only)
+
+Beyond the two equity funds, two further public funds were probed to test data
+shapes the acceptance rule does not cover. No portfolio identifiers were used and
+nothing private is recorded here.
+
+| Public sample | Rows | Weight sum | Duplicate ISINs | Observation |
+| --- | ---: | ---: | ---: | --- |
+| iShares Core Global Aggregate Bond UCITS ETF (IE00BDBRDM35) | 40000 | 100.00000162% | 19603 | Same ISIN repeated with identical nominal amount but a different percent and value; two blocks of 20000 rows summing to 90.53930858% and 9.46069304% |
+| Invesco S&P 500 UCITS ETF (IE00B3YCGJ38), swap-based | 502 | 99.99999953% | 0 | No futures, swap or forward rows; the substitute basket looks like a physical equity list |
+
+Consequences:
+
+- The bond response is internally inconsistent: identical instrument, identical
+  nominal holding, two different weights and values. That cannot be one fund's NAV
+  decomposition; it looks like merged share classes or vintages. Its total also
+  exceeds the one-millionth rounding tolerance. The adapter now rejects an answer
+  in which one ISIN appears with the same nominal amount and a different weight,
+  as `MALFORMED_RESPONSE`, instead of summing the rows as two legitimate positions.
+  Legitimate duplicates with different nominal amounts remain accepted.
+- The swap-based fund would previously have been displayed as if its substitute
+  basket were a physical portfolio. The provider declares neither exposure basis
+  nor a replication method, so the application cannot distinguish it. It stays in
+  the unvalidated, partial-coverage presentation, and G3 now records this concrete
+  case rather than a hypothetical one.
+- A non-browser client can receive HTTP 403 with body `error code: 1010` from the
+  provider's CDN while the same request with a regular client succeeds. That is bot
+  protection, not an entitlement result; the adapter treats 403 as an entitlement
+  failure, so a misconfigured client is reported as suspended rather than retried.
+
+A scale regression in `LookThroughEngineTest` now builds a 1266-row fund with 1250
+identified equities and 16 identifierless rows. It asserts exact reconciliation,
+1250 company rows and that identifierless rows stay unresolved rather than being
+invented as cash.

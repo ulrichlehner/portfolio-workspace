@@ -977,3 +977,43 @@ Remaining open work, deliberately not marked complete:
   explicitly authorized experimental source fork exception applies.
 - Task 6.5: publication preparation is done for this increment, but no official
   upstream publishing is authorized or ready.
+
+## 2026-10-25: evidence-based acceptance rule and extra provider probes
+
+The user approved documenting an evidence-based acceptance rule instead of adding
+a second runtime data source, and asked for continued functional and data
+verification. Design, capability spec, task 1.3 and the gate records now carry the
+rule: weights count as total-fund-NAV fractions when complete dated independent
+issuer snapshots agree row-by-row by ISIN for at least two public physical funds
+within published rounding. The record names scope, sources, date and method, is
+revocable and excludes known omissions. No runtime coupling to the issuer's
+undocumented product-page API was added.
+
+Task 1.3 is recorded as accepted for the identified physical sleeve only.
+Derivative overlay, completeness declaration, holdings-effective date and
+corporate grouping stay open in the gap register.
+
+Further verification in this pass:
+
+- Bond fund probe (public identifier): 40000 rows, 19603 repeated ISINs with
+  identical nominal amounts but different percent and value, and a total of
+  100.00000162%, above the rounding tolerance. The adapter now rejects such an
+  internally inconsistent answer as `MALFORMED_RESPONSE` instead of summing it.
+  PP commit `557ba29d6`.
+- Swap-based fund probe: 502-row substitute basket, no derivative rows, total
+  99.99999953%. The provider declares no exposure basis, so the app cannot
+  distinguish it from a physical portfolio. Recorded as concrete G3 evidence.
+- Scale regression: a 1266-row fund with 1250 identified equities and 16
+  identifierless rows reconciles exactly, produces 1250 company rows, and keeps
+  the identifierless value unresolved instead of reporting it as cash.
+- An HTTP 403 with body `error code: 1010` came from the provider's CDN for a
+  non-browser client while a regular client succeeded. That is bot protection,
+  not an entitlement decision; the adapter still treats 403 as entitlement and
+  suspends retries, which is the safe behaviour.
+
+Verification: `EulerpoolFundCompositionProviderTest` 28 tests and
+`LookThroughEngineTest` 18 tests green; full core suite 5056 tests, zero
+failures/errors, one skipped, Checkstyle zero violations. Translation resource
+validation, focused UI tests (65) and the packaged app were verified before this
+increment; the UI is unchanged by it. PP commit `557ba29d6` is pushed to the
+development fork only; no upstream PR, binary release or provider contact.

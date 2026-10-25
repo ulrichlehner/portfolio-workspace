@@ -77,7 +77,7 @@ Every composition SHALL identify its source, fund, retrieval time, available pro
 - **THEN** the result shows holdings date unavailable separately from retrieval and provider refresh times.
 
 ### Requirement: Verified allocation semantics
-Only validated fractions of total fund NAV with a supported exposure basis SHALL count as validated coverage. Unknown denominators, normalized top-only weights, synthetic collateral and unsupported derivatives SHALL leave the fund unvalidated. A 100% sum SHALL NOT prove completeness. An arithmetically usable but semantically unverified source MAY still expand into provider-classified constituents for an issuer-level display; it SHALL NOT enter validated coverage totals.
+Allocation semantics SHALL be validated either by an authoritative provider declaration or by documented repeated independent agreement. Neither a 100% sum nor a single comparison SHALL suffice. The validated scope SHALL name what it covers; known omissions SHALL stay outside it. An arithmetically usable but unvalidated source MAY expand into provider-classified constituents for an issuer-level display, but SHALL NOT enter validated coverage totals.
 
 #### Scenario: Top holdings normalized to 100 percent
 - **WHEN** returned weights sum to 100% but their total-fund denominator is unverified
@@ -90,6 +90,14 @@ Only validated fractions of total fund NAV with a supported exposure basis SHALL
 #### Scenario: Valid partial NAV fractions
 - **WHEN** verified nonnegative rows account for 80% of total fund NAV
 - **THEN** those rows are eligible for classification and the remaining 20% stays unresolved without normalization.
+
+#### Scenario: Documented evidence-based acceptance
+- **WHEN** a provider declares no denominator but complete dated independent issuer snapshots agree with its weights for at least two public physical funds, within published rounding
+- **THEN** the weights are accepted as fractions of total fund NAV for the validated scope, the scope is recorded with sources, date and method, and missing derivative or other known exposure stays outside it.
+
+#### Scenario: Evidence-based acceptance revoked
+- **WHEN** a later comparison contradicts the accepted weights or the documented rule no longer holds
+- **THEN** the acceptance record is withdrawn and affected funds return to unvalidated rather than keeping the earlier claim.
 
 ### Requirement: Conservative numerical validation
 The system SHALL preserve source rows and use decimal weights without general normalization. Malformed, nonfinite, negative or overfull weights SHALL make a snapshot unusable, except for an evidenced rounding excess of at most one millionth in fractional-weight units. Accepted excess SHALL be removed proportionally with exact reconciliation. Positive shortfalls SHALL remain unresolved. Legitimate duplicate rows SHALL only be combined after validating their semantics.

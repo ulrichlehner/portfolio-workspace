@@ -8,6 +8,35 @@ Confirmed product direction: current exposure, automatic retrieval, no required 
 
 Confirmed provider decision: proceed with Eulerpool first, based on working free-account access and the low-friction setup observed. Leeway remains a documented alternative; its activation process and unverified holdings access are not blockers for this change.
 
+### Revision 2026-10-25: whole-portfolio scope and unverified display
+
+The first integrated build showed no usable result: the strict validator rejected
+every real Eulerpool source because the provider declares no denominator, no
+exposure basis and no completeness, and the instrument resolver had no evidence
+to classify the fund. Two planning assumptions are corrected here.
+
+1. **Scope.** Portfolio Lens is the x-ray of the complete portfolio, not of a
+   prior selection. The scope is every security with a nonzero net position
+   across the client's portfolios. Selection-based scope is withdrawn.
+2. **Display versus validation.** Transparent partial coverage needs a state for
+   "arithmetically usable, semantically unverified". Such a source is displayed
+   in its own category, position by position, with a visible notice and partial
+   coverage. It is never aggregated into company exposure, never counted as
+   validated coverage and never traversed recursively. The strict path and the
+   task 1.3 evidence gate are unchanged; this adds a labelled display tier, not a
+   certification.
+
+The provider classification evidence comes from the fact that the provider
+answered with an ETF holdings list for the identifier. That establishes a fund,
+not its allocation semantics. Directly held equities without classification
+evidence stay at instrument level rather than being merged into a guessed
+company.
+
+Observed but not adopted: the provider's fund profile and search endpoints
+supply fund-level metadata and an instrument type, but no constituent
+classification or company identity. One lookup per constituent is
+budget-infeasible, so company grouping is not attempted.
+
 Observed PP integration points in the local checkout:
 
 - `portfolio/name.abuchen.portfolio/src/name/abuchen/portfolio/snapshot/ClientSnapshot.java`: dated positions and valuations in the reporting currency.
@@ -141,7 +170,7 @@ Provider selection is settled for the initial adapter. It does not certify every
 
 Accepted: show useful validated results with explicit unresolved exposure, without abandoning the full-coverage objective. The capability specs define the observable contract; the following table explains its application.
 
-Use current portfolio values and the latest available compositions. Label the result as current values combined with the available composition dates, not a real-time holdings feed. Use a positive-value securities view initially, explicitly labelled as a percentage of selected securities value; exclude account cash from that denominator and explain this in the view. Short/leveraged portfolio semantics need separate design before support. Within funds, retain cash and other non-equity allocations rather than assigning them to companies.
+Use current portfolio values and the latest available compositions. Label the result as current values combined with the available composition dates, not a real-time holdings feed. Use every held security with a positive value as the initial scope, explicitly labelled as a percentage of the held securities value; exclude account cash from that denominator and explain this in the view. Short/leveraged portfolio semantics need separate design before support. Within funds, retain cash and other non-equity allocations rather than assigning them to companies.
 
 The main view should show company, direct contribution, contribution through funds and combined contribution. Expanding a company reveals the source funds. A status summary should keep unresolved exposure and data limitations visible beside the result. Provider details belong in a data-status panel rather than the main flow.
 
@@ -161,7 +190,7 @@ The main view should show company, direct contribution, contribution through fun
 | Rate limit or expired key | Back off or stop the relevant requests; show an actionable status and preserve existing results where storage is allowed. No repeated prompts, silent provider switch or automatic purchase. |
 | Duplicate identifiers or signed weights | Preserve source rows during validation. Sum legitimate separate positions only after checking semantics; reject incompatible/malformed snapshots rather than dropping negatives or deduplicating blindly. |
 
-Coverage should describe how much selected value is accounted for by validated company contributions, identified-but-ungrouped instruments, cash/other assets and unresolved portions. Freshness is a separate dimension. Do not advertise "100% complete" merely because weights reconcile. Use decimal arithmetic and preserve signed source rows. Version one resolves only nonnegative, unleveraged NAV allocations with verified semantics; a negative allocation makes the entire fund unsupported, with signed source rows retained for diagnostics. Do not normalize overfull totals. A shortfall remains unresolved even if tiny; round only for display. Invalid/nonfinite weights or totals above 100% make a snapshot unusable. This conservative rule avoids concealing uncertainty with a tolerance; any later provider-specific rounding tolerance requires evidence and a spec revision.
+Coverage should describe how much held securities value is accounted for by validated company contributions, identified-but-ungrouped instruments, cash/other assets, unverified provider positions and unresolved portions. Freshness is a separate dimension. Do not advertise "100% complete" merely because weights reconcile. Use decimal arithmetic and preserve signed source rows. Version one resolves only nonnegative, unleveraged NAV allocations with verified semantics; a negative allocation makes the entire fund unsupported, with signed source rows retained for diagnostics. Arithmetic-usable rows without verified semantics may be displayed as unverified positions, never as validated coverage. Do not normalize overfull totals. A shortfall remains unresolved even if tiny; round only for display. Invalid/nonfinite weights or totals above 100% make a snapshot unusable. This conservative rule avoids concealing uncertainty with a tolerance; any later provider-specific rounding tolerance requires evidence and a spec revision.
 
 Schedule automatic retrieval at most once per rolling 24 hours per fund while PP runs, plus manual refresh respecting provider limits. Coalesce concurrent requests; a chart redraw never schedules a fetch. Use a provider-wide budget, honour Retry-After, and stop authentication/entitlement retries until configuration changes. No background process runs when PP is closed. This does not promise daily source publication.
 

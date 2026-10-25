@@ -11,16 +11,24 @@ The analysis SHALL be presented as Portfolio Lens within Portfolio Performance. 
 - **WHEN** a user navigates to the look-through analysis
 - **THEN** the feature is labelled Portfolio Lens within the existing PP application.
 
-### Requirement: Current securities scope
-The analysis SHALL use current PP valuations in the reporting currency for selected positive-value securities. Percentages SHALL use that selected securities value as denominator, explicitly excluding account cash. Zero positions SHALL contribute nothing. Unsupported negative positions SHALL be disclosed as excluded rather than silently changing the denominator.
+### Requirement: Portfolio scope
+The analysis SHALL value every security with a nonzero net position across all portfolios of the open client in the reporting currency. It SHALL NOT require a prior selection. Percentages SHALL use the current value of those held securities, excluding account cash. Zero positions SHALL contribute nothing. Unsupported negative positions SHALL be disclosed as excluded, and an empty portfolio SHALL show an explicit empty state.
+
+#### Scenario: Open without a prior selection
+- **WHEN** a user opens Portfolio Lens in a client with holdings and no securities view is open
+- **THEN** the analysis covers all held securities and reports the valuation date.
 
 #### Scenario: Accounts and closed positions
-- **WHEN** the selection contains positive securities, an account cash balance and a zero position
+- **WHEN** the portfolio contains positive securities, an account cash balance and a zero position
 - **THEN** only positive securities enter the denominator, and the view labels the account-cash exclusion.
 
 #### Scenario: Negative position
-- **WHEN** the selection includes a negative position
-- **THEN** the view identifies the excluded unsupported position and does not claim complete coverage of the entire selection.
+- **WHEN** a held position is negative
+- **THEN** the view identifies the excluded unsupported position and does not claim complete coverage of the entire portfolio.
+
+#### Scenario: Empty portfolio
+- **WHEN** the portfolio has no current holding
+- **THEN** the view states that there is no holding and shows no invented coverage categories.
 
 ### Requirement: Missing valuation visibility
 Missing valuation or currency conversion SHALL make the analysis explicitly incomplete. The system SHALL NOT substitute zero or show a whole-selection coverage percentage when its denominator cannot be established.
@@ -44,11 +52,22 @@ Unavailable or unusable compositions SHALL leave the entire affected fund unreso
 - **THEN** resolved company exposure is 80% and unresolved exposure is 20% of the full securities denominator.
 
 ### Requirement: Separate coverage categories
-The view SHALL reconcile selected value across verified company contributions, identified equities with unverified company grouping, validated cash/other assets and unresolved portions. Unknown asset types SHALL remain unresolved. Coverage and composition freshness SHALL be reported separately; rounding SHALL NOT turn a nonzero unresolved remainder into a complete-coverage claim.
+The view SHALL reconcile portfolio value across verified company contributions, identified equities with unverified company grouping, validated cash/other assets, unverified provider positions and unresolved portions. Unknown asset types SHALL remain unresolved. Coverage and composition freshness SHALL be reported separately; rounding SHALL NOT turn a nonzero unresolved remainder into a complete-coverage claim.
 
 #### Scenario: Fund cash and ungrouped shares
 - **WHEN** a fund contains verified cash and an identified equity whose company grouping is unknown
 - **THEN** cash remains cash/other assets, the equity remains ungrouped, and neither is reported as fully grouped company exposure.
+
+### Requirement: Unverified provider positions
+A composition whose weights are arithmetically usable but whose allocation semantics are not validated SHALL be displayable in a separate unverified category. Each such position SHALL be listed with its weight-derived value, its fund path and an explicit note, and SHALL keep coverage partial. It SHALL NOT be aggregated into company exposure, SHALL NOT be counted as validated coverage and SHALL NOT be traversed recursively.
+
+#### Scenario: Provider weights without verified semantics
+- **WHEN** a held fund returns nonnegative weights that sum to less than or equal to 100% while denominator and exposure basis remain unverified
+- **THEN** the affected values appear as unverified provider positions with a visible notice, the remaining value stays unresolved, and the result is labelled partial coverage.
+
+#### Scenario: Artificially invalid weights
+- **WHEN** an unverified provider answer contains a missing, malformed, negative or overfull weight
+- **THEN** the entire affected fund value remains unresolved instead of being partially displayed.
 
 ### Requirement: Bounded nested look-through
 Nested funds SHALL be decomposed only with usable compositions. Cycles and branches beyond eight composition edges SHALL stop at the affected branch and preserve its value as unresolved. Repeated legitimate paths SHALL remain distinct contributions before company aggregation.

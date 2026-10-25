@@ -583,3 +583,59 @@ the 100% objective and all publication restrictions remain unchanged.
   look-through suite 54 tests green with 0 Checkstyle violations.
 - Still open: the interactive 5.2/5.4 check with a rebuilt app, and the actual
   provider decomposition of a fund (task 1.3 evidence gate).
+
+## 2026-10-25: whole-portfolio scope and unverified display
+
+The first integrated build showed a 100 percent unresolved view. Two causes were
+corrected together; the strict path and the task 1.3 evidence gate are unchanged.
+
+- Scope: `HeldSecurities` returns every security with a nonzero net position
+  across all client portfolios, netting purchases and sales and ignoring
+  transactions after the valuation date. `PortfolioLensCompositionService` uses
+  it instead of `SelectionService`, so no prior selection is needed. An empty
+  portfolio shows an explicit empty state instead of zero categories.
+- Unverified display: `CompositionValidator.validateArithmetic` accepts
+  nonnegative weights up to 100 percent without allocation semantics.
+  `CompositionRefreshCoordinator` keeps such a source separately from validated
+  data, never enriches or persists it, and does not set a retry backoff.
+  `LookThroughEngine` expands it exactly one level into
+  `Category.UNVERIFIED_HOLDING` rows; company aggregation and nested traversal
+  are not used for it. Shortfalls stay unresolved and arithmetic-invalid
+  sources leave the whole fund unresolved.
+- Fund identity: `InstrumentEvidence.fundFromComposition` records the provider's
+  own holdings answer as the fund classification. A composition is therefore
+  sufficient evidence that the instrument is a fund; it says nothing about the
+  allocation semantics.
+- Presentation: the unverified category lists each position with fund path,
+  note, value and share; the view shows a partial-coverage notice. Direct
+  unresolved holdings are listed per instrument with a reason instead of only
+  as an anonymous aggregate. Coverage stays partial.
+- Documentation and labels: `docs/portfolio-lens.md` describes the whole-
+  portfolio scope, the unverified category and the remaining limits. 13 new and
+  4 changed labels were added in all 18 locale files and normalized with
+  `portfolio-build-tools/sort-messages.sh`; the files stay pure ASCII with
+  unicode escapes.
+
+PP commit: `8898760a1` (`feat: show unverified fund positions`). Nothing was
+pushed.
+
+Verification:
+
+- Focused core: `LookThroughEngineTest` 16, `CompositionValidatorTest` 16,
+  `CompositionRefreshCoordinatorTest` 19, `HeldSecuritiesTest` 4; all green.
+  Two pre-existing tests that expected unverified semantics to trigger a retry
+  backoff were updated to the new display semantics.
+- `scripts/dev.sh test`: 5,037 tests, zero failures/errors, one skipped;
+  Checkstyle passed with zero violations.
+- Focused UI reactor with REST and bootstrap bundles: 57 tests, zero
+  failures/errors; Checkstyle passed. New coverage includes the unverified
+  category and empty state in the presenter, and the coordinator retaining an
+  unverified source for display.
+- `git diff --check` passed before the commit. The diff contains no real
+  identifiers, amounts or credentials.
+- Task 7.4 (isolated-app confirmation) remains open; the app is rebuilt next.
+
+The provider evidence record is extended in `provider-gates.md`: 1266 rows
+summing to 100 percent, `assetType` null throughout, 15 rows without identifier,
+no holdings-effective date, and a row-value/AUM mismatch. A validated
+decomposition is still not achieved.

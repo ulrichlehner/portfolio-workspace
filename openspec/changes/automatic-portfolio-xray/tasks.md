@@ -15,7 +15,7 @@ Unchecked boxes describe work remaining after the completed milestones. Task 1.2
 
 - [x] 1.1 Recheck workspace and upstream AGENTS.md, CLAUDE.md, CONTRIBUTING.md, applicable path rules and target bundle formatting settings; record an implementation checklist confirming Docker-only builds, no unrelated formatting, core/UI boundaries and focused upstream increments.
 - [x] 1.2 Record the user-confirmed development-only assumption of Eulerpool runtime/display and user-key adapter distribution permission, without claiming verified rights. Move actual verification to the task 6.3 pre-publish checklist. Keep real-data disk persistence disabled until permission and retention are verified; local development uses session-only data. Provider contact needs separate explicit authorization.
-- [ ] 1.3 Establish Eulerpool NAV denominator, completeness and exposure-basis evidence for at least one independent public physical-fund example; document issuer comparison, classification and company-mapping evidence and remaining gaps. Verify a useful validated decomposition, not merely endpoint success or a 100% sum; keep unsupported funds unresolved.
+- [ ] 1.3 Establish Eulerpool NAV denominator, completeness and exposure-basis evidence for at least one independent public physical-fund example; document issuer comparison, classification and company-mapping evidence and remaining gaps. Verify a useful validated decomposition, not merely endpoint success or a 100% sum; keep unsupported funds unvalidated. Recorded on 2026-10-25: a public UCITS fund returned 1266 rows summing to 100%, `assetType` was null on every row, 15 rows had no identifier, and the row `value` sum differed from the reported fund AUM. The provider exposes no holdings-effective date and no per-constituent classification. A validated decomposition therefore remains unachieved; arithmetic-usable provider weights are displayed only as unverified positions (task 7.2), never as validated coverage.
 
 ## 2. Composition foundations
 
@@ -41,7 +41,7 @@ Unchecked boxes describe work remaining after the completed milestones. Task 1.2
 ## 5. Reporting UI
 
 - [x] 5.1 Add the Portfolio Lens view under the existing PP namespace using the lookthrough internal domain term with company/direct/indirect/total columns, source expansion and clearly labelled denominator; verify a synthetic portfolio shows overlaps, cash/other, ungrouped and unresolved categories and never labels rounded residuals complete. Follow existing view and image-registration conventions; verify the feature name is externalized and existing application/bundle identifiers are unchanged.
-- [ ] 5.2 Connect cancellable background jobs and data-status UI for provenance, missing dates, stale data, storage mode/restart limitations, excluded positions and provider failures; verify responsive refresh/cancel behaviour, no requests on redraw and no required upload or mapping flow in an isolated app.
+- [ ] 5.2 Connect cancellable background jobs and data-status UI for provenance, missing dates, stale data, storage mode/restart limitations, excluded positions, unverified provider positions and provider failures; verify responsive refresh/cancel behaviour, no requests on redraw and no required upload or mapping flow in an isolated app. The view must open on the complete portfolio without a prior selection and show an explicit empty state when there is no holding.
 - [x] 5.3 Externalize and translate new UI labels according to CONTRIBUTING.md, including setup, limitations and missing-date states; verify resource keys and translations and build changed UI bundles in Docker via scripts/dev.sh app. Check any icons against CC0, iconmonstr, SVG sizing and Images registration rules.
 - [ ] 5.4 Document current-value scope, credential setup, refresh, per-provider persistence opt-out/policy enforcement, session-only restart/offline limitations, partial coverage and local data removal; verify each workflow against the isolated app and preserve the full-coverage objective.
 
@@ -52,6 +52,18 @@ Unchecked boxes describe work remaining after the completed milestones. Task 1.2
 - [ ] 6.3 Complete the pre-publish checklist before publishing the adapter: verify Eulerpool runtime/personal display, user-key adapter source/binary distribution, applicable attribution and other obligations, and separately optional persistence/retention for the applicable plan using authoritative terms or an authorized provider response. Record source, date and pass/fail/unknown per permission; development assumptions do not pass this checklist. Keep real-data persistence disabled unless permitted with verified retention. Verify the task 1.3 public physical-fund acceptance evidence and produce a pass/fail acceptance record distinguishing validated coverage from freshness. Private portfolio checks remain local and never become public fixtures or artifacts. Provider contact requires separate explicit authorization.
 - [ ] 6.4 Review gaps G1-G6 in design.md and any newly discovered gaps; deliver linked follow-up backlog records for unresolved items with evidence, remedy and closure criteria. Verify the durable-spec synchronization will retain the 100% objective and that partial delivery is not described as objective completion.
 - [ ] 6.5 Review the complete diff for secrets and real portfolio data and prepare focused upstream increments from upstream/master under workspace contribution rules; verify specs remain outside portfolio/, each increment includes its tests, and required checks pass before any separately authorized publishing. Create focused Conventional Commits for completed workspace tooling and upstream increments after checks and privacy review; record commit references. Push and open PRs when authorized, recording any outstanding publishing steps.
+
+## 7. Whole-portfolio scope and unverified display revision
+
+The user rejected the selection-based scope: Portfolio Lens is the x-ray of the
+complete portfolio. The earlier design made the strict provider gate reject every
+real fund, so the view showed no usable result. These tasks correct that while
+keeping validated coverage separate.
+
+- [x] 7.1 Replace the selection scope with every security that has a nonzero net position across the client's portfolios, without a prior selection; verify cross-portfolio netting, sold positions, future-dated transactions, client order and the empty-portfolio state.
+- [x] 7.2 Add an arithmetic-only composition path that accepts nonnegative weights up to 100% without verified semantics, displays them as unverified provider positions with fund path, note and partial coverage, never aggregates them into company exposure and never traverses them recursively; verify shortfall, overfull, negative and missing weights with synthetic inputs.
+- [x] 7.3 Update the user documentation, capability specs and task 1.3 record so a validated decomposition is not claimed and the unverified category is described as display-only; translate changed and new labels into all supported languages.
+- [ ] 7.4 Rebuild the isolated macOS app and have the user confirm that opening Portfolio Lens shows the complete portfolio with visible unverified fund positions and an explicit partial-coverage notice. Record the outcome; keep tasks 5.2 and 5.4 open until the interactive checks pass.
 
 ## Workflow follow-up
 

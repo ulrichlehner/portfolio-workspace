@@ -128,6 +128,39 @@ classification/company mappings. No new fund-level API comparison was completed
 in this review. Task 1.3 stays unchecked; no fund is newly certified as useful
 validated decomposition. Missing evidence remains in design gaps G1–G3.
 
+### Measured evidence added 2026-10-25
+
+A public accumulating UCITS equity fund was requested with an individual key.
+This is a read-only check of one public identifier, not a portfolio-derived test:
+
+- `/api/1/etf/holdings/{isin}` returned 1266 rows whose `percent` values summed
+  to 100.0. `assetType` was null on every row, 15 rows carried no ISIN, and
+  `share` summed to a different magnitude than `value`. The summed row `value`
+  exceeded the profile `aum` by about three percent, so the rows are not a proven
+  fraction of total fund NAV.
+- `/api/1/etf/profile/{isin}` returned `assetClass` ("Equity"), `aum`, `nav`,
+  `currency`, `isLeveraged`, `isInverse`, `trackingIndex`, `etfCompany`,
+  `domicile`, `updated_at` and `tickers`. It supplies fund-level metadata and a
+  fund-versus-non-fund signal, but no holdings-effective date and no constituent
+  classification.
+- `/api/1/equity/search?q={isin}` returned `name`, `isin`, `ticker`, `type`
+  (`etf` for the fund, `stock` for a control equity), `currency`. It classifies
+  an instrument, not its constituents.
+- Response headers showed a very high provider limit for this account
+  (`x-ratelimit-limit: 100000`, `x-ratelimit-remaining: 99996`). This is an
+  observation, not an entitlement; the application budget stays a conservative
+  placeholder.
+
+Consequences recorded for the implementation:
+
+- The provider cannot certify denominator, completeness or exposure basis through
+  its API. Task 1.3 cannot be closed by endpoint evidence alone.
+- Per-constituent company identity would require one lookup per row, which is
+  neither budget-feasible nor evidence of a company mapping. It is not attempted.
+- Weights may still be shown as unverified positions when they are arithmetically
+  usable. That display is explicitly not validated coverage and keeps the
+  coverage status partial (task 7.2).
+
 Pause only work requiring an unpassed permission or data-quality gate. Obtain
 runtime/display/distribution permission and a dated public physical-fund
 comparison covering NAV, supported exposure, classification and company identity.

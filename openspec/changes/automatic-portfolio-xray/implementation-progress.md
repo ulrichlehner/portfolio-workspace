@@ -719,3 +719,20 @@ UI look-through suite 57 tests. Checkstyle zero violations.
 Open: the Eulerpool preference page is functional but not structured like the
 other API-key pages (task 8.5, low priority). The user confirms the full x-ray in
 the isolated app (task 8.6).
+
+## 2026-10-25: reconcile the accepted rounding excess
+
+The first live pass with the rounding tolerance showed the x-ray and an
+Internal Error (`IllegalArgumentException` in `LookThroughResult`). The accepted
+overfull weights expanded to a hair more value than the fund position, so the
+exact reconciliation failed on every recalculation.
+
+`CompositionValidator` now removes the accepted excess proportionally (at most
+one millionth) and puts the exact residual on the largest row, so the validated
+weights sum to exactly one. Source rows stay unchanged, the shortfall is zero and
+the decomposition reconciles with the fund value. Genuine overfull data is still
+rejected and never rescaled.
+
+PP commit: `27439e406` (`fix: reconcile accepted rounding excess`).
+Verification: validator 17, engine 17, UI 57; Checkstyle zero violations.
+The spec and design record the proportional correction instead of "no scaling".

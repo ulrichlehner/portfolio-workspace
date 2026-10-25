@@ -902,3 +902,78 @@ handling economic overlays and company grouping beyond ISIN remain unfinished;
 the historical weight check is not falsely described as integrated full economic
 coverage. The new evidence and concrete next gaps are recorded in provider-gates.md
 and coverage-follow-ups.md. No new model delegation was used for this verification.
+
+## 2026-10-25: translation handoff, settings polish and local review fixes
+
+The translation subagent stopped responding twice and was cancelled by the user
+after the TUI interrupt binding (`ctrl+d` in the composer's subagent list) was
+explained. Its session produced no usable file changes, so the orchestrator
+performed the translations directly in one pass over all 19 bundles.
+
+- Six changed and two added labels are present in every locale:
+  `LookThroughCategoryUnresolved` ("Not yet decomposed"), the four new
+  decomposition reasons (missing composition, unusable composition, weight
+  shortfall, stopped traversal), `LookThroughStatusColumnFund` ("Instrument"),
+  `PrefEulerpoolAPIKeyLink` and `PrefEulerpoolKeyNotDisplayed`. The English
+  `PrefEulerpoolDescription` again states that existing keys are never displayed,
+  matching the actual page behaviour.
+- Files were normalized with the repository's own
+  `portfolio-build-tools` writer, so they stay pure ASCII with `\uXXXX` escapes,
+  canonical spacing and sorted keys.
+- A Docker resource check asserts ASCII encoding, absence of duplicate keys,
+  presence and non-emptiness of every required key in all 19 files, and matching
+  `Messages.java` fields. It reports `Validated 19 bundles`.
+- Java language server artifacts are not part of this work. The generated
+  `filteredResources` blocks in every tracked `.project` file were restored with
+  `git restore`; a follow-up `git status` shows no modified `.project` file.
+
+The Eulerpool preference page now offers a key link, a masked active-key
+placeholder that never loads the stored secret, and a status hint only while a
+key is active. Task 8.5 is complete. The navigation entry uses the same
+icon-free presentation as its sibling report entries, and the data-status column
+is labelled Instrument instead of Fund.
+
+Local review corrections in this pass: provider classification evidence carries
+only the matched primary identifier so two funds reporting the same ISIN with
+different ticker suffixes no longer produce conflicting alias assertions; the
+search path requires an exact primary identifier and never substitutes a
+different ISIN; the equity-profile fallback requires the returned ISIN to match;
+sanitized authentication/entitlement/rate-limit results stop the request chain;
+session classification is keyed per account and ISIN; and reserved enrichment
+permits are rechecked against suspension before a queued request executes.
+
+Final verification for this milestone (all after the last code change):
+
+- Core suite in Docker: 5053 tests, zero failures/errors, one skipped;
+  Checkstyle zero violations.
+- Focused UI reactor with REST and bootstrap bundles: 65 tests, zero
+  failures/errors; Checkstyle zero violations.
+- `scripts/dev.sh app`: BUILD SUCCESS in 3:26, macOS ARM64 app with bundled
+  runtime. The manifest records revision `5153f7fca`, dirty state, source
+  fingerprint and artifact digest. Packaging skips tests; the counts above come
+  from separate runs. The artifact was built before the commit that carries the
+  same working-tree content, so the recorded dirty state is expected.
+- Resource validation over 19 bundles plus `Messages.java` passed; the files were
+  normalized by `portfolio-build-tools`. `Messages.java` field order now mirrors
+  the sorted properties.
+- No modified `.project` file remained before the commit or after the build.
+- Privacy review of the complete diff found no retained credential, private
+  configuration value, scratch payload, portfolio data or provider fixture.
+
+PP commit `7ad3b999b` (`fix: harden issuer classification and progress`) and the
+earlier `5153f7fca` notice are pushed to the development fork only. No upstream
+PR, binary release or provider contact was performed.
+
+Remaining open work, deliberately not marked complete:
+
+- Task 1.3: the historical weight and classification evidence is corroborated,
+  but the app does not apply issuer evidence and economic overlays are missing.
+- Task 5.2: the isolated app check for cancel/refresh behaviour is still pending.
+  Native UI automation is unavailable on this machine, so this was not inferred
+  from headless tests.
+- Task 5.4: documentation is updated, but the manual workflow re-check is pending.
+- Task 6.2: the synthetic end-to-end matrix in a managed launch is pending.
+- Task 6.3: permissions and the publication checklist remain unverified; only the
+  explicitly authorized experimental source fork exception applies.
+- Task 6.5: publication preparation is done for this increment, but no official
+  upstream publishing is authorized or ready.

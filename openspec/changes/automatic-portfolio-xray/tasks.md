@@ -2,6 +2,13 @@
 
 Unchecked boxes describe work remaining after the completed milestones. Task 1.2 records the confirmed development-only permission assumption; implementation and local development can proceed. Actual permission verification is required by the task 6.3 pre-publish checklist. Real provider data stays session-only until persistence permission and retention are verified. Task 1.3 gates validated exposure claims. Stop only the affected work when a gate fails. Do not silently substitute a paid plan or another provider.
 
+Publication clarification confirmed 2026-10-25: experimental source-only pushes to
+the user's development fork are authorized with an explicit notice of unverified
+permissions/data quality, no provider payloads or credentials and no public binaries.
+The task 6.3 permission checklist still gates official upstream integration and
+binary releases. A notice does not establish rights or transfer legal responsibility.
+Task 1.3 remains an active independent data-validation obligation.
+
 ## 0. Local macOS testing foundation
 
 - [x] 0.1 Create a workspace tooling branch following the generic branch convention and keep PP implementation on feature/automatic-portfolio-xray (or focused scope-suffixed branches) from upstream/master; verify repository, base and branch before editing. Record that workspace tooling never goes into upstream PP.
@@ -16,6 +23,16 @@ Unchecked boxes describe work remaining after the completed milestones. Task 1.2
 - [x] 1.1 Recheck workspace and upstream AGENTS.md, CLAUDE.md, CONTRIBUTING.md, applicable path rules and target bundle formatting settings; record an implementation checklist confirming Docker-only builds, no unrelated formatting, core/UI boundaries and focused upstream increments.
 - [x] 1.2 Record the user-confirmed development-only assumption of Eulerpool runtime/display and user-key adapter distribution permission, without claiming verified rights. Move actual verification to the task 6.3 pre-publish checklist. Keep real-data disk persistence disabled until permission and retention are verified; local development uses session-only data. Provider contact needs separate explicit authorization.
 - [ ] 1.3 Establish Eulerpool NAV denominator, completeness and exposure-basis evidence for at least one independent public physical-fund example; document issuer comparison, classification and company-mapping evidence and remaining gaps. Verify a useful validated decomposition, not merely endpoint success or a 100% sum; keep unsupported funds unvalidated. Recorded on 2026-10-25: a public UCITS fund returned 1266 rows summing to 100%, `assetType` was null on every row, 15 rows had no identifier, and the row `value` sum differed from the reported fund AUM. The provider exposes no holdings-effective date and no per-constituent classification. A validated decomposition therefore remains unachieved; arithmetic-usable provider weights are displayed only as unverified positions (task 7.2), never as validated coverage.
+
+Task 1.3 evidence update, 2026-10-25: independent issuer JSON now corroborates
+all 1352 identified rows across two complete public samples by ISIN and raw weight
+at the issuer's 22 Oct effective date. Nine synthetic comparison tests and the
+offline public-sample acceptance checks pass in Docker. Issuer classifications
+are available; the app does not yet apply them. Five omitted positive-notional
+futures across the two sources are specifically identified. Remaining work is
+supported decomposition/integration and economic/company-grouping limits, not
+asking the user to validate the weights. The earlier row-value/AUM discrepancy
+alone is not treated as evidence of invalid weights.
 
 ## 2. Composition foundations
 
@@ -49,7 +66,7 @@ Unchecked boxes describe work remaining after the completed milestones. Task 1.2
 
 - [x] 6.1 Run scripts/dev.sh test for core tests and Checkstyle and scripts/dev.sh app for integrated UI compilation; record results and review changed code against bundle formatting/contribution rules. Do not require live credentials in ordinary tests.
 - [ ] 6.2 Use scripts/dev.sh run-app with synthetic portfolios/providers to verify mixed coverage, identical analysis in both stores, offline retained-data fallback, session-only restart/failed retrieval, per-provider opt-out and policy changes during refresh, quota/auth failures, cache reset, feature removal and reopening without X-ray. Confirm portfolio integrity, then quit and run scripts/dev.sh clean.
-- [ ] 6.3 Complete the pre-publish checklist before publishing the adapter: verify Eulerpool runtime/personal display, user-key adapter source/binary distribution, applicable attribution and other obligations, and separately optional persistence/retention for the applicable plan using authoritative terms or an authorized provider response. Record source, date and pass/fail/unknown per permission; development assumptions do not pass this checklist. Keep real-data persistence disabled unless permitted with verified retention. Verify the task 1.3 public physical-fund acceptance evidence and produce a pass/fail acceptance record distinguishing validated coverage from freshness. Private portfolio checks remain local and never become public fixtures or artifacts. Provider contact requires separate explicit authorization.
+- [ ] 6.3 Complete the permission and data-quality checklist before official upstream integration or binary release: verify Eulerpool runtime/personal display, user-key adapter source/binary distribution, applicable attribution and other obligations, and separately optional persistence/retention for the applicable plan using authoritative terms or an authorized provider response. Record source, date and pass/fail/unknown per permission; development assumptions and the authorized experimental source-fork notice do not pass this checklist. Keep real-data persistence disabled unless permitted with verified retention. Verify the task 1.3 public physical-fund acceptance evidence and produce a pass/fail acceptance record distinguishing validated coverage from freshness. Private portfolio checks remain local and never become public fixtures or artifacts. Provider contact requires separate explicit authorization.
 - [x] 6.4 Review gaps G1-G6 in design.md and any newly discovered gaps; deliver linked follow-up backlog records for unresolved items with evidence, remedy and closure criteria. Verify the durable-spec synchronization will retain the 100% objective and that partial delivery is not described as objective completion.
 - [ ] 6.5 Review the complete diff for secrets and real portfolio data and prepare focused upstream increments from upstream/master under workspace contribution rules; verify specs remain outside portfolio/, each increment includes its tests, and required checks pass before any separately authorized publishing. Create focused Conventional Commits for completed workspace tooling and upstream increments after checks and privacy review; record commit references. Push and open PRs when authorized, recording any outstanding publishing steps.
 

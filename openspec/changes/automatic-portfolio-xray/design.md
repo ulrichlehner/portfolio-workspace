@@ -154,6 +154,17 @@ Prices and entitlements are a dated research snapshot, not a purchase recommenda
 
 ### Eulerpool: measured evidence
 
+Latest independent verification on 2026-10-25: the official issuer JSON contains
+ISINs and asset classes absent from the convenient CSV. For the complete issuer
+lists effective 22 Oct 2026, all 1251 identified World rows and 101 NASDAQ rows
+match the independent provider samples within raw rounding. This corroborates
+historical holdings weights and supplies authoritative classification evidence.
+The provider omits zero-market-value futures with positive notional; economic
+coverage is therefore not complete. Naive row-value/profile-AUM comparisons are
+not invalidity evidence without matching currencies, fund/share-class scope and
+dates. The production pipeline does not yet apply the issuer corroboration.
+See provider-gates.md for exact counts, source contract, tests and remaining work.
+
 Authenticated read-only requests succeeded on a free account. Evaluated fund responses were nonempty, contained substantially more than ten constituents for broad funds, and included numeric weights totaling approximately 100%. This demonstrates usable access, not proven completeness or coverage of all funds. Portfolio-derived identifiers and per-fund results are intentionally absent from this public record.
 
 Observed limitations: assetType was null throughout the evaluated responses; some equities lacked ISINs; two ticker-based equity-profile enrichment attempts returned errors; duplicate identifiers and negative weights occurred. Such records need deliberate handling, not removal or naive deduplication.
@@ -179,6 +190,19 @@ Use budget-aware scheduling, bounded retries, backoff and cached identities. Per
 Leeway's [analysis-plan page](https://leeway.tech/payment/plans?data=api) distinguishes web-app plans without API access from API packages. Its [general API page](https://leeway.tech/data-api) contains inconsistent free-allowance wording. Verify actual free-account entitlements and quota decrement rather than assuming every marketing limit applies. The accessible [terms PDF](https://leeway.tech/assets/AGB.pdf) is headed for business customers; establish which terms govern individual API use, local display and caching.
 
 ### Remaining blockers and their scope
+
+**Controlling publication clarification, confirmed 2026-10-25:** The user permits
+source-only pushes to their public development fork under the explicit development
+risk assumption, with a prominent experimental-use notice. This exception supersedes
+the blanket source-publication restriction in the historical gate discussion below.
+No provider data or credentials may be distributed. The notice must say this is
+not an official PP release, that permissions and data completeness remain unverified,
+and that users must independently ensure compliance with their provider terms and
+account entitlements. It does not grant rights or claim a legally effective transfer
+of responsibility. Official upstream integration and binary releases remain gated by
+task 6.3; the user has not authorized an upstream PR or public binary release.
+Real-data persistence remains disabled until permission and retention are verified.
+Independent data-validation work continues; publication does not pass task 1.3.
 
 Confirmed development decision on 2026-10-23: assume runtime/display and
 user-key adapter distribution permission for implementation and local development.

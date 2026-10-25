@@ -70,6 +70,11 @@ Remaining provider rows without ISIN have exact cash/collateral name candidates,
 not verified identifier mappings. Source values and profile AUM cannot be compared
 naively across currencies, share-class/fund scope and dates.
 
+The issuer product pages explicitly identify both products as Physical, with
+Optimised and Replicated methodology respectively. Historical `keyFundFacts`
+requests are not supported: a dated request is rejected with HTTP 400. The
+current net-asset facts are therefore not substituted for the holdings date.
+
 Detailed evidence and remaining acceptance criteria are in
 `openspec/changes/automatic-portfolio-xray/provider-gates.md`. Historical agreement
 does not validate every future response, a company graph or the omitted economic

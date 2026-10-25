@@ -845,3 +845,60 @@ unpassed, and the current code milestone is still awaiting translations and
 packaging. The translation session has not supplied a usable handoff; no crash
 or active progress can be established from the available status tools. Avoid
 parallel edits to its resource files until the session is stopped or completes.
+
+## 2026-10-25: source-fork exception and complete issuer-data comparison
+
+The user confirmed the proposed publication scope: experimental source-only
+development-fork pushes are allowed with a clear notice, despite unverified
+provider rights. This does not establish rights or transfer legal responsibility.
+Official upstream integration and public binary releases still require their
+separate review; persistence stays disabled. Proposal/design/spec/tasks,
+provider-gates.md and AGENTS.md now distinguish these scopes.
+
+PP commit `5153f7fca` adds the prominent experimental notice to README.md and was
+pushed to `origin/feature/automatic-portfolio-xray`. This publishes the previously
+accepted `27439e406` source baseline plus the notice, not the current uncommitted
+review fixes. Those remain local pending translation handoff/resource validation
+and packaging. The complete outgoing source range was privacy-reviewed against
+retained credentials/private configuration and checked for scratch, OpenSpec,
+generated build and `.project` artifacts. None was included. New local Java
+language-server `.project` changes were excluded and not discarded. No upstream
+PR, public binary release or provider contact was performed.
+
+The user assigned independent data verification to the agent rather than asking
+the user to validate weights. The issuer's actual product page/client request
+contract was inspected. Unlike the simple CSV, its public dated holdings JSON
+includes constituent ISINs, classifications, raw weights, market and notional
+values. At issuer effective date 22 Oct 2026:
+
+- World: all 1251 identified provider rows match unique issuer ISINs, and every
+  paired weight agrees within combined raw rounding tolerance; maximum difference
+  is 0.000005 percentage points. These are all 1250 equities plus a money-market
+  holding.
+- NASDAQ: all 101 identified rows match; every weight agrees within tolerance;
+  maximum difference is 0.00000495 percentage points.
+- No duplicate ISIN groups occur. The remaining 15/five provider rows have exact
+  cash/collateral name candidates, not new verified identifier assertions.
+- Four World futures and one NASDAQ future with zero market value but positive
+  notional are omitted from the provider answer. An extra World zero-balance cash
+  row explains the remaining row-count difference. Missing economic overlay is
+  now a concrete diagnosed gap, not a speculative objection.
+- Both issuer pages explicitly describe Physical structure. They distinguish
+  fund/share-class net assets; current facts and historical holdings dates are not
+  conflated. Dated keyFundFacts requests are unsupported (HTTP 400). A common
+  market-value scale factor and the profile's GBP currency expose why the former
+  naive AUM comparison was not valid evidence against the weights.
+
+Workspace tooling milestone `500f6c8` adds the offline comparison utility,
+synthetic tests and reproduction documentation. All 48 tooling tests passed in
+Docker, including nine new comparison regressions; the nine were rerun after
+review. A separate offline actual-data acceptance run asserts all 1352 identified
+rows match within rounding and detects the omitted notional exposures. Full
+payloads/reports remain in ignored scratch; none is a distributed fixture.
+Strict OpenSpec validation and diff whitespace checks pass.
+
+This materially advances task 1.3. Applying the issuer evidence in the app,
+handling economic overlays and company grouping beyond ISIN remain unfinished;
+the historical weight check is not falsely described as integrated full economic
+coverage. The new evidence and concrete next gaps are recorded in provider-gates.md
+and coverage-follow-ups.md. No new model delegation was used for this verification.

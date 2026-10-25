@@ -12,18 +12,22 @@ The system SHALL retrieve compositions automatically after individual credential
 - **THEN** the system schedules eligible retrieval and reports its status without requesting a holdings file.
 
 ### Requirement: Licensed local use
-Provider release SHALL require verified permission for desktop display and adapter distribution with user-supplied keys. Persisting real provider data SHALL require verified permission and an applicable retention policy. Unverified or prohibited persistence SHALL select session-only operation if runtime use is permitted. Incompatible runtime use SHALL require product review, without automatic subscription purchase.
+Official upstream integration and binary releases SHALL require verified desktop-use and adapter-distribution permissions. An explicitly authorized experimental source-only development fork MAY be published with a notice of unverified rights and data quality; the notice SHALL NOT claim to grant rights or transfer legal responsibility. Real-data persistence SHALL require verified permission and retention. Unknown persistence SHALL remain disabled.
 
 #### Scenario: Free cache permission unresolved
 - **WHEN** API access succeeds but free local caching permission remains unverified
-- **THEN** persistence remains disabled, session-only operation is available if runtime use is permitted, and release still requires the separate display/distribution and data-quality gates.
+- **THEN** persistence remains disabled, session-only operation is available under the recorded development assumption, and official integration or binary release still requires the separate permission and data-quality gates.
 
 ### Requirement: Development permission assumption
 Implementation and local development MAY proceed under an explicitly recorded development-only assumption of runtime/display and adapter distribution permission. That assumption SHALL NOT establish verified permission, enable real-data disk persistence or satisfy the pre-publish permission checklist.
 
 #### Scenario: Development permission assumed
 - **WHEN** development proceeds under the recorded permission assumption
-- **THEN** real provider data remains session-only until persistence and retention are verified, and publication remains blocked until runtime/display, adapter distribution and applicable attribution obligations are verified.
+- **THEN** real provider data remains session-only until persistence and retention are verified, and official integration or binary release remains blocked until runtime/display, adapter distribution and applicable attribution obligations are verified.
+
+#### Scenario: Authorized experimental source fork
+- **WHEN** the user explicitly authorizes source-only publication of the development fork before provider clarification
+- **THEN** the fork includes an experimental-use notice, distributes no provider payloads or credentials, keeps persistence disabled and leaves permission and data-quality gates open; the notice does not assert that provider rights are verified or responsibility has legally transferred.
 
 ### Requirement: Provider-specific persistence preference
 The system SHALL offer a local persistence preference per provider/account, defaulting on where permitted. Effective persistence SHALL require both user preference and provider policy approval. Policies SHALL distinguish permitted, prohibited and unverified persistence, including retention limits. Restrictions SHALL override the preference without disabling permitted session-only analysis or changing other providers' settings.

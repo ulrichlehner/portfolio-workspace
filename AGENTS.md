@@ -268,6 +268,18 @@ running test copy, and remote downloads need not have equal digests.
 
 ## Portfolio Lens provider gates
 
+Publication-scope update confirmed by the user on 2026-10-25: experimental
+source-only pushes to the user's public PP development fork are authorized with
+a prominent notice that this is not an official PP release, permissions and data
+completeness remain unverified, and users must independently ensure compliance
+with applicable provider terms/account entitlements. This is risk acceptance for
+the development fork, not verified rights or a legally assured transfer of
+responsibility. It supersedes the blanket source-publication gate below only for
+that fork. No provider payloads, credentials or public binaries may be distributed.
+Official upstream integration and binary releases still require task 6.3 review;
+upstream PR authorization is separate. Persistence remains disabled until verified
+permission and retention exist. Task 1.3 data validation must continue independently.
+
 The repository checklist and public Eulerpool permission review are recorded in
 `openspec/changes/automatic-portfolio-xray/provider-gates.md` (2026-10-23).
 Free desktop cache retention and distribution of an adapter using individual

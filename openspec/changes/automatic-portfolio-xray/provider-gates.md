@@ -1,5 +1,23 @@
 # Repository and provider gates
 
+## Current publication scope, confirmed 2026-10-25
+
+The user explicitly permits source-only publication in their development fork
+with an experimental-use notice, despite unresolved provider permissions and
+data quality. This is the user's development-risk decision, not provider approval
+or an assurance that a disclaimer transfers responsibility or grants rights.
+It supersedes the earlier blanket restriction on source-fork pushes below.
+No provider payloads, credentials or public binaries are distributed. Official
+upstream integration and binary releases remain subject to task 6.3 review.
+Real-data disk persistence stays disabled. Task 1.3 data validation continues.
+
+**Latest data finding:** The full dated issuer-API comparison below supersedes the
+earlier CSV-only limitation. All 1352 identified Eulerpool rows in the two public
+examples match official issuer ISINs and raw weights within rounding. Historical
+holdings weights are now corroborated across the complete identified lists, not
+merely their top ten. Missing economic futures exposure and production use of this
+independent evidence remain separate unfinished work.
+
 Checked: 2026-10-23. Section 0 was committed as `1d3d0a9`.
 This record contains public documentation evidence only. No portfolio was opened,
 no authenticated provider request was made, no provider was contacted and no
@@ -215,9 +233,83 @@ or a claim that the provider's terms were independently cleared today.
 | Attribution and other applicable obligations | Unknown | Attribution is mentioned in the licensing summary; the applicable complete obligations have not been established |
 | Optional real-data persistence | Unknown; disabled | No verified Free-plan permission established |
 | Optional real-data retention | Unknown; disabled | No applicable retention period established |
-| Public physical-fund economic-exposure acceptance (1.3) | Fail | Top-ten plausibility passes, but denominator, complete exposure and company mapping are not established |
+| Public physical-fund economic-exposure acceptance (1.3) | Partial evidence; not closed | All 1352 identified historical rows pass issuer ISIN/raw-weight comparison. Production use of issuer evidence, complete economic exposure and corporate grouping remain unfinished |
 | Freshness transparency | Pass for representation, not source freshness | Missing holdings-effective dates remain unknown; retrieval/update dates are not substituted |
-| Publication | Blocked for the PP adapter | Runtime/display/distribution/obligations and data-quality gates are not passed. The user authorized pushing changes on 2026-10-25; this does not establish the missing provider rights |
+| Experimental source-only development fork | Authorized by user with notice | Explicitly confirmed on 2026-10-25; no rights verification, provider payloads, credentials or public binaries |
+| Official upstream integration / binary releases | Blocked | Runtime/display/distribution/obligations and data-quality gates are not passed; the development-fork exception does not establish provider rights |
 
 Provider contact remains unauthorized. Disk caching remains disabled. Further
 local development can continue under the recorded development-only assumption.
+
+### Full ISIN-keyed issuer comparison, 2026-10-25
+
+The product page's own public data endpoint was inspected, not guessed from a
+third-party data vendor. Its `holdings` component supplies a requested effective
+date, parallel ISIN/classification/market-value/notional/weight arrays, and raw
+weights with five decimal places. This corrects the earlier assumption that the
+issuer has no available constituent ISINs: they are absent from the convenient CSV
+but present in the issuer's public JSON.
+
+Authoritative product pages:
+
+- https://www.ishares.com/uk/individual/en/products/251882/ishares-core-msci-world-ucits-etf
+- https://www.ishares.com/uk/individual/en/products/253741/ishares-nasdaq-100-ucits-etf
+
+Observed endpoint:
+`https://www.blackrock.com/varnish-api/uk-retail01-product-data/product-data/api/v2/get-product-data`
+
+The page's `ProductPageAjaxUtils` supplies the query contract. The comparison used
+`appSubType=ISHARES`, `appType=PRODUCT_PAGE`, `component=holdings`, `locale=en_GB`,
+`targetSite=ishares-uk`, `userType=individual`, `excludeContent=true`,
+`includeConfig=true`, `asOfDate=20261022`, and the product IDs above. Returned
+`asOfDate.value` was checked independently; an update timestamp is never used as
+a holdings-effective date.
+
+| Public example, issuer effective 22 Oct 2026 | API rows | Issuer rows | Unique ISIN pairs | Pairs within raw rounding | Matched provider weight | Maximum difference, percentage points |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Core MSCI World UCITS ETF | 1266 | 1271 | 1251 | 1251 | 99.66376718% | 0.00000500 |
+| NASDAQ 100 UCITS ETF USD (Acc) | 106 | 107 | 101 | 101 | 99.95872674% | 0.00000495 |
+
+No duplicate ISIN groups occurred on either side. The World pairs comprise all
+1250 equities plus one money-market holding; all 101 NASDAQ equity rows pair by
+ISIN. The remaining 15 World and five NASDAQ source rows have no ISIN. Each has
+one exact issuer-name candidate classified as cash or collateral. These candidates
+are diagnostics, not new identifier assertions or classifications in the app.
+
+The issuer additionally reports four World futures with zero market value but
+positive aggregate notional of about 0.4263% of the issuer's total market value,
+and one zero-market-value NASDAQ future with positive notional of about 0.0172%.
+The World export also includes an additional zero-balance cash row. These exactly
+explain the row-count differences for the dated comparison. Eulerpool has no
+corresponding futures rows, so the source cannot establish full economic exposure.
+
+The issuer page identifies World methodology as Optimised and NASDAQ as
+Replicated; both explicitly declare `productStructure = Physical`. Both provide
+full-fund and share-class net-asset fields separately. A request for dated
+`keyFundFacts` at 22 Oct is explicitly rejected by the issuer with HTTP 400;
+current 23 Oct net-asset facts are not silently substituted as 22 Oct facts.
+All ISIN-paired market values share the same issuer/provider scale factor,
+approximately 1.3374526876, in both examples. Issuer reporting currency is USD;
+the provider's public World profile is GBP, while individual API rows declare no
+value currency. The earlier naive comparison of row values with profile AUM does
+not prove bad weights: currency, fund/share-class scope and dates must first align.
+It is withdrawn as an invalidity argument. The ISIN/weight comparison is
+dimensionless and is not affected by this currency ambiguity.
+
+Verification tooling is `scripts/compare_fund_holdings.py`, with synthetic tests
+in `scripts/tests/test_fund_comparison.py`. It rejects malformed numbers and
+misaligned arrays, preserves duplicate groups, reports all unmatched rows and
+does not certify names, dates or complete economic exposure. Nine synthetic
+comparison tests and all 48 workspace tooling tests passed in Docker. An offline
+Docker acceptance run against both downloaded public examples asserts that all
+1352 identified source rows pair and agree within combined rounding tolerance
+0.000005005 percentage points, with omitted positive-notional futures detected.
+Raw issuer/provider payloads and detailed reports remain in ignored scratch
+storage; none is distributed as a fixture.
+
+This establishes reproducible historical holdings-weight and instrument-type
+evidence, not a generic promise about later Eulerpool answers or a company graph.
+The app currently does not retrieve or apply this issuer evidence. Task 1.3 still
+requires a supported public decomposition using the corroborated evidence; the
+economic-overlay and company-grouping limits must remain explicit. The complete
+data objective is not replaced with acceptance of an unresolved placeholder.

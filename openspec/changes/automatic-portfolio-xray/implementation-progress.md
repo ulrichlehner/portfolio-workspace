@@ -633,7 +633,13 @@ Verification:
   unverified source for display.
 - `git diff --check` passed before the commit. The diff contains no real
   identifiers, amounts or credentials.
-- Task 7.4 (isolated-app confirmation) remains open; the app is rebuilt next.
+- `scripts/dev.sh app`: BUILD SUCCESS against `8898760a1` (clean), macOS ARM64
+  app with bundled runtime, build time 5:49. The manifest records the revision,
+  source fingerprint and artifact digest; the packaged core jar contains
+  `HeldSecurities` and the updated engine. Tests are not part of packaging; the
+  results above come from separate runs.
+- Task 7.4 (isolated-app confirmation) remains open; the app is launched for
+  the user's check.
 
 The provider evidence record is extended in `provider-gates.md`: 1266 rows
 summing to 100 percent, `assetType` null throughout, 15 rows without identifier,

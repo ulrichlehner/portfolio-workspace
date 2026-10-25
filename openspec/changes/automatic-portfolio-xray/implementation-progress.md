@@ -691,3 +691,31 @@ Remaining: a per-constituent request is issued serially, so the first x-ray of
 a broad fund can take a few minutes; classification results appear progressively
 and are cached for the session. The provider still reports no denominator,
 completeness or holdings date, so task 1.3 stays open and coverage stays partial.
+
+## 2026-10-25: completeness fix and loading feedback
+
+The user reported that Apple appeared only from the MSCI World fund, although it
+is also a NASDAQ 100 constituent. The NASDAQ 100 holdings were fetched but the
+whole fund was rejected: its published weights sum to 100.00000001% because of
+decimal rounding, and the exact overfull check made the snapshot unusable.
+
+- `CompositionValidator` accepts at most one millionth above 100% as a
+  published-weight rounding artefact, keeps every row unchanged and clamps the
+  shortfall at zero. Larger overfull totals remain unusable. Evidence: a public
+  UCITS fund returned 100.00000001%. This is a spec revision, recorded in the
+  fund-compositions spec and the design.
+- The provider reuses one HTTP client with a pooled connection manager instead of
+  creating a client per request, so keep-alive and TLS session reuse speed up the
+  per-constituent classification.
+- The view shows a loading line while a refresh is running, with the number of
+  funds completed. Without it a long classification pass looked stuck. The label
+  is translated into all supported languages.
+
+PP commit: `4b9cf7336` (`fix: accept rounding and show load progress`).
+
+Verification: validator 17 tests, engine 16, coordinator 19, provider 21, held 4;
+UI look-through suite 57 tests. Checkstyle zero violations.
+
+Open: the Eulerpool preference page is functional but not structured like the
+other API-key pages (task 8.5, low priority). The user confirms the full x-ray in
+the isolated app (task 8.6).

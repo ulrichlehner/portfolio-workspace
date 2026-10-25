@@ -88,11 +88,15 @@ Only validated fractions of total fund NAV with a supported exposure basis SHALL
 - **THEN** those rows are eligible for classification and the remaining 20% stays unresolved without normalization.
 
 ### Requirement: Conservative numerical validation
-The system SHALL preserve source rows and use decimal weights without normalization. Nonfinite or malformed weights, totals exceeding 100%, and any negative allocation SHALL make a snapshot unusable for first-version exposure calculation. Legitimate duplicate instrument rows SHALL only be combined after validating their semantics. Positive shortfalls SHALL remain unresolved, regardless of display rounding.
+The system SHALL preserve source rows and use decimal weights without normalization. Nonfinite or malformed weights, totals above 100% beyond a documented provider rounding tolerance, and any negative allocation SHALL make a snapshot unusable for first-version exposure calculation. A tolerance of one millionth above 100% MAY be accepted only as a published-weight rounding artefact, with evidence, without scaling any row and without a negative shortfall; larger overfull totals stay unusable. Legitimate duplicate instrument rows SHALL only be combined after validating their semantics. Positive shortfalls SHALL remain unresolved, regardless of display rounding.
 
 #### Scenario: Signed or overfull response
-- **WHEN** a response contains a negative allocation or a total above 100%
+- **WHEN** a response contains a negative allocation or a total above 100% beyond the rounding tolerance
 - **THEN** the system retains diagnostic source information and leaves the fund unresolved rather than dropping rows or rescaling it.
+
+#### Scenario: Provider rounding excess
+- **WHEN** published weights sum to 100.00000001% because of decimal rounding
+- **THEN** the rows remain eligible for classification, unchanged, with a zero shortfall.
 
 #### Scenario: Legitimate duplicate positions
 - **WHEN** two nonnegative positions represent the same verified instrument within a valid NAV composition

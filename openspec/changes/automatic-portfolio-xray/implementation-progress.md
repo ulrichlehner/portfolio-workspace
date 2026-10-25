@@ -754,3 +754,84 @@ reconciles exactly to the portfolio value.
 Task 8.6 is complete. Task 5.2 remains open only for the explicit cancel-refresh
 check and task 5.4 for the re-read of the documented workflows; the core view,
 loading feedback and the absence of an upload or mapping step were observed live.
+
+## 2026-10-25: unresolved reasons, identity safety and bounded concurrency
+
+The user's latest feedback was that "unresolved" looked like a defect, especially
+when the category contained held ETFs. Review found distinct issues:
+
+- The presenter ignored the contribution's decomposition failure reason and
+  showed classification wording even for a known fund without a composition.
+  It now distinguishes missing/unusable compositions, weight shortfalls and
+  stopped traversal from missing identity/classification. Reasons are visible
+  in a Note column; the category is labelled "Not yet decomposed".
+- An interrupted earlier change treated all identifierless rows as other assets.
+  That change was removed: absent identifiers do not establish cash or collateral.
+- A single nonmatching search hit was previously accepted. Classification now
+  requires an exact primary identifier, with an exact-ISIN equity-profile
+  fallback. Similar tickers with a different ISIN do not establish equivalence.
+- Provider evidence no longer asserts unverified aliases copied from a source
+  row. It carries the matched primary identifier only. This prevents the same
+  ISIN with different fund-specific ticker suffixes from producing conflicting
+  alias evidence. The session classification cache is account/ISIN scoped.
+- Constituent classification uses a separate eight-thread daemon pool. The
+  coordinator admits distinct lookups in source order, preserves duplicate
+  source occurrences, enforces its cap and shared budget, and discards late
+  snapshot updates after cancellation. Queued work rechecks suspension/backoff.
+  The wait checks cancellation without waiting for a blocked transport to finish.
+- Classification transport failures remain uncached and carry sanitized auth,
+  entitlement and Retry-After status. Eulerpool reserves at most three request
+  units per classification, including bounded fallback requests; held-instrument
+  classifications now also require budget admission. Reserved unused units are
+  not refunded. No cold-start speed measurement is claimed yet.
+- The preference page has a key link, clearer structure and masked active-key
+  placeholder without retrieving a secret into the field. The navigation entry
+  follows sibling report entries without its own icon. The status column is
+  labelled Instrument rather than Fund.
+
+The previous Go concurrency delegation exhausted its allowance before producing
+working code. The user authorized ChatGPT-backed continuation, with economical
+usage. Two bounded delegations use medium effort for concurrency and low effort
+for translation. The orchestrator reviews and corrects their actual diffs and
+runs all builds centrally. No paid API fallback or provider contact is used.
+
+Verification in progress:
+
+- Initial complete core run: 5050 tests, zero failures/errors, one skipped,
+  Checkstyle zero violations.
+- Follow-up core run after duplicate/cancellation/backoff fixes: 5052 tests,
+  zero failures/errors, one skipped, Checkstyle zero violations.
+- Final reviewed core, UI reactor, translation checks and packaging are recorded
+  below when complete. Prior results do not establish those pending checks.
+
+The official issuer downloads were re-fetched and compared independently;
+provider-gates.md records the current dated results and corrects the stale
+NASDAQ date in the earlier delegated report. This remains plausibility evidence,
+not validated economic exposure. Task 1.3 and the publication permission gate
+remain open. Task 6.4 is complete with explicit G1-G7 follow-up records in
+coverage-follow-ups.md. Task 7.4's whole-portfolio/partial-display acceptance is
+covered by the previously recorded task 8.6 live check; cancel/workflow acceptance
+remains separate and open. No private scratch data is deleted by this milestone.
+
+Reviewed verification:
+
+- Complete core run after identity-safety fixes: 5053 tests, zero failures/errors,
+  one skipped; Checkstyle zero violations.
+- Coordinator regression rerun after strengthening the queued-auth and overlap
+  assertions: 23 tests, zero failures/errors; Checkstyle passed.
+- Focused UI reactor: 65 tests, zero failures/errors; Checkstyle passed. An initial
+  run found missing policy setup in three newly added test fixtures, corrected
+  before the successful rerun. It was not a production storage defect.
+- Strict OpenSpec validation passed after splitting an overlong numerical rule
+  into requirement/scenarios without changing the numerical contract.
+- Native macOS UI automation is not enabled. No system permissions were changed;
+  the interactive app acceptance remains pending rather than being inferred from
+  the headless tests.
+- Translation completion/resource validation and final app packaging are still
+  pending. No updated app build or measured cold-start speed is claimed yet.
+
+The user authorized pushing changes on 2026-10-25. Workspace planning/progress may
+be pushed after privacy review. PP adapter publication still requires the recorded
+provider gates; push authorization does not establish licensing rights. The user
+also asked whether the translation agent was stuck. A targeted progress request
+was sent to the same low-effort session; no completion report has arrived yet.

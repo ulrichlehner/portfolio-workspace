@@ -53,6 +53,13 @@ apply for code style and conventions. Where they conflict with this file, this f
   Escalate only when complexity, risk, or observed failures justify it, and explain why.
   Reassess this baseline as models and task requirements change; free-model availability
   and quality must be verified per task rather than assumed.
+- Routing update (2026-10-25): the user subsequently authorized OpenCode Go, then
+  ChatGPT-backed models after exhausting the Go allowance. Use the authorized
+  subscription connection, not a paid API fallback. Keep usage economical:
+  handle routine work directly, delegate only bounded independent tasks, prefer
+  low/medium effort unless risk justifies more, and avoid automatic `max` routing
+  or duplicate broad reviews. Remaining subscription quota is not visible to
+  the agent. Pause on exhaustion rather than silently changing billing routes.
 - Apply the same explicit, task-appropriate selection and billing constraints to any
   future authorized LLM/provider. Provider authorization does not authorize paid API
   usage. The orchestrator owns these decisions without requiring user reminders.

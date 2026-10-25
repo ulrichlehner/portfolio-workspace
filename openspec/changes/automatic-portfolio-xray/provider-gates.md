@@ -169,3 +169,55 @@ runtime/display/distribution permission and a dated public physical-fund
 comparison covering NAV, supported exposure, classification and company identity.
 Resolve persistence permission before activating disk storage of real data;
 otherwise use permitted session-only operation under the accepted storage design.
+
+### Independent issuer recheck, 2026-10-25
+
+The orchestrator fetched the official latest-holdings CSVs again rather than
+treating a delegated summary as independently verified evidence:
+
+- [World issuer CSV](https://www.ishares.com/uk/individual/en/products/251882/ishares-core-msci-world-ucits-etf/latest-holdings.csv)
+- [NASDAQ 100 issuer CSV](https://www.ishares.com/uk/individual/en/products/253741/ishares-nasdaq-100-ucits-etf/latest-holdings.csv)
+
+Both exports now state holdings effective **23 Oct 2026**. The previous delegated
+NASDAQ comparison used a 22 Oct export; its maximum difference of 0.0049
+percentage points is not the result against this newly retrieved export.
+
+| Independent public example | API rows | API weight sum | Rows without ISIN | Issuer rows | Largest top-ten weight difference |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Core MSCI World UCITS ETF | 1266 | 99.99999996% | 15 | 1271 | 0.04191706 percentage points |
+| NASDAQ 100 UCITS ETF USD (Acc) | 106 | 100.00000001% | 5 | 108 | 0.10491939 percentage points |
+
+API row update dates are 25 Oct 2026, not an effective holdings date. Comparison
+paired the top ten by exact ticker after removing the API's exchange suffix,
+with a unique issuer row required. The issuer export has no constituent ISIN
+column, so this is a plausibility comparison, not independent ISIN identity
+verification. Issuer weights are rounded to two decimal places. Neither equal
+row dates nor exact source vintages were established.
+
+The World export includes equity, cash, collateral, money-market and futures
+rows. The NASDAQ export includes equity, cash, collateral, FX and futures rows,
+including a futures row with zero market value and positive notional value.
+Row-count differences alone do not identify every omission, but demonstrate why
+weight normalization and top-ten agreement cannot certify economic exposure.
+Task 1.3 remains **not passed**. G1-G6 remedies and closure checks are retained
+in [coverage-follow-ups.md](coverage-follow-ups.md).
+
+### Pre-publish acceptance matrix, 2026-10-25
+
+This is a release decision using the evidence above, not a new permission grant
+or a claim that the provider's terms were independently cleared today.
+
+| Gate | Result | Evidence / outstanding closure |
+| --- | --- | --- |
+| Runtime and personal desktop display | Unknown | Free personal use is supported in principle by the published pricing/licensing summary; applicable desktop-use obligations remain unverified |
+| Adapter source distribution with individual keys | Unknown | No authoritative grant for this distribution model established |
+| Adapter binary distribution with individual keys | Unknown | No authoritative grant for this distribution model established |
+| Attribution and other applicable obligations | Unknown | Attribution is mentioned in the licensing summary; the applicable complete obligations have not been established |
+| Optional real-data persistence | Unknown; disabled | No verified Free-plan permission established |
+| Optional real-data retention | Unknown; disabled | No applicable retention period established |
+| Public physical-fund economic-exposure acceptance (1.3) | Fail | Top-ten plausibility passes, but denominator, complete exposure and company mapping are not established |
+| Freshness transparency | Pass for representation, not source freshness | Missing holdings-effective dates remain unknown; retrieval/update dates are not substituted |
+| Publication | Blocked for the PP adapter | Runtime/display/distribution/obligations and data-quality gates are not passed. The user authorized pushing changes on 2026-10-25; this does not establish the missing provider rights |
+
+Provider contact remains unauthorized. Disk caching remains disabled. Further
+local development can continue under the recorded development-only assumption.

@@ -88,7 +88,7 @@ Only validated fractions of total fund NAV with a supported exposure basis SHALL
 - **THEN** those rows are eligible for classification and the remaining 20% stays unresolved without normalization.
 
 ### Requirement: Conservative numerical validation
-The system SHALL preserve source rows and use decimal weights without normalization. Nonfinite or malformed weights, totals above 100% beyond a documented provider rounding tolerance, and any negative allocation SHALL make a snapshot unusable for first-version exposure calculation. A tolerance of one millionth above 100% MAY be accepted only as a published-weight rounding artefact, with evidence; the accepted excess SHALL be removed by a proportional correction of at most one millionth so the decomposition reconciles exactly, while source rows stay unchanged. Larger overfull totals stay unusable. Legitimate duplicate instrument rows SHALL only be combined after validating their semantics. Positive shortfalls SHALL remain unresolved, regardless of display rounding.
+The system SHALL preserve source rows and use decimal weights without general normalization. Malformed, nonfinite, negative or overfull weights SHALL make a snapshot unusable, except for an evidenced rounding excess of at most one millionth in fractional-weight units. Accepted excess SHALL be removed proportionally with exact reconciliation. Positive shortfalls SHALL remain unresolved. Legitimate duplicate rows SHALL only be combined after validating their semantics.
 
 #### Scenario: Signed or overfull response
 - **WHEN** a response contains a negative allocation or a total above 100% beyond the rounding tolerance
@@ -96,7 +96,11 @@ The system SHALL preserve source rows and use decimal weights without normalizat
 
 #### Scenario: Provider rounding excess
 - **WHEN** published weights sum to 100.00000001% because of decimal rounding
-- **THEN** the rows remain eligible for classification, reconcile exactly to the fund value and keep a zero shortfall.
+- **THEN** the rows remain eligible for classification after a proportional correction within the tolerance, reconcile exactly to the fund value and keep a zero shortfall, while the original source rows remain unchanged.
+
+#### Scenario: Tiny positive shortfall
+- **WHEN** valid nonnegative weights sum to less than 100% by an amount that rounds to zero in the display
+- **THEN** the exact shortfall remains unresolved and is not normalized away or treated as complete coverage.
 
 #### Scenario: Legitimate duplicate positions
 - **WHEN** two nonnegative positions represent the same verified instrument within a valid NAV composition
@@ -109,6 +113,14 @@ The system SHALL attempt automatic classification and identity resolution within
 - **WHEN** permitted automatic resolution cannot establish a constituent's identity or asset type
 - **THEN** its contribution remains unresolved with its source label and reason, without requiring user mapping.
 
+#### Scenario: Search returns another instrument
+- **WHEN** a search returns a single hit or matching ticker with a different primary ISIN
+- **THEN** that hit does not establish identity or classification for the source ISIN.
+
+#### Scenario: The same instrument has different source tickers
+- **WHEN** two funds report the same ISIN with different ticker suffixes
+- **THEN** an exact-ISIN classification is shared within the account without asserting those source tickers are verified aliases, and both original contribution rows remain inspectable.
+
 ### Requirement: Refresh scheduling and quota handling
 Automatic refresh SHALL occur at most once per rolling 24 hours per fund while PP runs. Manual refresh SHALL respect provider quotas and coalesce concurrent requests. Redrawing a view SHALL NOT trigger retrieval. Rate limits SHALL cause backoff, and authentication or entitlement failures SHALL suspend requests until configuration changes.
 
@@ -119,6 +131,14 @@ Automatic refresh SHALL occur at most once per rolling 24 hours per fund while P
 #### Scenario: Application closed
 - **WHEN** PP is not running
 - **THEN** no automatic refresh is performed by this feature.
+
+#### Scenario: Bounded parallel classification
+- **WHEN** constituent classifications run concurrently
+- **THEN** admission respects the shared budget and lookup cap, reserves bounded fallback costs, coalesces duplicate identifiers, preserves source order and rechecks suspension/backoff before queued requests execute.
+
+#### Scenario: Classification failure is not negative evidence
+- **WHEN** classification fails because of transport, authentication, entitlement or rate limiting
+- **THEN** the failure is not cached as a definitive missing classification, relevant backoff/suspension is preserved, and directly held instruments cannot bypass the shared request budget.
 
 ### Requirement: Last valid data and retention
 Failed retrieval or validation SHALL NOT replace an existing usable snapshot with empty or invalid data. Licensed retained data SHALL remain available with visible age and failure status only within permitted retention. Different sources or vintages SHALL NOT be silently blended.

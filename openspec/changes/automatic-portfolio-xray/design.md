@@ -59,6 +59,27 @@ These are combined into an issuer-level x-ray:
 Share classes of one company are not merged into a company graph; the grouping
 key is the security identifier. This is stated in the view and documentation.
 
+### Revision 2026-10-25: classification admission and understandable gaps
+
+Classification uses a separate pool of eight daemon threads while fund admission
+remains serial. The coordinator admits distinct lookups deterministically in
+source order and preserves duplicate contribution occurrences. Account/primary-ID
+session caching coalesces overlapping requests without serializing network I/O.
+Eulerpool classification has at most three requests (search, exact-identity equity
+profile, bond fallback); reserve that worst-case cost, including held instruments.
+Do not accept a different ISIN on ticker/name resemblance. Evidence carries only
+the matched primary identifier, not unverified source aliases. Failures remain
+uncached, with auth/entitlement suspension and Retry-After enforced before queued
+work starts. Cancellation invalidates late snapshot updates and stops queued
+lookups, without promising an already-running HTTP request can be recalled.
+
+The UI labels the unresolved category "Not yet decomposed" and exposes each
+failure reason directly in a Note column. A known ETF with no usable composition
+must not be described as lacking classification. No identifier does not establish
+cash or other assets. Invalid composition metadata stays available for a precise
+reason without admitting its weights to the calculation. Unknown allocation
+semantics keep coverage partial even if a source declares itself complete.
+
 Observed PP integration points in the local checkout:
 
 - `portfolio/name.abuchen.portfolio/src/name/abuchen/portfolio/snapshot/ClientSnapshot.java`: dated positions and valuations in the reporting currency.
@@ -310,6 +331,10 @@ Use the isolated Eclipse workspace with no imported production recent-file histo
 | G6 | Cyclic/deep nested funds | Validated traversal/data remedy; preserve reconciliation and visible branch gaps |
 
 For each remaining gap, release review must retain missing evidence, affected category, remedy and verification criterion and link a follow-up backlog record. These generic records contain no private holdings. The local view supplies per-fund reasons. Partial first-release acceptance cannot close these gaps or the ultimate objective automatically.
+
+The dated review and closure criteria for G1-G6 and the publication gate are in
+[coverage-follow-ups.md](coverage-follow-ups.md). In particular, nested engine
+support does not prove automatic retrieval of newly discovered child funds.
 
 Suggested provider questions, prepared but not sent: Does the free tier include complete UCITS holdings? What does each request cost? Are underlying identifiers and holdings-effective dates available? What is returned for synthetic funds? Are signed weights and derivatives included? May an individual cache responses locally for offline use in PP, and for how long? Does distributing an adapter with user-supplied keys require a separate agreement?
 

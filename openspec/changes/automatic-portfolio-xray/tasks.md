@@ -50,7 +50,7 @@ Unchecked boxes describe work remaining after the completed milestones. Task 1.2
 - [x] 6.1 Run scripts/dev.sh test for core tests and Checkstyle and scripts/dev.sh app for integrated UI compilation; record results and review changed code against bundle formatting/contribution rules. Do not require live credentials in ordinary tests.
 - [ ] 6.2 Use scripts/dev.sh run-app with synthetic portfolios/providers to verify mixed coverage, identical analysis in both stores, offline retained-data fallback, session-only restart/failed retrieval, per-provider opt-out and policy changes during refresh, quota/auth failures, cache reset, feature removal and reopening without X-ray. Confirm portfolio integrity, then quit and run scripts/dev.sh clean.
 - [ ] 6.3 Complete the pre-publish checklist before publishing the adapter: verify Eulerpool runtime/personal display, user-key adapter source/binary distribution, applicable attribution and other obligations, and separately optional persistence/retention for the applicable plan using authoritative terms or an authorized provider response. Record source, date and pass/fail/unknown per permission; development assumptions do not pass this checklist. Keep real-data persistence disabled unless permitted with verified retention. Verify the task 1.3 public physical-fund acceptance evidence and produce a pass/fail acceptance record distinguishing validated coverage from freshness. Private portfolio checks remain local and never become public fixtures or artifacts. Provider contact requires separate explicit authorization.
-- [ ] 6.4 Review gaps G1-G6 in design.md and any newly discovered gaps; deliver linked follow-up backlog records for unresolved items with evidence, remedy and closure criteria. Verify the durable-spec synchronization will retain the 100% objective and that partial delivery is not described as objective completion.
+- [x] 6.4 Review gaps G1-G6 in design.md and any newly discovered gaps; deliver linked follow-up backlog records for unresolved items with evidence, remedy and closure criteria. Verify the durable-spec synchronization will retain the 100% objective and that partial delivery is not described as objective completion.
 - [ ] 6.5 Review the complete diff for secrets and real portfolio data and prepare focused upstream increments from upstream/master under workspace contribution rules; verify specs remain outside portfolio/, each increment includes its tests, and required checks pass before any separately authorized publishing. Create focused Conventional Commits for completed workspace tooling and upstream increments after checks and privacy review; record commit references. Push and open PRs when authorized, recording any outstanding publishing steps.
 
 ## 7. Whole-portfolio scope and unverified display revision
@@ -63,9 +63,14 @@ keeping validated coverage separate.
 - [x] 7.1 Replace the selection scope with every security that has a nonzero net position across the client's portfolios, without a prior selection; verify cross-portfolio netting, sold positions, future-dated transactions, client order and the empty-portfolio state.
 - [x] 7.2 Add an arithmetic-only composition path that accepts nonnegative weights up to 100% without verified semantics, displays them as unverified provider positions with fund path, note and partial coverage, never aggregates them into company exposure and never traverses them recursively; verify shortfall, overfull, negative and missing weights with synthetic inputs.
 - [x] 7.3 Update the user documentation, capability specs and task 1.3 record so a validated decomposition is not claimed and the unverified category is described as display-only; translate changed and new labels into all supported languages.
-- [ ] 7.4 Rebuild the isolated macOS app and have the user confirm that opening Portfolio Lens shows the complete portfolio with visible unverified fund positions and an explicit partial-coverage notice. Record the outcome; keep tasks 5.2 and 5.4 open until the interactive checks pass.
+- [x] 7.4 Rebuild the isolated macOS app and have the user confirm that opening Portfolio Lens shows the complete portfolio with visible unverified fund positions and an explicit partial-coverage notice. Record the outcome; keep tasks 5.2 and 5.4 open until the interactive checks pass.
 
 ## 8. Issuer x-ray via provider classification
+
+Section 8 supersedes the intermediate display-only category in tasks 7.2-7.4.
+The whole-portfolio/partial-display acceptance of 7.4 was observed in the isolated
+app and recorded with task 8.6 in implementation-progress.md. This closes neither
+weight validation nor the separate cancel and workflow checks in 5.2/5.4.
 
 The user requires a complete, functional x-ray. The provider does classify
 individual instruments (`/equity/search` for stocks, ETFs and funds, and its
@@ -74,7 +79,7 @@ identifier, ticker and name. These are combined into an issuer-level x-ray.
 
 - [x] 8.1 Add provider-backed instrument classification and use it to resolve held instruments and fund constituents to issuers, funds, bonds and other assets; cache one answer per identifier per session.
 - [x] 8.2 Expand arithmetic-usable compositions into their classified constituents even when the allocation semantics are unvalidated; keep synthetic and derivative exposure unresolved, keep coverage partial and show an issuer-level company/instrument breakdown with a weights-not-validated notice.
-- [x] 8.3 Accept a provider rounding excess of up to one millionth above 100% without scaling any row, with evidence from a public fund whose weights sum to 100.00000001%; keep larger overfull totals unusable.
+- [x] 8.3 Accept a provider rounding excess of up to one millionth above 100%, proportionally correcting accepted weights to reconcile exactly while retaining unchanged source rows, with evidence from a public fund whose weights sum to 100.00000001%; keep larger overfull totals unusable.
 - [x] 8.4 Show a loading line with completed fund count while a refresh or classification pass runs, and translate the label into all supported languages.
 - [ ] 8.5 Align the Eulerpool preference page with the other API-key pages (masked key field, key link, simpler structure); low priority, no functional change.
 - [x] 8.6 Update the documentation, capability specs and provider evidence record to describe the issuer-level x-ray, its share-class grouping limit and its unvalidated weights; rebuild the isolated app and have the user confirm the x-ray.

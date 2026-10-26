@@ -151,12 +151,20 @@ case "${1:-}" in
             cat "$SCRATCH/pp-dev-data/startup-bundle" >> "$SCRATCH/pp-dev-config/org.eclipse.equinox.simpleconfigurator/bundles.info"
         fi
         mkdir -p "$SCRATCH/pp-dev-home"
+        # Development convenience: hand the app the path of the private key file,
+        # never the key itself. The app installs it as a session key only when no
+        # key is configured, and a link is refused.
+        dev_key_args=()
+        dev_key="$SCRATCH/eulerpool-api-key.txt"
+        if [ -f "$dev_key" ] && [ ! -L "$dev_key" ]; then
+            dev_key_args=("-Dportfolio.lens.developmentKeyFile=$dev_key")
+        fi
         echo "Starting isolated development app; quit it to release the launcher lock."
         # Direct execution targets this build and keeps descriptor 9 alive.
         # WebDAV secrets were mounted only in the finished downloader container.
         exec "$APP/Contents/MacOS/PortfolioPerformance" -data "$SCRATCH/pp-dev-workspace" \
             -configuration "$SCRATCH/pp-dev-config" "${launch_args[@]}" \
-            --launcher.appendVmargs -vmargs "-Duser.home=$SCRATCH/pp-dev-home" \
+            --launcher.appendVmargs -vmargs "-Duser.home=$SCRATCH/pp-dev-home" "${dev_key_args[@]}" \
             "-Declipse.p2.data.area=$SCRATCH/pp-dev-config/p2" \
             >"$SCRATCH/pp-dev-workspace/launcher.log" 2>&1
         ;;

@@ -91,6 +91,21 @@ scripts/dev.sh keep-data
 scripts/dev.sh recover-data
 ```
 
+### Development API key
+
+If `scratch/eulerpool-api-key.txt` exists as a regular file, `run-app` passes only
+its path to the app as `-Dportfolio.lens.developmentKeyFile=...`. Portfolio Lens
+installs that key as a session key when no key is configured yet. The managed
+workspace is recreated on each launch, so this is what makes repeated local tests
+possible without retyping the key.
+
+The key itself never appears in arguments, logs, preferences or exports. The
+property is read once at startup, ignored when a secure or session key already
+exists, and refuses links, oversized files and malformed content. This is a
+development convenience in the workspace tooling and the fork; it is not part of
+an official PP feature. Keep the file private, mode 600, and remove it with the
+rest of the private test data when testing ends.
+
 Online launch aborts on failed setup, authentication, TLS, transfer or container
 validation. It never silently opens an old copy. Explicit offline launch
 prints a stale-data notice and the last successful check/download times.

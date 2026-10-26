@@ -1017,3 +1017,26 @@ failures/errors, one skipped, Checkstyle zero violations. Translation resource
 validation, focused UI tests (65) and the packaged app were verified before this
 increment; the UI is unchanged by it. PP commit `557ba29d6` is pushed to the
 development fork only; no upstream PR, binary release or provider contact.
+
+## 2026-10-26: interactive settings check and offline launch
+
+Task 5.2 is complete: the user confirmed in the managed build `557ba29d6` that
+cancelling a running refresh returns the view to a normal state without errors.
+Opening without a prior selection and the empty-portfolio state remain covered by
+the UI suite; the live empty case was not exercised because the test portfolio
+always holds securities. Redraws stay memory-only by construction and by test.
+
+The Eulerpool settings page was checked live: the key link opens the developer
+page, the layout matches the intended order, a stored key is never displayed and
+is represented only by a masked placeholder, persistence is disabled with its
+reason, removal works, and an invalid key is rejected. The only defect was the
+position of that error text: the dialog header clipped it to one line. PP commit
+`68806400d` moves action results into a wrapping label under the affected
+controls. Verification: full core suite 5056 tests and the focused UI suite 65
+tests green, Checkstyle zero violations; the app was rebuilt from clean
+`68806400d` and the user confirmed the corrected message.
+
+An explicit offline managed launch was then started from the same retained
+generation to check the session-only limitation. Remaining live checks for tasks
+5.4 and 6.2 are the offline/stale presentation and the subsequent online restart;
+they need the user's observation because native UI automation is unavailable.

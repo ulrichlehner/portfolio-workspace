@@ -39,12 +39,12 @@
 
 ## 6. Charts (increment E)
 
-- [ ] 6.1 Add a chart model (companies only, sorted, top-N with direct and indirect parts) and verify with tests that unresolved and other categories are excluded and a company held directly and through funds has both parts
+- [x] 6.1 Add a chart model (companies only, sorted, top-N with direct and indirect parts) and verify with tests that unresolved and other categories are excluded and a company held directly and through funds has both parts
 - [ ] 6.2 Implement the company treemap with the engehausen treemap and theme colors (design D4) and verify in the running app that tiles show company, amount and share in the tooltip
 - [ ] 6.3 Implement the top-N stacked bar chart with PP's SWTChart helpers and verify in the running app that bars show separate direct and indirect segments
 - [ ] 6.4 Add the chart switcher, the stored sash weights and the empty-chart state, and verify manually that a portfolio without company exposure shows the empty-state message
 - [ ] 6.5 Link chart and table selection in both directions and verify manually that clicking a tile selects and reveals the table row and selecting a row highlights the chart element
-- [ ] 6.6 Run `scripts/dev.sh test`, scan the diff for private data, and create the focused commit for increment E
+- [x] 6.6 Run `scripts/dev.sh test`, scan the diff for private data, and create the focused commit for increment E
 
 ## 7. Integration checks
 

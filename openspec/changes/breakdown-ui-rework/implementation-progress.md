@@ -16,9 +16,20 @@ export where other work was still uncommitted. The helper used is
 | Increment | Commit | Verification |
 | :--- | :--- | :--- |
 | B rename and placement | `b42b770cf` | core: 5080 tests, BUILD SUCCESS, Checkstyle clean; UI reactor: 72 tests passed |
-| C settings page | `5073178f8` | UI reactor on B + C: 77 tests passed; restored a message key still used by the status pane |
-| A responsiveness and selection | `7c2b119ff` | UI reactor: 86 tests passed, Checkstyle clean in 7 modules |
-| D layout, onboarding, status pane | `c444a4b22` | UI reactor: 100 tests passed, Checkstyle and message checks clean; app build succeeded |
+| C settings page | `b2f79fb2c` | UI reactor on B + C: 77 tests passed; restored a message key still used by the status pane |
+| A responsiveness and selection | `0a5ff3d00` | UI reactor: 86 tests passed, Checkstyle clean in 7 modules |
+| D layout, onboarding, status pane | `c13bae600` | UI reactor: 100 tests passed, Checkstyle and message checks clean; app build succeeded |
+| E charts | `258d18efa` | UI reactor: 103 tests passed, Checkstyle and message checks clean |
+
+## Review
+
+An Opus review of the stack found six issues, fixed and folded into their commits by
+autosquash (hashes above are after the rebase): treemap click zoomed into a tile (library
+navigation listener), Refresh enabled with nothing to refresh, coverage legend could read
+100 % with a nonzero remainder (regression assertion added), status table rebuilt on every
+push (now compared by visible content), persistence preference saved on click instead of
+OK/Apply, session-only entry offered only after a failed OK. Final UI reactor on the rebased
+stack: 103 tests passed, BUILD SUCCESS. The core bundle is unchanged by this change.
 
 ## Outstanding manual checks
 
@@ -28,12 +39,14 @@ export where other work was still uncommitted. The helper used is
 - 5.3 to 5.5 summary strip, coverage bar and banners in light and dark theme and at narrow
   widths; no-key banner opens the Eulerpool settings and disappears after a key is saved;
   stop control ends progress and keeps applied results.
+- 6.2 to 6.5 treemap and top 20 rendering, tooltips, switcher and persisted sash weights,
+  empty-chart message, chart and table selection linking.
 - Computer-use access to the dev app was declined on 2026-10-26, so visual checks are done
   by the user.
 
 ## Notes for review
 
-- Settings: a failed `replaceSecure` (storage unavailable) has already removed the previously
+- Settings (open): a failed `replaceSecure` (storage unavailable) has already removed the previously
   stored key, because the core credential API deletes before it writes. Pre-existing behavior,
   not changed here; candidate follow-up.
 - Settings: whitespace-only input is rejected as invalid rather than treated as empty.

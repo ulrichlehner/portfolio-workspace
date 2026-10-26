@@ -66,6 +66,11 @@ apply for code style and conventions. Where they conflict with this file, this f
   implementation and mechanical refactors, and Haiku for bounded read-only
   exploration. Do not use other models (for example Fable) without asking.
   Sub-agent effort is set only when the user asks for it.
+- Autonomy (2026-10-26): during apply, the orchestrator owns UI/UX and design judgment,
+  evaluates its own results (including screenshots of the running app) and continues
+  through all increments without review pauses. It stops only for tests with the user's
+  real data, publishing, decisions that change specs or scope, real blockers and quota
+  exhaustion.
 - `portfolio/` is a nested repository ignored by the workspace, so workspace worktrees
   do not contain it. Sub-agents work in the shared fork checkout with disjoint file
   ownership; the orchestrator applies shared files such as `messages*.properties`

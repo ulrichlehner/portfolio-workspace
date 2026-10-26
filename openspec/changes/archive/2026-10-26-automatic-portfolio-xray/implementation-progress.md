@@ -1085,3 +1085,21 @@ and is not claimed: G1 (provider declaration), G2 (corporate grouping), G3
 (economic overlay), G4 (uncovered funds), G5 (holdings-effective date) and G6
 (automatic nested retrieval) remain open with evidence, remedy and closure
 criteria in coverage-follow-ups.md.
+
+## 2026-10-26: sync and archive
+
+All 40 tasks were complete, so the change was archived. The three delta specs
+were merged into durable specs first:
+
+- `openspec/specs/fund-compositions/spec.md` (13 requirements)
+- `openspec/specs/portfolio-look-through/spec.md` (11 requirements)
+- `openspec/specs/development-portfolio-testing/spec.md` (8 requirements)
+
+The delta-only section headers were removed, the authored purposes were copied
+verbatim, and `openspec validate --specs` passed for all three. The change then
+moved to `openspec/changes/archive/2026-10-26-automatic-portfolio-xray/`.
+
+Archiving a partial release does not mean the 100% validated-coverage objective is
+achieved. G1-G6 stay recorded in `coverage-follow-ups.md` inside the archived
+change, and the durable specs retain the complete-coverage requirement. The
+permission position remains the documented assumption, not a verified grant.

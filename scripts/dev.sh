@@ -157,7 +157,7 @@ case "${1:-}" in
         dev_key_args=()
         dev_key="$SCRATCH/eulerpool-api-key.txt"
         if [ -f "$dev_key" ] && [ ! -L "$dev_key" ]; then
-            dev_key_args=("-Dportfolio.lens.developmentKeyFile=$dev_key")
+            dev_key_args=("-Dportfolio.lookthrough.developmentKeyFile=$dev_key")
         fi
         echo "Starting isolated development app; quit it to release the launcher lock."
         # Direct execution targets this build and keeps descriptor 9 alive.

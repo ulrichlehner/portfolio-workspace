@@ -2,30 +2,30 @@
 
 ## 1. Setup
 
-- [ ] 1.1 In `portfolio/`, create `feature/breakdown-ui-rework` from `feature/automatic-portfolio-xray` and verify with `git log --oneline upstream/master..HEAD` that it starts at the base branch tip with no extra commits
+- [x] 1.1 In `portfolio/`, create `feature/breakdown-ui-rework` from `feature/automatic-portfolio-xray` and verify with `git log --oneline upstream/master..HEAD` that it starts at the base branch tip with no extra commits
 
 ## 2. Responsiveness and selection (increment A)
 
-- [ ] 2.1 Make `LookThroughStatusModel` notify only on observable state changes (no notification from an automatic check that schedules nothing) and verify with a new `LookThroughStatusModelTest` case that an idle `refreshAutomatically()` produces no notification
-- [ ] 2.2 Add stable keys to presenter rows (company identity, category and source path for details, fund reference for status rows) and verify with `LookThroughViewPresenterTest` that equal results produce equal keys and distinct companies with the same label keep distinct keys
-- [ ] 2.3 Split the view's status and result listeners and run recalculation as a coalescing background job with a generation counter (design D1); verify with a unit test of the coalescing scheduler that a burst of requests yields one calculation and stale results are discarded
+- [x] 2.1 Make `LookThroughStatusModel` notify only on observable state changes (no notification from an automatic check that schedules nothing) and verify with a new `LookThroughStatusModelTest` case that an idle `refreshAutomatically()` produces no notification
+- [x] 2.2 Add stable keys to presenter rows (company identity, category and source path for details, fund reference for status rows) and verify with `LookThroughViewPresenterTest` that equal results produce equal keys and distinct companies with the same label keep distinct keys
+- [x] 2.3 Split the view's status and result listeners and run recalculation as a coalescing background job with a generation counter (design D1); verify with a unit test of the coalescing scheduler that a burst of requests yields one calculation and stale results are discarded
 - [ ] 2.4 Preserve selection, expansion and top index in the company table and the status pane across updates (design D2); verify manually in `scripts/dev.sh run-app` that a selected, expanded row survives a 60-second check and an incoming fund result
-- [ ] 2.5 Run `scripts/dev.sh test` with Checkstyle, scan the diff for private data, and create the focused commit for increment A
+- [x] 2.5 Run `scripts/dev.sh test` with Checkstyle, scan the diff for private data, and create the focused commit for increment A
 
 ## 3. Rename and placement (increment B)
 
-- [ ] 3.1 Rename `PortfolioLensAnalysis`, `PortfolioLensCompositionService`, `PortfolioLensSession` and their tests to `LookThrough*` and verify with `grep -rn PortfolioLens portfolio/` returning no source or test hits
-- [ ] 3.2 Replace `LabelPortfolioLens` with `LabelBreakdown` and a view title key (Breakdown / Aufschlüsselung, Breakdown by Company / Aufschlüsselung nach Unternehmen), set `PrefTitleEulerpool` to "Eulerpool", and update all `messages*.properties`; verify that no properties file still contains "Portfolio Lens"
+- [x] 3.1 Rename `PortfolioLensAnalysis`, `PortfolioLensCompositionService`, `PortfolioLensSession` and their tests to `LookThrough*` and verify with `grep -rn PortfolioLens portfolio/` returning no source or test hits
+- [x] 3.2 Replace `LabelPortfolioLens` with `LabelBreakdown` and a view title key (Breakdown / Aufschlüsselung, Breakdown by Company / Aufschlüsselung nach Unternehmen), set `PrefTitleEulerpool` to "Eulerpool", and update all `messages*.properties`; verify that no properties file still contains "Portfolio Lens"
 - [ ] 3.3 Move the navigation item under Statement of Assets with the information pane visible (design D7) and verify in the running app that the German sidebar shows Vermögensaufstellung > Aufschlüsselung and the view title reads Aufschlüsselung nach Unternehmen
-- [ ] 3.4 Run `scripts/dev.sh test`, scan the diff for private data, and create the focused commit for increment B
+- [x] 3.4 Run `scripts/dev.sh test`, scan the diff for private data, and create the focused commit for increment B
 
 ## 4. Settings page (increment C)
 
-- [ ] 4.1 Rework `EulerpoolPreferencePage` to one key field with Apply/OK storage, an immediate remove control enabled only when a key exists, one status line and the request-key link (design D6); verify with `EulerpoolPreferencePageTest` that OK stores, cancel stores nothing and an empty field keeps the stored key
-- [ ] 4.2 Add the session-only fallback that appears only when secure storage is unavailable and verify with a test using an unavailable credential store that the key is used for the session and nothing is written
-- [ ] 4.3 Reject keys with whitespace or line breaks through the page error message and verify with a test that the page is invalid and nothing is stored
+- [x] 4.1 Rework `EulerpoolPreferencePage` to one key field with Apply/OK storage, an immediate remove control enabled only when a key exists, one status line and the request-key link (design D6); verify with `EulerpoolPreferencePageTest` that OK stores, cancel stores nothing and an empty field keeps the stored key
+- [x] 4.2 Add the session-only fallback that appears only when secure storage is unavailable and verify with a test using an unavailable credential store that the key is used for the session and nothing is written
+- [x] 4.3 Reject keys with whitespace or line breaks through the page error message and verify with a test that the page is invalid and nothing is stored
 - [ ] 4.4 Reduce the persistence section to one checkbox plus one status line and verify in the running app that an unverified policy shows a disabled checkbox with a one-sentence reason
-- [ ] 4.5 Remove the now unused message keys in all properties files, run `scripts/dev.sh test`, scan the diff for private data, and create the focused commit for increment C
+- [x] 4.5 Remove the now unused message keys in all properties files, run `scripts/dev.sh test`, scan the diff for private data, and create the focused commit for increment C
 
 ## 5. View layout, onboarding and data status (increment D)
 

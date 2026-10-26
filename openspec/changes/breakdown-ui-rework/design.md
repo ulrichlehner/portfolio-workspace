@@ -97,8 +97,8 @@ checkbox "Use for this session only" and stores via `replaceSession` on the next
 - Navigation: `statementOfAssets.add(new Item(Messages.LabelBreakdown, LookThroughView.class))`, keeping the
   information pane visible (unlike Chart and Holdings).
 - Messages: replace `LabelPortfolioLens` with `LabelBreakdown` and `LookThroughViewTitle`; change
-  `PrefTitleEulerpool` to "Eulerpool"; remove keys that no longer have a use. German texts are written by hand;
-  other languages fall back to English until translated through PP's normal process.
+  `PrefTitleEulerpool` to "Eulerpool"; remove keys that no longer have a use. Every language file already
+  carries translations of the look-through keys, so new and changed texts are translated in all of them.
 - Classes: `PortfolioLensAnalysis`, `PortfolioLensCompositionService`, `PortfolioLensSession` become
   `LookThroughAnalysis`, `LookThroughCompositionService`, `LookThroughSession`. Packages stay `lookthrough`.
 

@@ -94,7 +94,7 @@ scripts/dev.sh recover-data
 ### Development API key
 
 If `scratch/eulerpool-api-key.txt` exists as a regular file, `run-app` passes only
-its path to the app as `-Dportfolio.lens.developmentKeyFile=...`. Portfolio Lens
+its path to the app as `-Dportfolio.lookthrough.developmentKeyFile=...`. The Breakdown view
 installs that key as a session key when no key is configured yet. The managed
 workspace is recreated on each launch, so this is what makes repeated local tests
 possible without retyping the key.

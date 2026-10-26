@@ -29,13 +29,13 @@
 
 ## 5. View layout, onboarding and data status (increment D)
 
-- [ ] 5.1 Add a presenter summary model (securities value, resolved share, top-10 share, decomposed and held fund counts, notice indicator text) and verify with `LookThroughViewPresenterTest` cases for partial coverage, missing denominator and empty portfolio
-- [ ] 5.2 Add a coverage model (segments per category with minimum visible width for a nonzero remainder) and verify with tests that a tiny unresolved remainder keeps a visible segment and a missing denominator yields no bar
+- [x] 5.1 Add a presenter summary model (securities value, resolved share, top-10 share, decomposed and held fund counts, notice indicator text) and verify with `LookThroughViewPresenterTest` cases for partial coverage, missing denominator and empty portfolio
+- [x] 5.2 Add a coverage model (segments per category with minimum visible width for a nonzero remainder) and verify with tests that a tiny unresolved remainder keeps a visible segment and a missing denominator yields no bar
 - [ ] 5.3 Build the header, summary strip and coverage bar controls and remove the permanent notice paragraphs; verify in the running app in light and dark theme that the notices are only in the indicator tooltip
 - [ ] 5.4 Add the banner area with priority selection (refresh progress with stop > suspended > no key with funds > empty portfolio) and verify with a unit test of the selection logic plus a manual check that the no-key banner opens the Eulerpool settings page
 - [ ] 5.5 Replace the Cancel toolbar action with the progress stop control and verify manually that refresh disables itself while running and stopping keeps applied results
-- [ ] 5.6 Reduce the data status pane to fund, status icon, retrieved date and decomposed share with details in tooltips and verify with `LookThroughDataStatusTest` that the tooltip text contains failure reason and original dates
-- [ ] 5.7 Run `scripts/dev.sh test`, scan the diff for private data, and create the focused commit for increment D
+- [x] 5.6 Reduce the data status pane to fund, status icon, retrieved date and decomposed share with details in tooltips and verify with `LookThroughDataStatusTest` that the tooltip text contains failure reason and original dates
+- [x] 5.7 Run `scripts/dev.sh test`, scan the diff for private data, and create the focused commit for increment D
 
 ## 6. Charts (increment E)
 

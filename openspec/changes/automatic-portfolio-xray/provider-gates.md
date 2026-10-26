@@ -236,7 +236,8 @@ or a claim that the provider's terms were independently cleared today.
 | Public physical-fund economic-exposure acceptance (1.3) | Accepted for the identified physical sleeve under the documented rule | Two complete dated issuer comparisons (1251 and 101 exact-ISIN rows) agree within published rounding; issuer classifications available. Derivative overlay, completeness declaration, holdings-effective date and corporate grouping stay outside the accepted scope |
 | Freshness transparency | Pass for representation, not source freshness | Missing holdings-effective dates remain unknown; retrieval/update dates are not substituted |
 | Experimental source-only development fork | Authorized by user with notice | Explicitly confirmed on 2026-10-25; no rights verification, provider payloads, credentials or public binaries |
-| Official upstream integration / binary releases | Blocked | Runtime/display/distribution/obligations and data-quality gates are not passed; the development-fork exception does not establish provider rights |
+| Formal permission verification for the development fork | Deferred by user decision on 2026-10-26 | Restated as a documented assumption: use is assumed acceptable until further notice, residual risk accepted by the user, formal verification does not block completion. This is not a verified grant |
+| Official upstream integration / binary releases | Requires explicit sign-off | Still not authorized and not covered by the assumption; maintainers and the user decide separately. The assumption does not establish provider rights |
 
 Provider contact remains unauthorized. Disk caching remains disabled. Further
 local development can continue under the recorded development-only assumption.

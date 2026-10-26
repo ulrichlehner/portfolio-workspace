@@ -1057,3 +1057,31 @@ does not require a synthetic portfolio file:
   with a synthetic portfolio, which the current launcher cannot select. Closing it
   needs either that launch variant or an explicit decision that the automated
   coverage is accepted instead.
+
+## 2026-10-26: completion of the tracked tasks
+
+Task 6.3 was reformulated at the user's request from a blocking verification gate
+into a documented assumption: Eulerpool use is assumed acceptable for the
+experimental development fork until further notice, the residual risk is accepted
+by the user, and formal verification must not block completion. The assumption is
+explicitly not a verified grant; it is recorded with the open questions in
+provider-gates.md and AGENTS.md. Real-data persistence stays disabled because no
+retention is established. Official upstream integration and binary releases still
+need explicit sign-off; no provider request was sent.
+
+Task 6.2 was closed with the user's live observation of a swap-based ETF
+(XTR.MSCI EM.MKT.SWAP 1C) in the managed build: the fund is fetched, its issuer
+rows are displayed, the partial-coverage notice states that weight semantics are
+not validated, the holdings date is reported as unavailable and the coverage stays
+partial. Together with the earlier offline launch, session-only restart, mixed
+coverage, absence of any upload flow and portfolio integrity, this covers the
+live part. The remaining matrix items are covered by the store, policy,
+coordinator and session suites. No synthetic-provider launcher was built; the user
+accepted the live-plus-automated mapping. The swap case demonstrates the open G3
+limitation rather than validating economic exposure.
+
+All 40 tracked tasks are complete. The complete-coverage objective is not achieved
+and is not claimed: G1 (provider declaration), G2 (corporate grouping), G3
+(economic overlay), G4 (uncovered funds), G5 (holdings-effective date) and G6
+(automatic nested retrieval) remain open with evidence, remedy and closure
+criteria in coverage-follow-ups.md.

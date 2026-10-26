@@ -276,9 +276,13 @@ with applicable provider terms/account entitlements. This is risk acceptance for
 the development fork, not verified rights or a legally assured transfer of
 responsibility. It supersedes the blanket source-publication gate below only for
 that fork. No provider payloads, credentials or public binaries may be distributed.
-Official upstream integration and binary releases still require task 6.3 review;
-upstream PR authorization is separate. Persistence remains disabled until verified
-permission and retention exist. Task 1.3 data validation must continue independently.
+Formal verification is deferred by the user's decision on 2026-10-26: provider use
+is assumed acceptable for the development fork until further notice, with the
+residual risk accepted by the user, and that assumption must not block completion.
+It is not a verified grant. Official upstream integration and binary releases still
+require explicit sign-off by the user and the maintainers; upstream PR
+authorization is separate. Persistence remains disabled until retention is
+established. Task 1.3 data validation continues independently.
 
 The repository checklist and public Eulerpool permission review are recorded in
 `openspec/changes/automatic-portfolio-xray/provider-gates.md` (2026-10-23).

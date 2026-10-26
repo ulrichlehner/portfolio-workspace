@@ -1040,3 +1040,20 @@ An explicit offline managed launch was then started from the same retained
 generation to check the session-only limitation. Remaining live checks for tasks
 5.4 and 6.2 are the offline/stale presentation and the subsequent online restart;
 they need the user's observation because native UI automation is unavailable.
+
+Interactive checks on 2026-10-26 completed the remaining acceptance evidence that
+does not require a synthetic portfolio file:
+
+- Offline managed launch from the retained generation: the portfolio opens, the
+  launcher reports STALE DATA, Portfolio Lens keeps every position in the
+  not-yet-decomposed category with its reason, states session-only storage and
+  explains that fund exposure stays unresolved until data is available. No
+  exception appeared in the launcher log.
+- Task 5.4 is complete; the documented workflows match the observed behaviour.
+- Task 6.5 is complete for the development fork, with the upstream pull request
+  recorded as outstanding, blocked by the permission gate and not authorized.
+- Task 6.2 stays open with a narrowed remaining scope: the synthetic-provider
+  matrix is covered by automated tests, but the task asks for a managed launch
+  with a synthetic portfolio, which the current launcher cannot select. Closing it
+  needs either that launch variant or an explicit decision that the automated
+  coverage is accepted instead.

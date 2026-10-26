@@ -60,6 +60,16 @@ apply for code style and conventions. Where they conflict with this file, this f
   low/medium effort unless risk justifies more, and avoid automatic `max` routing
   or duplicate broad reviews. Remaining subscription quota is not visible to
   the agent. Pause on exhaustion rather than silently changing billing routes.
+- Routing update (2026-10-26): the user confirmed that Claude Code sessions run on
+  the user's Claude subscription, not API billing. In Claude Code, use Opus for
+  concurrency, architecture and consequential review, Sonnet for well-specified
+  implementation and mechanical refactors, and Haiku for bounded read-only
+  exploration. Do not use other models (for example Fable) without asking.
+  Sub-agent effort is set only when the user asks for it.
+- `portfolio/` is a nested repository ignored by the workspace, so workspace worktrees
+  do not contain it. Sub-agents work in the shared fork checkout with disjoint file
+  ownership; the orchestrator applies shared files such as `messages*.properties`
+  and runs `scripts/dev.sh` centrally.
 - Apply the same explicit, task-appropriate selection and billing constraints to any
   future authorized LLM/provider. Provider authorization does not authorize paid API
   usage. The orchestrator owns these decisions without requiring user reminders.

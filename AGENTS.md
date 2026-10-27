@@ -296,8 +296,17 @@ is assumed acceptable for the development fork until further notice, with the
 residual risk accepted by the user, and that assumption must not block completion.
 It is not a verified grant. Official upstream integration and binary releases still
 require explicit sign-off by the user and the maintainers; upstream PR
-authorization is separate. Persistence remains disabled until retention is
-established. Task 1.3 data validation continues independently.
+authorization is separate. Task 1.3 data validation continues independently.
+
+Local storage decision by the user on 2026-10-27: provider data (compositions,
+company profiles, revenue regions) shall be stored on disk on the user's own
+machine. PP implements this as an explicit per-account confirmation in the
+provider settings ("my plan allows local storage"); once confirmed, the
+account's policy counts as permitted and the existing opt-out preference
+applies. The user accepts the residual risk for their account; this is not a
+verified grant and does not cover distributing payloads. It supersedes the
+statements below that keep real-data persistence disabled. Public data under an
+open license (GLEIF LEI records, CC0) may be stored without such confirmation.
 
 The repository checklist and public Eulerpool permission review are recorded in
 `openspec/changes/automatic-portfolio-xray/provider-gates.md` (2026-10-23).

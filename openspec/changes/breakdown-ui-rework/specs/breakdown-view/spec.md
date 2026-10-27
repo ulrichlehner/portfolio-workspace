@@ -70,11 +70,15 @@ Recalculation SHALL happen only when its inputs change: client data, valuation d
 - **THEN** the view stays responsive to scrolling and selection and recalculates once per burst instead of once per fund.
 
 ### Requirement: Single refresh action with inline progress
-The view SHALL offer one refresh action. While a refresh runs, an inline progress line SHALL show completed and total lookups and offer a stop control. The view SHALL NOT show a permanently visible cancel action.
+The view SHALL offer one refresh action. While a refresh runs, an inline progress indicator SHALL show completed and total lookups and offer a stop control. Starting or ending a refresh SHALL NOT move the summary, charts or table. The view SHALL NOT show a permanently visible cancel action.
 
 #### Scenario: Refresh in progress
 - **WHEN** the user starts a refresh for funds that need constituent lookups
 - **THEN** the refresh action is disabled, the progress line shows the counts, and stopping it ends waiting without discarding results already applied.
+
+#### Scenario: No layout shift
+- **WHEN** the user starts a refresh and it later completes
+- **THEN** the progress appears and disappears in place of the valuation date in the summary row, and no other element of the view changes position.
 
 #### Scenario: Nothing to refresh
 - **WHEN** no held fund needs a composition
@@ -96,8 +100,23 @@ The view SHALL show one banner for the most relevant state: no API key configure
 - **THEN** no key banner is shown and the view displays the direct breakdown.
 
 ### Requirement: Compact data status
-The data status pane SHALL list each held fund with its name, a status icon, retrieval date and decomposed share. Attempt, retry, provider refresh, holdings date, freshness, source data and denominator details SHALL remain available in the row tooltip. The pane SHALL keep the session-only notice as a single line.
+The data status pane SHALL list each held fund, and each held security whose classification is still unknown, with its name, a status icon with a short status text, retrieval date and decomposed share. Securities classified as directly held shares SHALL NOT be listed. Attempt, retry, provider refresh, holdings date, freshness, source data and denominator details SHALL remain available in the row tooltip. The pane SHALL keep the session-only notice as a single line.
 
 #### Scenario: Fund with failed refresh and retained data
 - **WHEN** the latest refresh failed and an earlier composition from this session is used
 - **THEN** the row shows a warning icon and the earlier retrieval date, and the tooltip names the failure and the original dates.
+
+#### Scenario: Composition rejected by validation
+- **WHEN** the provider returned a composition that validation rejects, for example because of negative weights or a total above 100 percent
+- **THEN** the row states that the composition was rejected and names the reason in short text, the decomposed share shows a dash instead of zero, and the tooltip explains that the fund stays unresolved.
+
+#### Scenario: Security not yet classified
+- **WHEN** a held security has not been classified yet
+- **THEN** the row states that it is being checked, and the row disappears once the security is classified as a directly held share.
+
+### Requirement: Calculating state
+Until the first result for the open portfolio is available, the view SHALL show a calculating state that is distinct from every empty state: placeholders in the summary and a calculating message in the chart area and the table. Empty-state messages SHALL appear only for a calculated result.
+
+#### Scenario: Opening the view
+- **WHEN** the user opens the view and the first calculation is still running
+- **THEN** the summary shows placeholders and the chart area and table state that the breakdown is being calculated, without the "no company exposure" message.

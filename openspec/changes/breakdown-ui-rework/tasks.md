@@ -46,10 +46,17 @@
 - [ ] 6.5 Link chart and table selection in both directions and verify manually that clicking a tile selects and reveals the table row and selecting a row highlights the chart element
 - [x] 6.6 Run `scripts/dev.sh test`, scan the diff for private data, and create the focused commit for increment E
 
-## 7. Integration checks
+## 7. Findings from the first app check
 
-- [ ] 7.1 Build with `scripts/dev.sh app` and run `scripts/dev.sh run-app --webdav-copy` against a copy of the user's portfolio; verify each scenario of the `breakdown-view` and `composition-provider-settings` specs and record the results in this change without private values
-- [ ] 7.2 Run `scripts/dev.sh clean`, then record the commit references and any remaining verification in this file
+- [x] 7.1 Add a calculating state shown until the first result (summary placeholders, calculating message in chart area and table) and verify with a presenter or view-state test that empty-state messages appear only for a calculated result
+- [x] 7.2 Show a short status text next to the status icon, including the validation reason for rejected compositions (re-validating the provider preview in the UI layer), a dash instead of 0.00 for rejected funds, and drop securities classified as directly held shares from the pane; verify with `LookThroughDataStatusTest` cases for rejected, pending and unclassified rows
+- [ ] 7.3 Move the refresh progress into the summary row in place of the valuation date so nothing shifts, and verify in the running app that starting and ending a refresh moves no element
+- [ ] 7.4 Run the UI reactor tests, scan the diff for private data, and fold the fixes into the increment D commit
+
+## 8. Integration checks
+
+- [ ] 8.1 Build with `scripts/dev.sh app` and run `scripts/dev.sh run-app --webdav-copy` against a copy of the user's portfolio; verify each scenario of the `breakdown-view` and `composition-provider-settings` specs and record the results in this change without private values
+- [ ] 8.2 Run `scripts/dev.sh clean`, then record the commit references and any remaining verification in this file
 
 ## Workflow follow-up
 

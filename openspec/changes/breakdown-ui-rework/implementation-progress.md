@@ -31,6 +31,18 @@ push (now compared by visible content), persistence preference saved on click in
 OK/Apply, session-only entry offered only after a failed OK. Final UI reactor on the rebased
 stack: 103 tests passed, BUILD SUCCESS. The core bundle is unchanged by this change.
 
+## First app check (2026-10-26/27)
+
+Findings: initial state read as empty, status icons without meaning, layout shift on
+refresh. Specs and tasks 7.1 to 7.3 were added. Fix commit `76adde874`: calculating state,
+status text with validation reason, rows for directly held shares dropped, progress in the
+summary row. UI reactor: 113 tests passed, BUILD SUCCESS. App rebuilt from `76adde874`.
+
+The rejected funds were diagnosed with one provider request each: all negative rows are
+identifier-less cash or currency-forward rows of at most -0.015 % of the fund. The current
+validation rule rejects any negative weight, so the funds stay unresolved. A rule for such
+rows is planned as a separate change.
+
 ## Outstanding manual checks
 
 - 2.4 selection and expansion survive a 60-second check and an incoming fund result.
@@ -41,6 +53,7 @@ stack: 103 tests passed, BUILD SUCCESS. The core bundle is unchanged by this cha
   stop control ends progress and keeps applied results.
 - 6.2 to 6.5 treemap and top 20 rendering, tooltips, switcher and persisted sash weights,
   empty-chart message, chart and table selection linking.
+- 7.3 starting and ending a refresh moves no element.
 - Computer-use access to the dev app was declined on 2026-10-26, so visual checks are done
   by the user.
 

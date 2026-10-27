@@ -26,3 +26,4 @@
 - Percentages at or below 1 that sum to at most 1.5 are read as fractions; confirm with a real response in 4.2.
 - The country grouping is labelled "Country (headquarters)" / "Land (Firmensitz)" to set it apart from revenue regions.
 - One company appears once per revenue group; each allocation has its own row key.
+- UI refinements: note column removed, treemap group share always visible with percent sign, 2:1 chart/table default, revenue fallback to headquarters country with coverage by source, more region labels (fork 497943629).

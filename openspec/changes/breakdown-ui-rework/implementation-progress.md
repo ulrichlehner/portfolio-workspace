@@ -43,19 +43,16 @@ identifier-less cash or currency-forward rows of at most -0.015 % of the fund. T
 validation rule rejects any negative weight, so the funds stay unresolved. A rule for such
 rows is planned as a separate change.
 
-## Outstanding manual checks
+## Manual verification
 
-- 2.4 selection and expansion survive a 60-second check and an incoming fund result.
-- 3.3 German sidebar Vermögensaufstellung > Aufschlüsselung, view title.
-- 4.4 disabled persistence checkbox with a one-sentence reason.
-- 5.3 to 5.5 summary strip, coverage bar and banners in light and dark theme and at narrow
-  widths; no-key banner opens the Eulerpool settings and disappears after a key is saved;
-  stop control ends progress and keeps applied results.
-- 6.2 to 6.5 treemap and top 20 rendering, tooltips, switcher and persisted sash weights,
-  empty-chart message, chart and table selection linking.
-- 7.3 starting and ending a refresh moves no element.
-- Computer-use access to the dev app was declined on 2026-10-26, so visual checks are done
-  by the user.
+On 2026-10-27 the user confirmed all manual checks in the app built from `76adde874`
+with a private copy of the real portfolio: navigation and German labels, summary strip,
+coverage bar and indicator tooltip, calculating state, charts with tooltips, switcher and
+restored layout, chart and table selection linking, selection kept across automatic checks,
+refresh progress without layout shift, settings page and no-key banner. Computer-use access
+was declined, so these checks were done by the user. Task 7.4: the fixes were committed as a
+separate focused commit instead of being folded into increment D, because they also touch
+files introduced by increment E.
 
 ## Notes for review
 

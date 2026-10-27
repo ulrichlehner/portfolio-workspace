@@ -41,11 +41,11 @@ The view SHALL offer a treemap of companies sized by total exposure and a bar ch
 - **THEN** the chart area shows an empty-state message instead of empty axes.
 
 ### Requirement: Linked chart and table selection
-Selecting a company in a chart SHALL select and reveal the same company in the table. Selecting a company in the table SHALL highlight it in the visible chart.
+Selecting a company in a chart SHALL select, expand and reveal the same company in the table. Selecting a company in the table SHALL highlight it in the visible chart.
 
 #### Scenario: Select a treemap tile
-- **WHEN** the user clicks the tile of a company
-- **THEN** the table selects that company row and scrolls it into view.
+- **WHEN** the user clicks the tile of a company whose row is collapsed
+- **THEN** the table selects that company row, expands it to show its contributions and scrolls it into view.
 
 ### Requirement: Stable selection across updates
 Status updates, automatic refresh checks and recalculations SHALL preserve the selected rows, expanded rows and scroll position in the company table and in the data status table, as long as the selected items still exist.
@@ -120,3 +120,39 @@ Until the first result for the open portfolio is available, the view SHALL show 
 #### Scenario: Opening the view
 - **WHEN** the user opens the view and the first calculation is still running
 - **THEN** the summary shows placeholders and the chart area and table state that the breakdown is being calculated, without the "no company exposure" message.
+
+### Requirement: Separated data status pane
+The chart and table area SHALL be visually separated from the header above and from the data status pane below, so that each reads as a distinct section.
+
+#### Scenario: Pane below the table
+- **WHEN** the data status pane is open below the chart and table
+- **THEN** a visible boundary and spacing separate the two areas in light and dark theme.
+
+#### Scenario: Header above the charts
+- **WHEN** the view shows a result
+- **THEN** a visible boundary separates the summary and coverage legend from the chart and table.
+
+### Requirement: Percent signs outside percent columns
+Shares shown outside a column whose header names the unit SHALL carry a percent sign. This applies to the summary, the coverage legend and tooltips, and the chart labels and tooltips.
+
+#### Scenario: Summary and legend
+- **WHEN** the summary shows the assigned share and the top ten share and the coverage legend shows its categories
+- **THEN** each share is followed by a percent sign, while the table column keeps plain numbers below its percent header.
+
+### Requirement: Coverage legend
+The coverage legend SHALL carry a caption naming it as coverage, SHALL list only nonzero categories and SHALL NOT reuse the colors that the charts use for direct and indirect holdings.
+
+#### Scenario: Zero categories
+- **WHEN** ungrouped equities and cash or other assets are zero
+- **THEN** the coverage legend lists only companies and the remaining nonzero categories.
+
+### Requirement: Treemap tiles and bar values
+The treemap SHALL show every company as its own tile, SHALL leave no area unpainted, and its legend SHALL be a labelled scale from directly held to held through funds. Each bar SHALL show its total amount and share next to it.
+
+#### Scenario: Many small companies
+- **WHEN** the result contains hundreds of companies with tiny exposure
+- **THEN** every company keeps its own tile in size order, tiles too small for a gap are drawn without one, the area left by tiles too small to draw is filled in the tile color for fund holdings, and the chart area contains no blank region.
+
+#### Scenario: Bar values
+- **WHEN** the bar chart shows the largest companies
+- **THEN** each bar is followed by its total amount and share, and the value axis leaves enough room for the longest label.

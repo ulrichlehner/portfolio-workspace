@@ -25,7 +25,7 @@ None.
 ## Impact
 
 - UI bundle: presenter summary and header; messages.
-- Delivery: one focused commit on `feature/concentration-metrics`, stacked on `feature/breakdown-chart-polish`;
+- Delivery: one focused commit on `feature/concentration-metrics`, stacked on `feature/fund-overlap` in one linear stack;
   independent of the enrichment changes.
 
 ## Out of scope

@@ -2,7 +2,7 @@
 
 ## 1. Setup
 
-- [ ] 1.1 In `portfolio/`, create `feature/concentration-metrics` from `feature/breakdown-chart-polish`; verify with `git log --oneline -1`
+- [ ] 1.1 In `portfolio/`, create `feature/concentration-metrics` from `feature/fund-overlap` (single linear stack); verify with `git log --oneline -1`
 
 ## 2. Implementation
 

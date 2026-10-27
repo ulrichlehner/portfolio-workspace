@@ -28,7 +28,7 @@ decomposed constituents of every fund, so the overlap can be computed without ne
 
 - Core or presenter: overlap calculation from the look-through contributions.
 - UI: chart pane gets a third chart kind drawn with SWT (no new library).
-- Delivery: one focused commit on `feature/fund-overlap`, stacked on `feature/breakdown-chart-polish`;
+- Delivery: one focused commit on `feature/fund-overlap`, stacked on `feature/revenue-regions` in one linear stack;
   independent of the enrichment changes.
 
 ## Out of scope

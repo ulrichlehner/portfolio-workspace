@@ -112,9 +112,10 @@ jobs:
       - name: Build
         working-directory: portfolio
         run: |
+          # Upstream's OpenAPI lint/compat profiles compare against upstream
+          # references and are not meaningful for fork builds.
           mvn verify \
             --batch-mode \
-            -Popenapi-lint,openapi-compat \
             -DforceContextQualifier="$QUALIFIER" \
             --file portfolio-app/pom.xml
 

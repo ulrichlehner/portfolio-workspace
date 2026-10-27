@@ -88,6 +88,28 @@ jobs:
             exit 1
           fi
 
+      - name: Check file format against the latest official release
+        working-directory: portfolio
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # A file saved by this build must stay readable by the official PP.
+          # Compare Client.CURRENT_VERSION with the latest official release.
+          client=name.abuchen.portfolio/src/name/abuchen/portfolio/model/Client.java
+          file_version() { sed -n 's/.*int CURRENT_VERSION *= *\([0-9]*\);.*/\1/p' | head -1; }
+          fork=$(file_version < "$client")
+          release=$(gh api repos/portfolio-performance/portfolio/releases/latest --jq .tag_name)
+          official=$(curl -fsSL "https://raw.githubusercontent.com/portfolio-performance/portfolio/${release}/${client}" | file_version)
+          echo "File format: fork ${fork}, official ${release} ${official}"
+          if [ -z "$fork" ] || [ -z "$official" ]; then
+            echo "::warning::Could not compare the file format with the official release ${release}"
+          elif [ "$fork" -gt "$official" ]; then
+            echo "::warning::File format ${fork} is newer than official ${release} (${official}); files saved by this build cannot be opened by ${release}"
+            echo "FORMAT_NOTE=Files saved with this build use file format ${fork} and cannot be opened by the official release ${release} (format ${official})." >> "$GITHUB_ENV"
+          else
+            echo "FORMAT_NOTE=Same file format as the official release ${release} (format ${official}); portfolio files can be opened by both." >> "$GITHUB_ENV"
+          fi
+
       - name: Cache Maven artifacts
         uses: actions/cache@v6
         with:
@@ -153,6 +175,10 @@ jobs:
             echo
             echo "Built from ulrichlehner/portfolio@${FORK_SHA} (${FORK_REF}): ${url}"
             echo
+            if [ -n "${FORMAT_NOTE:-}" ]; then
+              echo "${FORMAT_NOTE}"
+              echo
+            fi
             echo "## ${heading}"
             echo
             # shellcheck disable=SC2086

@@ -190,8 +190,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          # --target creates the tag on this workspace commit when it does not exist yet
+          # The tag must exist (push it first): the workflow token may not
+          # create refs on commits that change workflow files.
           gh release create "$VERSION" dist/* \
-            --target "$GITHUB_SHA" \
+            --verify-tag \
             --title "Portfolio Performance ${VERSION} (unofficial fork build)" \
             --notes-file RELEASE_NOTES.md

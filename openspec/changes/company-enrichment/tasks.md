@@ -33,3 +33,8 @@
 - Country names from the profile map through JDK English names plus a small alias table (Hong Kong, South
   Korea and similar).
 - Switching register lookups off ignores stored register data without deleting it (open data).
+
+## Fixes after the first real-data check (2026-10-27)
+
+- Bar chart resize loop (StackOverflowError), table without source column, "Streuung" wording, title per grouping.
+- Enrichment in independent lanes with incremental storage, scoped register lookups (largest 500, typical holding domiciles or deviating profile country), throttled off-thread presentation, backoff and a data status line; companies are pending only while loading continues.

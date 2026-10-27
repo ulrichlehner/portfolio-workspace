@@ -7,17 +7,21 @@ Explain current company exposure across direct securities and fund constituents 
 ## Requirements
 
 ### Requirement: Feature identity
-The analysis SHALL be presented as Portfolio Lens within Portfolio Performance. It SHALL retain the existing PP application identity and portfolio compatibility rather than requiring a separately branded application.
+The analysis SHALL be presented as Breakdown (German: Aufschlüsselung) within Portfolio Performance, as a sub-item of Statement of Assets (German: Vermögensaufstellung), with the view title Breakdown by Company (German: Aufschlüsselung nach Unternehmen). It SHALL retain the existing PP application identity and portfolio compatibility rather than requiring a separately branded application.
 
 #### Scenario: Open the analysis
 - **WHEN** a user navigates to the look-through analysis
-- **THEN** the feature is labelled Portfolio Lens within the existing PP application.
+- **THEN** the feature is listed as Breakdown under Statement of Assets within the existing PP application, and the view is titled Breakdown by Company.
+
+#### Scenario: German user interface
+- **WHEN** PP runs with the German language
+- **THEN** the sidebar shows Aufschlüsselung under Vermögensaufstellung and the view is titled Aufschlüsselung nach Unternehmen.
 
 ### Requirement: Portfolio scope
 The analysis SHALL value every security with a nonzero net position across all portfolios of the open client in the reporting currency. It SHALL NOT require a prior selection. Percentages SHALL use the current value of those held securities, excluding account cash. Zero positions SHALL contribute nothing. Unsupported negative positions SHALL be disclosed as excluded, and an empty portfolio SHALL show an explicit empty state.
 
 #### Scenario: Open without a prior selection
-- **WHEN** a user opens Portfolio Lens in a client with holdings and no securities view is open
+- **WHEN** a user opens the Breakdown view in a client with holdings and no securities view is open
 - **THEN** the analysis covers all held securities and reports the valuation date.
 
 #### Scenario: Accounts and closed positions

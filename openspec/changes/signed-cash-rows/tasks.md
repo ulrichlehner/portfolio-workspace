@@ -2,7 +2,7 @@
 
 ## 1. Setup
 
-- [ ] 1.1 In `portfolio/`, create `fix/signed-cash-rows` from `feature/breakdown-ui-rework` and verify with `git log --oneline -1` that it starts at the Breakdown branch tip
+- [x] 1.1 In `portfolio/`, create `fix/signed-cash-rows` from `feature/breakdown-ui-rework` and verify with `git log --oneline -1` that it starts at the Breakdown branch tip
 
 ## 2. Validation
 

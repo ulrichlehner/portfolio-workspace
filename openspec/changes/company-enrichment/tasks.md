@@ -38,3 +38,4 @@
 
 - Bar chart resize loop (StackOverflowError), table without source column, "Streuung" wording, title per grouping.
 - Enrichment in independent lanes with incremental storage, scoped register lookups (largest 500, typical holding domiciles or deviating profile country), throttled off-thread presentation, backoff and a data status line; companies are pending only while loading continues.
+- Request accounting: constituents classified profile-first, profiles shared with enrichment, unused reservations released, revenue keeps headroom for profiles. Estimated first launch about 8 000 to 8 500 budget units instead of about 20 000. Profile-first assumes the profile endpoint returns no sector for funds (unverified).

@@ -290,11 +290,16 @@ completeness remain unverified, and users must independently ensure compliance
 with applicable provider terms/account entitlements. This is risk acceptance for
 the development fork, not verified rights or a legally assured transfer of
 responsibility. It supersedes the blanket source-publication gate below only for
-that fork. No provider payloads, credentials or public binaries may be distributed.
+that fork. Credentials, private data and provider payloads are never distributed.
+Update by the user on 2026-10-28: downloadable personal-use builds of the
+development fork (for example GitHub releases with an app version suffix) are
+allowed. Each release carries the same notice: unofficial, not supported by the
+PP maintainers, provider permissions and data completeness unverified, use at
+your own risk.
 Formal verification is deferred by the user's decision on 2026-10-26: provider use
 is assumed acceptable for the development fork until further notice, with the
 residual risk accepted by the user, and that assumption must not block completion.
-It is not a verified grant. Official upstream integration and binary releases still
+It is not a verified grant. Official upstream integration and official binary releases still
 require explicit sign-off by the user and the maintainers; upstream PR
 authorization is separate. Task 1.3 data validation continues independently.
 

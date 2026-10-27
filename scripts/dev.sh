@@ -61,7 +61,7 @@ build_metadata() {
 safe_scratch() {
     [ ! -L "$SCRATCH" ] || { echo "Unsafe scratch link" >&2; exit 1; }
     mkdir -p "$SCRATCH"
-    for name in pp-dev-data pp-dev-build pp-dev-workspace pp-dev-config pp-dev-home pp-dev-secrets pp-dev.lock; do
+    for name in pp-dev-data pp-dev-build pp-dev-workspace pp-dev-config pp-dev-home pp-dev-secrets pp-dev-provider-state pp-dev.lock; do
         [ ! -L "$SCRATCH/$name" ] || { echo "Unsafe managed storage link" >&2; exit 1; }
     done
 }
@@ -104,6 +104,41 @@ private_data() {
         "$IMAGE" python3 /tools/pp_dev_data.py "$action" --data /data --host-data "$SCRATCH/pp-dev-data"
     if [ "$action" = cleanup ]; then
         rmdir "$SCRATCH/pp-dev-data"
+        rm -rf "$SCRATCH/pp-dev-provider-state"
+    fi
+}
+
+# The managed workspace is recreated on each launch. Provider caches and the
+# Breakdown's own preferences (lookthrough.*) are carried over, so repeated
+# launches do not fetch every composition and company again.
+UI_STATE=.metadata/.plugins/name.abuchen.portfolio.ui
+UI_PREFS=.metadata/.plugins/org.eclipse.core.runtime/.settings/name.abuchen.portfolio.ui.prefs
+
+save_provider_state() {
+    local workspace="$SCRATCH/pp-dev-workspace" state="$SCRATCH/pp-dev-provider-state" name
+    [ -d "$workspace" ] || return 0
+    mkdir -p "$state" && chmod 700 "$state"
+    for name in lookthrough-cache lookthrough-companies; do
+        if [ -d "$workspace/$UI_STATE/$name" ] && [ ! -L "$workspace/$UI_STATE/$name" ]; then
+            rm -rf "${state:?}/$name"
+            mv "$workspace/$UI_STATE/$name" "$state/$name"
+        fi
+    done
+    if [ -f "$workspace/$UI_PREFS" ]; then
+        grep '^lookthrough\.' "$workspace/$UI_PREFS" > "$state/prefs" || true
+    fi
+}
+
+restore_provider_state() {
+    local workspace="$SCRATCH/pp-dev-workspace" state="$SCRATCH/pp-dev-provider-state" name
+    [ -d "$state" ] || return 0
+    mkdir -p "$workspace/$UI_STATE"
+    for name in lookthrough-cache lookthrough-companies; do
+        [ -d "$state/$name" ] && mv "$state/$name" "$workspace/$UI_STATE/$name"
+    done
+    if [ -s "$state/prefs" ]; then
+        mkdir -p "$(dirname "$workspace/$UI_PREFS")"
+        { echo "eclipse.preferences.version=1"; cat "$state/prefs"; } > "$workspace/$UI_PREFS"
     fi
 }
 
@@ -140,11 +175,13 @@ case "${1:-}" in
                 fi
                 launch_args=(-applicationXMI "$(cat "$SCRATCH/pp-dev-data/startup-uri")" -clearPersistedState)
                 # No recent-file history from any earlier manual session.
+                save_provider_state
                 rm -rf "$SCRATCH/pp-dev-workspace"
                 ;;
             *) usage; exit 1 ;;
         esac
         mkdir -p "$SCRATCH/pp-dev-workspace"
+        restore_provider_state
         rm -rf "$SCRATCH/pp-dev-config"
         cp -R "$APP/Contents/Eclipse/configuration" "$SCRATCH/pp-dev-config"
         if [ "${2:-}" = --webdav-copy ]; then
@@ -207,6 +244,8 @@ case "${1:-}" in
         acquire_lock
         require_fork
         find "$PP" -mindepth 2 -maxdepth 3 -type d -name target -prune -exec rm -rf {} +
+        # Provider caches survive an ordinary clean; clean-data removes them.
+        save_provider_state
         rm -rf "$SCRATCH/pp-dev-workspace"
         rm -rf "$SCRATCH/pp-dev-config"
         rm -rf "$SCRATCH/pp-dev-home"

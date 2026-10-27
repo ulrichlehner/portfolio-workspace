@@ -99,6 +99,13 @@ installs that key as a session key when no key is configured yet. The managed
 workspace is recreated on each launch, so this is what makes repeated local tests
 possible without retyping the key.
 
+The managed workspace is recreated on each launch, but the Breakdown's provider
+caches (`lookthrough-cache`, `lookthrough-companies`) and its own preferences
+(`lookthrough.*`, including the local storage confirmation) are carried over in
+`scratch/pp-dev-provider-state/` (mode 700). Repeated launches therefore do not
+fetch every composition and company again. An ordinary `clean` keeps them;
+`clean-data` removes them.
+
 The key itself never appears in arguments, logs, preferences or exports. The
 property is read once at startup, ignored when a secure or session key already
 exists, and refuses links, oversized files and malformed content. This is a

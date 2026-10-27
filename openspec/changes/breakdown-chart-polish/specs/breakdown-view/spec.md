@@ -18,7 +18,7 @@ The view SHALL show a horizontal bar that splits the securities value into compa
 - **THEN** the coverage legend lists only companies and the remaining nonzero categories.
 
 ### Requirement: Company charts
-The view SHALL offer a treemap of companies sized by total exposure and a bar chart of the largest companies stacked by direct and indirect exposure. Charts SHALL show only company exposure; unresolved and other categories SHALL stay in the coverage bar. Each chart element SHALL show the company, amount and share in a tooltip. The treemap SHALL show every company as its own tile, SHALL leave no area unpainted, and its legend SHALL be a labelled scale from directly held to held through funds.
+The view SHALL offer a treemap of companies sized by total exposure and a bar chart of the largest companies stacked by direct and indirect exposure. Charts SHALL show only company exposure; unresolved and other categories SHALL stay in the coverage bar. Each chart element SHALL show the company, amount and share in a tooltip. The treemap SHALL show every company as its own tile, SHALL leave no area unpainted, and its legend SHALL be a labelled scale from directly held to held through funds. Each bar SHALL show its total amount and share next to it.
 
 #### Scenario: Company held directly and through funds
 - **WHEN** a company is held directly and through two funds
@@ -30,7 +30,11 @@ The view SHALL offer a treemap of companies sized by total exposure and a bar ch
 
 #### Scenario: Many small companies
 - **WHEN** the result contains hundreds of companies with tiny exposure
-- **THEN** every company keeps its own tile in size order, the area left by tiles too small to draw is filled in the tile color for fund holdings, and the chart area contains no blank region.
+- **THEN** every company keeps its own tile in size order, tiles too small for a gap are drawn without one, the area left by tiles too small to draw is filled in the tile color for fund holdings, and the chart area contains no blank region.
+
+#### Scenario: Bar values
+- **WHEN** the bar chart shows the largest companies
+- **THEN** each bar is followed by its total amount and share, and the value axis leaves enough room for the longest label.
 
 ### Requirement: Linked chart and table selection
 Selecting a company in a chart SHALL select, expand and reveal the same company in the table. Selecting a company in the table SHALL highlight it in the visible chart.
@@ -42,8 +46,19 @@ Selecting a company in a chart SHALL select, expand and reveal the same company 
 ## ADDED Requirements
 
 ### Requirement: Separated data status pane
-The chart and table area SHALL be visually separated from the data status pane, so that the pane reads as a distinct section rather than a continuation of the table.
+The chart and table area SHALL be visually separated from the header above and from the data status pane below, so that each reads as a distinct section.
 
 #### Scenario: Pane below the table
 - **WHEN** the data status pane is open below the chart and table
 - **THEN** a visible boundary and spacing separate the two areas in light and dark theme.
+
+#### Scenario: Header above the charts
+- **WHEN** the view shows a result
+- **THEN** a visible boundary separates the summary and coverage legend from the chart and table.
+
+### Requirement: Percent signs outside percent columns
+Shares shown outside a column whose header names the unit SHALL carry a percent sign. This applies to the summary, the coverage legend and tooltips, and the chart labels and tooltips.
+
+#### Scenario: Summary and legend
+- **WHEN** the summary shows the assigned share and the top ten share and the coverage legend shows its categories
+- **THEN** each share is followed by a percent sign, while the table column keeps plain numbers below its percent header.

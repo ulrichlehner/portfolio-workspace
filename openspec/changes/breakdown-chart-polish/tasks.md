@@ -8,8 +8,8 @@
 
 - [x] 2.1 Expand the company row when a chart selects it and verify in the running app that clicking a tile of a collapsed company shows its contributions
 - [x] 2.2 Give the coverage legend a caption, hide zero categories and move cash/other off green; replace the treemap legend by a labelled direct-to-funds scale; verify with a presenter test for zero categories and in the running app in light and dark theme
-- [x] 2.3 Group treemap companies below a readable size into one neutral "other companies" tile with tooltip, paint the whole chart area, and verify with a chart-model test for the grouping and in the running app that no blank region remains
-- [x] 2.4 Separate the chart and table area from the data status pane within the view and verify in the running app in light and dark theme
+- [ ] 2.3 Fill the whole treemap area so tiles too small to draw leave no blank region, keep every company as its own tile, and verify in the running app with a large portfolio. A first version grouped small companies into one "other companies" tile; with about 4000 companies the group became the largest tile and dominated the chart, so grouping was dropped
+- [ ] 2.4 Separate the chart and table area from the data status pane within the view with a custom-drawn line (the native separator is invisible on macOS) and verify in the running app in light and dark theme
 
 ## 3. Verification and commit
 

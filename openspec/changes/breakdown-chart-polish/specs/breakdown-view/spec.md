@@ -18,7 +18,7 @@ The view SHALL show a horizontal bar that splits the securities value into compa
 - **THEN** the coverage legend lists only companies and the remaining nonzero categories.
 
 ### Requirement: Company charts
-The view SHALL offer a treemap of companies sized by total exposure and a bar chart of the largest companies stacked by direct and indirect exposure. Charts SHALL show only company exposure; unresolved and other categories SHALL stay in the coverage bar. Each chart element SHALL show the company, amount and share in a tooltip. The treemap SHALL group companies too small for a readable tile into one neutral "other companies" tile, SHALL leave no area unpainted, and its legend SHALL be a labelled scale from directly held to held through funds.
+The view SHALL offer a treemap of companies sized by total exposure and a bar chart of the largest companies stacked by direct and indirect exposure. Charts SHALL show only company exposure; unresolved and other categories SHALL stay in the coverage bar. Each chart element SHALL show the company, amount and share in a tooltip. The treemap SHALL show every company as its own tile, SHALL leave no area unpainted, and its legend SHALL be a labelled scale from directly held to held through funds.
 
 #### Scenario: Company held directly and through funds
 - **WHEN** a company is held directly and through two funds
@@ -30,7 +30,7 @@ The view SHALL offer a treemap of companies sized by total exposure and a bar ch
 
 #### Scenario: Many small companies
 - **WHEN** the result contains hundreds of companies with tiny exposure
-- **THEN** the treemap shows the largest companies as tiles and one "other companies" tile whose tooltip names the number of companies, their amount and share, and the chart area contains no blank region.
+- **THEN** every company keeps its own tile in size order, the area left by tiles too small to draw is filled in the tile color for fund holdings, and the chart area contains no blank region.
 
 ### Requirement: Linked chart and table selection
 Selecting a company in a chart SHALL select, expand and reveal the same company in the table. Selecting a company in the table SHALL highlight it in the visible chart.

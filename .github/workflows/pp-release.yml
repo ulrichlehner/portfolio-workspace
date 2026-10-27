@@ -1,0 +1,170 @@
+name: PP Fork Release
+# Builds the Portfolio Performance fork (ulrichlehner/portfolio) and publishes
+# a release in this workspace repository. Personal use, not an official release.
+on:
+  push:
+    tags:
+      - '*-fork.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version and tag, e.g. 0.89.1-fork.1'
+        required: true
+        type: string
+      ref:
+        description: 'Fork branch, tag or commit to build'
+        required: false
+        default: release/fork
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish fork release
+    runs-on: ubuntu-latest
+    env:
+      INPUT_VERSION: ${{ inputs.version }}
+      INPUT_REF: ${{ inputs.ref }}
+    steps:
+      - name: Resolve version and ref
+        env:
+          EVENT: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT" = workflow_dispatch ]; then
+            version="$INPUT_VERSION"
+            ref="${INPUT_REF:-release/fork}"
+          else
+            version="$GITHUB_REF_NAME"
+            ref=""
+          fi
+          if ! [[ "$version" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?-fork\.[0-9]+$ ]]; then
+            echo "::error::Version '$version' must look like 0.89.1-fork.1"
+            exit 1
+          fi
+          {
+            echo "VERSION=$version"
+            echo "FORK_REF=$ref"
+            # OSGi qualifiers must not contain dots: 0.89.1-fork.1 becomes fork1
+            echo "QUALIFIER=fork${version##*-fork.}"
+          } >> "$GITHUB_ENV"
+
+      - name: Check out workspace
+        uses: actions/checkout@v7
+
+      - name: Select fork ref
+        run: |
+          # A tag push may name another fork ref in release/fork-ref
+          if [ -z "$FORK_REF" ]; then
+            if [ -f release/fork-ref ]; then
+              FORK_REF=$(head -1 release/fork-ref | tr -d '[:space:]')
+            fi
+            FORK_REF="${FORK_REF:-release/fork}"
+          fi
+          echo "FORK_REF=$FORK_REF" >> "$GITHUB_ENV"
+
+      - name: Check out fork
+        uses: actions/checkout@v7
+        with:
+          repository: ulrichlehner/portfolio
+          ref: ${{ env.FORK_REF }}
+          path: portfolio
+          fetch-depth: 0
+
+      - name: Record fork commit
+        working-directory: portfolio
+        run: |
+          echo "FORK_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Check version against fork project version
+        working-directory: portfolio
+        run: |
+          base="${VERSION%%-fork*}"
+          project=$(sed -n 's|^[[:space:]]*<version>\(.*\)</version>.*|\1|p' portfolio-app/pom.xml | head -1)
+          project="${project%-SNAPSHOT}"
+          if [ "$base" != "$project" ]; then
+            echo "::error::Version base '$base' does not match project version '$project'"
+            exit 1
+          fi
+
+      - name: Cache Maven artifacts
+        uses: actions/cache@v6
+        with:
+          path: ~/.m2/repository
+          # Include .target files: Tycho resolves OSGi dependencies from the
+          # target platform definition, which is not captured by pom.xml alone
+          key: ${{ runner.os }}-mvn-${{ hashFiles('portfolio/**/pom.xml', 'portfolio/**/*.target') }}
+          restore-keys: |
+            ${{ runner.os }}-mvn-
+
+      - name: Set up Temurin JDK 21
+        uses: actions/setup-java@v6
+        with:
+          java-version: 21
+          distribution: temurin
+
+      - name: Set up Maven 3.9.16
+        uses: stCarolas/setup-maven@v5
+        with:
+          maven-version: 3.9.16
+
+      - name: Build
+        working-directory: portfolio
+        run: |
+          mvn verify \
+            --batch-mode \
+            -Popenapi-lint,openapi-compat \
+            -DforceContextQualifier="$QUALIFIER" \
+            --file portfolio-app/pom.xml
+
+      - name: Package Linux archives
+        run: |
+          mkdir -p dist
+          for arch in x86_64 aarch64; do
+            dir="portfolio/portfolio-product/target/products/name.abuchen.portfolio.product/linux/gtk/${arch}"
+            if [ ! -x "${dir}/portfolio/PortfolioPerformance" ]; then
+              echo "::error::No materialized Linux ${arch} product in ${dir}"
+              exit 1
+            fi
+            out="PortfolioPerformance-${VERSION}-linux.gtk.${arch}.tar.gz"
+            # Same layout as upstream: top-level portfolio/ directory
+            tar -C "$dir" --owner=0 --group=0 -czf "dist/${out}" portfolio
+            (cd dist && sha256sum "$out" > "${out}.sha256")
+          done
+          find dist -type f -exec ls -l {} +
+          cat dist/*.sha256
+
+      - name: Create release notes
+        run: |
+          url="https://github.com/ulrichlehner/portfolio/commit/${FORK_SHA}"
+          if git -C portfolio fetch --no-tags --filter=blob:none \
+              https://github.com/portfolio-performance/portfolio.git master:refs/remotes/upstream/master 2>/dev/null \
+              && base=$(git -C portfolio merge-base upstream/master "$FORK_SHA"); then
+            range="${base}..${FORK_SHA}"
+            heading="Commits since upstream base ${base:0:10}"
+          else
+            range="-n 50 ${FORK_SHA}"
+            heading="Latest commits"
+          fi
+          {
+            echo "Unofficial personal-use build of a Portfolio Performance fork. Not an official PP release and not supported by the PP maintainers. Includes experimental features (Breakdown / look-through view with a fund composition provider). Provider permissions and data completeness are unverified. Use at your own risk; you are responsible for complying with your data provider's terms."
+            echo
+            echo "Built from ulrichlehner/portfolio@${FORK_SHA} (${FORK_REF}): ${url}"
+            echo
+            echo "## ${heading}"
+            echo
+            # shellcheck disable=SC2086
+            git -C portfolio log --no-merges --format='- %s (%h)' $range
+          } > RELEASE_NOTES.md
+          cat RELEASE_NOTES.md
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # --target creates the tag on this workspace commit when it does not exist yet
+          gh release create "$VERSION" dist/* \
+            --target "$GITHUB_SHA" \
+            --title "Portfolio Performance ${VERSION} (unofficial fork build)" \
+            --notes-file RELEASE_NOTES.md

@@ -1,6 +1,22 @@
 # Spec Delta
 
+## MODIFIED Requirements
+
+### Requirement: Percent signs outside percent columns
+Shares SHALL carry a percent sign wherever they are shown: in the summary, the coverage legend and tooltips, the chart labels, treemap group headers and tooltips, and the share column of the table.
+
+#### Scenario: Summary and legend
+- **WHEN** the summary shows the assigned share and the top ten share and the coverage legend shows its categories
+- **THEN** each share is followed by a percent sign, as are the values in the table's share column.
+
 ## ADDED Requirements
+
+### Requirement: Table columns
+The table SHALL name its first column after the selected grouping, show a rank for top-level company or group rows by total, and show each contribution's source in the first column below its company. Rows whose total rounds to zero in the currency SHALL be hidden and not ranked.
+
+#### Scenario: Ranked groups
+- **WHEN** the user groups by sector
+- **THEN** the first column reads "Sector / company", sectors carry ranks 1, 2, 3 by total, and Unknown, Pending and coverage category rows carry no rank.
 
 ### Requirement: Grouping selector
 The view SHALL offer a "Breakdown by" selector with Company, Country, Region, Market classification, Sector, Industry and Currency. Company SHALL be the default. The selection SHALL be remembered per view and SHALL NOT trigger provider requests.

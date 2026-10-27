@@ -18,7 +18,7 @@
 ## 4. Verification and commit
 
 - [x] 4.1 Run `scripts/dev.sh test` and the Docker UI reactor tests with Checkstyle, scan the diff for private data and create one focused commit (fork 456ce8c39; 5140 core and 130 UI tests pass)
-- [ ] 4.2 With the user's private portfolio copy, compare Country and Revenue region totals and check coverage; report aggregates only
+- [x] 4.2 With the user's private portfolio copy, compare Country and Revenue region totals and check coverage; report aggregates only (checked by the user; fallback to headquarters added after feedback)
 
 ## Notes
 

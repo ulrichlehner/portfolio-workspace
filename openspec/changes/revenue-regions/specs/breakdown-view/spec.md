@@ -3,11 +3,11 @@
 ## ADDED Requirements
 
 ### Requirement: Revenue region grouping
-The "Breakdown by" selector SHALL offer "Revenue region". It SHALL show the allocated exposure per country or region, a "No revenue data" group for unallocated companies, and a notice with the share of company exposure that has revenue data and the range of reporting periods.
+The "Breakdown by" selector SHALL offer "Revenue region". It SHALL show the exposure allocated by revenue per country or region, companies without revenue data in their headquarters country marked as fallback, a "No revenue data" group for companies with neither, and a notice with the shares of company exposure allocated by revenue, by headquarters fallback and without data, plus the range of reporting periods.
 
 #### Scenario: Partial revenue data
 - **WHEN** companies covering 80 percent of the company exposure have revenue data
-- **THEN** the groups show the allocated amounts, "No revenue data" holds the remaining 20 percent, and the notice states the 80 percent coverage.
+- **THEN** the remaining 20 percent are allocated to headquarters countries as marked fallback where known, and the notice states 80 percent by revenue, the fallback share and the share without data.
 
 #### Scenario: Headquarters and revenue differ
 - **WHEN** the user switches between Country and Revenue region

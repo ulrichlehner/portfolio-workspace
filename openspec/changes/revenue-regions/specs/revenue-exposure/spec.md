@@ -19,7 +19,7 @@ The system SHALL retrieve a company's revenue by geography from the provider and
 - **THEN** the split is scaled to 100 percent and the data status names the company as incomplete.
 
 ### Requirement: Exposure allocation by revenue
-A company's total exposure SHALL be allocated to the members of its revenue split proportionally. Companies without revenue data SHALL remain unallocated. The allocated and unallocated amounts SHALL add up to the company exposure.
+A company's total exposure SHALL be allocated to the members of its revenue split proportionally. Companies without revenue data SHALL be allocated entirely to their headquarters country as a marked fallback, and remain unallocated only when that country is unknown. The allocated and unallocated amounts SHALL add up to the company exposure.
 
 #### Scenario: Allocation
 - **WHEN** a company with exposure 1000 has a split of 60 percent United States and 40 percent Europe

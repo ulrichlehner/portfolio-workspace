@@ -19,7 +19,7 @@
 ## 4. Verification and commit
 
 - [x] 4.1 Run the Docker UI reactor tests and Checkstyle, scan the diff for private data and create one focused commit (fork 821a0bb55; UI tests pass)
-- [ ] 4.2 Build the app and let the user check the country, region and sector groupings with a private copy of the portfolio
+- [x] 4.2 Build the app and let the user check the country, region and sector groupings with a private copy of the portfolio (checked by the user (country, region, sector, industry, revenue screenshots))
 
 ## Notes
 

@@ -7,12 +7,12 @@
 ## 2. Implementation
 
 - [x] 2.1 Compute the effective number of companies and the largest company in the presenter summary; verify with presenter tests for the even-spread and dominant-company examples
-- [ ] 2.2 Show both in the header with tooltips and extend the attention indicator above 10 percent; add texts and translations; verify with a header test and the message checks
+- [x] 2.2 Show both in the header with tooltips and extend the attention indicator above 10 percent; add texts and translations; verify with a header test and the message checks (verified by the user in the running app (header, tooltip, warning))
 
 ## 3. Verification and commit
 
 - [x] 3.1 Run the Docker UI reactor tests and Checkstyle, scan the diff for private data and create one focused commit (fork 37b3cfeab; 135 UI tests pass)
-- [ ] 3.2 Build the app and let the user check the summary with a private copy of the portfolio
+- [x] 3.2 Build the app and let the user check the summary with a private copy of the portfolio (checked by the user over several rounds; the figure is shown as "N von M" after feedback)
 
 ## Notes
 

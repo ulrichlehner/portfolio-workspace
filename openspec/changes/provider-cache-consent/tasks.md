@@ -18,7 +18,7 @@
 ## 4. Verification and commit
 
 - [x] 4.1 Run the Docker UI reactor tests and Checkstyle, scan the diff for private data and create one focused commit (fork 0dad41ca7 incl. stored "no composition" answers; core and UI tests pass)
-- [ ] 4.2 Build the app, confirm local storage with the user's private portfolio copy, restart the app and verify that the Breakdown appears without new retrieval; then withdraw and verify the cache is gone
+- [x] 4.2 Build the app, confirm local storage with the user's private portfolio copy, restart the app and verify that the Breakdown appears without new retrieval; then withdraw and verify the cache is gone (checked: confirmation stored, 7 compositions and all classifications on disk, no provider connection on start before the view opens)
 
 ## Notes
 

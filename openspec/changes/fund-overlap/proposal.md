@@ -12,7 +12,8 @@ decomposed constituents of every fund, so the overlap can be computed without ne
   of the two weights, plus the number of shared companies.
 - A new chart kind "Overlap" in the chart pane shows a fund-by-fund matrix with the overlap percentage per
   cell; the tooltip lists the largest shared companies.
-- Selecting a cell selects the largest shared company in the table.
+- Each pair is shown once (lower triangle) with its shared company count; cells do not navigate the table
+  (changed after the user's check).
 
 ## Capabilities
 

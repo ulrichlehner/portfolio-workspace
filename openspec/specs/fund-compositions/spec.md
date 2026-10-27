@@ -105,7 +105,7 @@ Allocation semantics SHALL be validated either by an authoritative provider decl
 The system SHALL preserve source rows and use decimal weights without general normalization. Malformed, nonfinite, negative or overfull weights SHALL make a snapshot unusable, except for an evidenced rounding excess of at most one millionth in fractional-weight units. Accepted excess SHALL be removed proportionally with exact reconciliation. Positive shortfalls SHALL remain unresolved. Legitimate duplicate rows SHALL only be combined after validating their semantics.
 
 #### Scenario: Signed or overfull response
-- **WHEN** a response contains a negative allocation or a total above 100% beyond the rounding tolerance
+- **WHEN** a response contains a negative allocation on a row with a security identifier, a negative net of rows without an identifier, or a total above 100% beyond the rounding tolerance
 - **THEN** the system retains diagnostic source information and leaves the fund unresolved rather than dropping rows or rescaling it.
 
 #### Scenario: Provider rounding excess
@@ -119,6 +119,21 @@ The system SHALL preserve source rows and use decimal weights without general no
 #### Scenario: Legitimate duplicate positions
 - **WHEN** two nonnegative positions represent the same verified instrument within a valid NAV composition
 - **THEN** both contributions are retained in the calculation rather than discarding one by identifier.
+
+### Requirement: Netting of rows without identifier
+Negative rows without a security identifier SHALL follow this requirement instead of the negative-weight rule. When all identified rows are nonnegative, rows without an identifier SHALL be netted against each other. A zero or positive net SHALL stay unresolved as one amount with a non-fatal diagnostic; a negative net SHALL make the snapshot unusable. Netting SHALL NOT classify rows by name, rescale identified rows or change source rows.
+
+#### Scenario: Negative cash and currency rows without identifier
+- **WHEN** a composition sums to 100%, all identified rows are nonnegative, and its rows without an identifier are +0.05% and -0.015% of the fund
+- **THEN** the identified rows keep their exact weights and are eligible for classification, the identifier-less rows become one unresolved amount of +0.035%, the fund reconciles exactly, the source rows stay unchanged, and a netting diagnostic is recorded.
+
+#### Scenario: Negative net without identifier
+- **WHEN** the rows without an identifier sum to a negative amount
+- **THEN** the snapshot is unusable and the fund stays unresolved with the negative-weight reason.
+
+#### Scenario: Short position with identifier
+- **WHEN** a row with a security identifier has a negative weight
+- **THEN** the snapshot is unusable even if identifier-less rows could absorb the amount.
 
 ### Requirement: Bounded automatic identity resolution
 The system SHALL attempt automatic classification and identity resolution within provider budgets. Missing or ambiguous identity SHALL remain explicit. Names alone SHALL NOT establish instrument equivalence or company grouping, and an ISIN alone SHALL NOT establish equity classification.

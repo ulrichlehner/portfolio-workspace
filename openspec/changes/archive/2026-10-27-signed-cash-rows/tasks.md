@@ -17,7 +17,7 @@
 ## 4. Verification and commit
 
 - [x] 4.1 Run `scripts/dev.sh test` and the Docker UI reactor tests, scan the diff for private data (no real ISINs or holdings in tests), and create one focused commit
-- [ ] 4.2 Build the app, open a private copy of the portfolio, and verify that the previously rejected funds show OK with a decomposed share and that their constituents appear in the breakdown; record the result without private values
+- [x] 4.2 Build the app, open a private copy of the portfolio, and verify that the previously rejected funds show OK with a decomposed share and that their constituents appear in the breakdown; record the result without private values
 
 ## Workflow follow-up
 

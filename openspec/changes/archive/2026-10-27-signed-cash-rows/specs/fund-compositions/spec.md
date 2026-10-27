@@ -3,7 +3,7 @@
 ## MODIFIED Requirements
 
 ### Requirement: Conservative numerical validation
-The system SHALL preserve source rows and use decimal weights without general normalization. Malformed, nonfinite, negative or overfull weights SHALL make a snapshot unusable, except for an evidenced rounding excess of at most one millionth in fractional-weight units, and except for negative rows without a security identifier whose netting is described below. Accepted excess SHALL be removed proportionally with exact reconciliation. Positive shortfalls SHALL remain unresolved. Legitimate duplicate rows SHALL only be combined after validating their semantics. Within one snapshot, rows without a security identifier SHALL be netted against each other when no row with an identifier is negative; a zero or positive net SHALL stay unresolved as one netted amount, a negative net SHALL make the snapshot unusable. Netting SHALL NOT classify any row by its name, rescale any identified row or change the source rows, and SHALL be recorded as a non-fatal diagnostic.
+The system SHALL preserve source rows and use decimal weights without general normalization. Malformed, nonfinite, negative or overfull weights SHALL make a snapshot unusable, except for an evidenced rounding excess of at most one millionth in fractional-weight units. Accepted excess SHALL be removed proportionally with exact reconciliation. Positive shortfalls SHALL remain unresolved. Legitimate duplicate rows SHALL only be combined after validating their semantics.
 
 #### Scenario: Signed or overfull response
 - **WHEN** a response contains a negative allocation on a row with a security identifier, a negative net of rows without an identifier, or a total above 100% beyond the rounding tolerance
@@ -20,6 +20,11 @@ The system SHALL preserve source rows and use decimal weights without general no
 #### Scenario: Legitimate duplicate positions
 - **WHEN** two nonnegative positions represent the same verified instrument within a valid NAV composition
 - **THEN** both contributions are retained in the calculation rather than discarding one by identifier.
+
+## ADDED Requirements
+
+### Requirement: Netting of rows without identifier
+Negative rows without a security identifier SHALL follow this requirement instead of the negative-weight rule. When all identified rows are nonnegative, rows without an identifier SHALL be netted against each other. A zero or positive net SHALL stay unresolved as one amount with a non-fatal diagnostic; a negative net SHALL make the snapshot unusable. Netting SHALL NOT classify rows by name, rescale identified rows or change source rows.
 
 #### Scenario: Negative cash and currency rows without identifier
 - **WHEN** a composition sums to 100%, all identified rows are nonnegative, and its rows without an identifier are +0.05% and -0.015% of the fund

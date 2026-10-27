@@ -56,7 +56,7 @@
 ## 8. Integration checks
 
 - [x] 8.1 Build with `scripts/dev.sh app` and run `scripts/dev.sh run-app --webdav-copy` against a copy of the user's portfolio; verify each scenario of the `breakdown-view` and `composition-provider-settings` specs and record the results in this change without private values
-- [ ] 8.2 Run `scripts/dev.sh clean`, then record the commit references and any remaining verification in this file
+- [x] 8.2 Run `scripts/dev.sh clean`, then record the commit references and any remaining verification in this file
 
 ## Workflow follow-up
 

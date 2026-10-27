@@ -67,3 +67,10 @@ files introduced by increment E.
   classification.
 - Banner: after a new key is saved, the suspended banner stays until the next refresh replaces
   the failed attempt.
+
+## Cleanup (2026-10-27)
+
+`scripts/dev.sh clean` and `scripts/dev.sh clean-data` ran after the dev app was quit; the
+private configuration stays. Final fork commits on `feature/breakdown-ui-rework`:
+`b42b770cf`, `b2f79fb2c`, `0a5ff3d00`, `c13bae600`, `258d18efa`, `76adde874`. Nothing pushed.
+Follow-up: `signed-cash-rows` (planned) makes the funds with netted cash rows usable.

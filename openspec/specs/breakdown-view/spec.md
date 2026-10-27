@@ -133,11 +133,11 @@ The chart and table area SHALL be visually separated from the header above and f
 - **THEN** a visible boundary separates the summary and coverage legend from the chart and table.
 
 ### Requirement: Percent signs outside percent columns
-Shares shown outside a column whose header names the unit SHALL carry a percent sign. This applies to the summary, the coverage legend and tooltips, and the chart labels and tooltips.
+Shares SHALL carry a percent sign wherever they are shown: in the summary, the coverage legend and tooltips, the chart labels, treemap group headers and tooltips, and the share column of the table.
 
 #### Scenario: Summary and legend
 - **WHEN** the summary shows the assigned share and the top ten share and the coverage legend shows its categories
-- **THEN** each share is followed by a percent sign, while the table column keeps plain numbers below its percent header.
+- **THEN** each share is followed by a percent sign, as are the values in the table's share column.
 
 ### Requirement: Coverage legend
 The coverage legend SHALL carry a caption naming it as coverage, SHALL list only nonzero categories and SHALL NOT reuse the colors that the charts use for direct and indirect holdings.
@@ -156,3 +156,78 @@ The treemap SHALL show every company as its own tile, SHALL leave no area unpain
 #### Scenario: Bar values
 - **WHEN** the bar chart shows the largest companies
 - **THEN** each bar is followed by its total amount and share, and the value axis leaves enough room for the longest label.
+
+### Requirement: Table columns
+The table SHALL name its first column after the selected grouping, show a rank for top-level company or group rows by total, and show each contribution's source in the first column below its company. Rows whose total rounds to zero in the currency SHALL be hidden and not ranked.
+
+#### Scenario: Ranked groups
+- **WHEN** the user groups by sector
+- **THEN** the first column reads "Sector / company", sectors carry ranks 1, 2, 3 by total, and Unknown, Pending and coverage category rows carry no rank.
+
+### Requirement: Grouping selector
+The view SHALL offer a "Breakdown by" selector with Company, Country, Region, Market classification, Sector, Industry and Currency. Company SHALL be the default. The selection SHALL be remembered per view and SHALL NOT trigger provider requests.
+
+#### Scenario: Switch to country
+- **WHEN** the user selects Country
+- **THEN** the table, treemap and bar chart show countries, using the current result and stored attributes only.
+
+### Requirement: Group rows
+For every grouping except Company, the table SHALL show one row per group with direct, indirect and total value and share. A group row SHALL expand into its companies, and the companies SHALL keep their contributions. The group totals SHALL add up to the company exposure of the result.
+
+#### Scenario: Country totals
+- **WHEN** the result contains companies headquartered in two countries
+- **THEN** each country row shows the sum of its companies, and both rows together equal the company exposure.
+
+### Requirement: Unknown and pending groups
+Companies without the selected attribute SHALL be shown in an "Unknown" group, and companies whose enrichment is still pending in a "Pending" group. Both groups SHALL show their count in the label.
+
+#### Scenario: Enrichment running
+- **WHEN** the user groups by sector while enrichment of the smaller companies is still running
+- **THEN** the enriched companies appear in their sectors, the others in "Pending", and the groups update as enrichment completes without losing the selection.
+
+### Requirement: Grouped charts
+For every grouping except Company, the treemap SHALL show groups as tiles with their companies nested inside, and the bar chart SHALL show the largest groups split into direct and indirect value with amount and share next to each bar. Selecting a group in a chart SHALL select and expand it in the table.
+
+#### Scenario: Select a country tile
+- **WHEN** the user clicks the area of a country in the treemap outside any labelled company
+- **THEN** the table selects and expands that country row.
+
+### Requirement: Standard classifications
+Regions and market classification SHALL use PP's region taxonomy templates, mapping each country code to its template category. Sectors SHALL map provider sector names to PP's GICS sector template by name; unmatched names SHALL be shown as delivered. The country source SHALL be visible in the country tooltip.
+
+#### Scenario: Country not in template
+- **WHEN** a company's country is not listed in the region template
+- **THEN** the company appears in the "Unknown" region group and keeps its country in the country grouping.
+
+### Requirement: Revenue region grouping
+The "Breakdown by" selector SHALL offer "Revenue region". It SHALL show the exposure allocated by revenue per country or region, companies without revenue data in their headquarters country marked as fallback, a "No revenue data" group for companies with neither, and a notice with the shares of company exposure allocated by revenue, by headquarters fallback and without data, plus the range of reporting periods.
+
+#### Scenario: Partial revenue data
+- **WHEN** companies covering 80 percent of the company exposure have revenue data
+- **THEN** the remaining 20 percent are allocated to headquarters countries as marked fallback where known, and the notice states 80 percent by revenue, the fallback share and the share without data.
+
+#### Scenario: Headquarters and revenue differ
+- **WHEN** the user switches between Country and Revenue region
+- **THEN** both groupings keep the same total, and the labels make clear that one shows headquarters and the other revenue.
+
+### Requirement: Overlap chart
+The chart pane SHALL offer an "Overlap" chart kind showing each pair of decomposed funds once, as the lower triangle of a fund matrix without diagonal. Each cell SHALL show the overlap percentage and the number of shared companies, shaded by size. A cell tooltip SHALL name both funds, the overlap, the number of shared companies and the five largest shared companies. With fewer than two decomposed funds, the chart SHALL show a short message instead of a matrix.
+
+#### Scenario: Two decomposed funds
+- **WHEN** the portfolio holds two decomposed funds
+- **THEN** the overlap chart shows one cell for the pair with its overlap and shared company count.
+
+#### Scenario: Single fund
+- **WHEN** only one fund is decomposed
+- **THEN** the overlap chart states that at least two decomposed funds are needed.
+
+### Requirement: Concentration summary
+The summary SHALL show the effective number of companies, computed as one divided by the sum of squared shares of each company in the company exposure and shown together with the number of companies, and the largest company with its share of the portfolio value. When a single company exceeds 10 percent of the portfolio value, the attention indicator SHALL name that company and its share.
+
+#### Scenario: Evenly spread
+- **WHEN** the company exposure is split evenly across 100 companies
+- **THEN** the summary shows an effective number of 100 of 100 companies.
+
+#### Scenario: Dominant company
+- **WHEN** one company accounts for 12 percent of the portfolio value
+- **THEN** the summary shows it as the largest company and the attention indicator names it with its 12 percent share.

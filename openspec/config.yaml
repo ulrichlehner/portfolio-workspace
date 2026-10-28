@@ -5,8 +5,9 @@ context: |
   portfolio/ and goes upstream as pull requests to portfolio-performance/portfolio. These OpenSpec artifacts
   stay in this workspace and never go upstream.
   The fork also has the long-lived branch release/fork for features that exist only in the development fork.
-  Fork-only changes branch from release/fork and are merged with a pull request inside the fork; changes meant
-  for upstream branch from upstream/master. Fork releases are built from release/fork by the workspace
+  Fork-only changes branch from release/fork and are merged with a pull request inside the fork. Every fork
+  feature, however small, goes through that pull request; release/fork never receives a direct commit or push.
+  Changes meant for upstream branch from upstream/master. Fork releases are built from release/fork by the workspace
   workflow pp-release.yml, see AGENTS.md, Rule 4.
   All builds and tests run in Docker via scripts/dev.sh. Never plan steps that install tools on the host.
   Everything is public: artifacts must not contain personal or financial data (names, IBANs, account numbers,

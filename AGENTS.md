@@ -241,6 +241,9 @@ The fork has two long-lived branches. `master` stays equal to `upstream/master`.
 integration branch of the development fork and carries everything that exists only there, for example the
 look-through view. Upstream contributions keep the flow of Rule 3.
 
+- Every fork feature, however small, is merged only through a pull request in `ulrichlehner/portfolio` into
+  `release/fork`. `release/fork` never receives a direct commit or push, and a feature change is not done
+  until that pull request is merged with a green fork CI run and a green `scripts/dev.sh test`.
 - Fork-only work branches from `release/fork` and is merged back with a pull request inside the fork:
   `gh pr create --repo ulrichlehner/portfolio --base release/fork --head <branch>`.
   Work that belongs upstream branches from `upstream/master` and gets the PR described in Rule 3.

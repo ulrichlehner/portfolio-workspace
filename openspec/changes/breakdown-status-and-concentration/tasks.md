@@ -27,8 +27,8 @@
 
 - [x] 5.1 Run `scripts/dev.sh test` and verify it is green, including the new and changed look-through UI tests.
 - [x] 5.2 Verify the scenarios in the app with the synthetic demo portfolio and the development key: first opening collapsed, row visible with the settled wording, menu action opens the pane and flips the arrow, pane state survives a restart, narrow window elides. The running row and the warning marker were not reproduced live; both are covered by the unit tests.
-- [ ] 5.3 Scan the diff for private data, restore any modified `*/.project` files, and verify `git status` shows only intended files.
-- [ ] 5.4 Commit with a Conventional Commit subject of at most 50 characters and open the pull request into `release/fork`; verify the fork CI run is green and record the commit and PR in the change.
+- [x] 5.3 Scan the diff for private data, restore any modified `*/.project` files, and verify `git status` shows only intended files. No `.project` changes, no key material or personal values in the diff, and the staged list contains only the look-through UI, its tests and the message files.
+- [x] 5.4 Commit `847de8e3e` (`feat(ui): clarify status and concentration`) on `feature/breakdown-status-and-concentration` and pull request #2 into `release/fork`; the fork CI run `Maven Build` passed in 9m26s and pull request #2 was merged into `release/fork` as `9ae194f03`. The planning artifacts are in workspace commit `fd4c561`.
 
 ## Workflow follow-up
 

@@ -85,19 +85,19 @@ The view SHALL offer one refresh action. While a refresh runs, an inline progres
 - **THEN** the refresh action is disabled and no progress line is shown.
 
 ### Requirement: Onboarding and empty states
-The view SHALL show one banner for the most relevant state: no API key configured, provider access suspended, no fund held, or empty portfolio. The no-key and suspended banners SHALL offer to open the provider's settings page. Direct holdings SHALL remain visible in all states that have holdings.
+The view SHALL show one banner for the most relevant state: no API key configured, provider access suspended, no fund held, or empty portfolio. The no-key and suspended banners SHALL offer to open the provider's settings page. Holdings SHALL remain listed with their value in every state; without provider credentials the view SHALL NOT claim that any value is attributed to companies.
 
 #### Scenario: No API key
-- **WHEN** the portfolio holds funds and no API key is configured
-- **THEN** a banner explains that funds can be broken down with an API key and opens the provider settings page on request, while directly held companies are shown.
+- **WHEN** the portfolio holds funds or directly held securities and no API key is configured
+- **THEN** a banner states that funds and directly held securities are broken down by company only with an API key and opens the provider settings page on request, while the coverage states that no value is attributed to companies.
 
 #### Scenario: Authentication failure
 - **WHEN** the provider rejected the configured key
 - **THEN** the banner states that access is suspended and offers to open the provider settings page.
 
 #### Scenario: No funds held
-- **WHEN** the portfolio holds only direct securities
-- **THEN** no key banner is shown and the view displays the direct breakdown.
+- **WHEN** the portfolio holds only directly held securities and an API key is configured
+- **THEN** no banner is shown and the view displays the direct breakdown.
 
 ### Requirement: Compact data status
 The data status pane SHALL list each held fund, and each held security whose classification is still unknown, with its name, a status icon with a short status text, retrieval date and decomposed share. Securities classified as directly held shares SHALL NOT be listed. Attempt, retry, provider refresh, holdings date, freshness, source data and denominator details SHALL remain available in the row tooltip. The pane SHALL keep the session-only notice as a single line.
@@ -110,9 +110,13 @@ The data status pane SHALL list each held fund, and each held security whose cla
 - **WHEN** the provider returned a composition that validation rejects, for example because of negative weights or a total above 100 percent
 - **THEN** the row states that the composition was rejected and names the reason in short text, the decomposed share shows a dash instead of zero, and the tooltip explains that the fund stays unresolved.
 
+#### Scenario: Security without provider credentials
+- **WHEN** a held security is unclassified and no API key is configured
+- **THEN** the row states that no API key is configured and that the security is not broken down, without any progress text, and the row disappears once the security is classified as a directly held share.
+
 #### Scenario: Security not yet classified
-- **WHEN** a held security has not been classified yet
-- **THEN** the row states that it is being checked, and the row disappears once the security is classified as a directly held share.
+- **WHEN** an API key is configured and the first pass has not reached the security yet
+- **THEN** the row states that it was not retrieved yet, and the row disappears once the security is classified as a directly held share.
 
 ### Requirement: Calculating state
 Until the first result for the open portfolio is available, the view SHALL show a calculating state that is distinct from every empty state: placeholders in the summary and a calculating message in the chart area and the table. Empty-state messages SHALL appear only for a calculated result.

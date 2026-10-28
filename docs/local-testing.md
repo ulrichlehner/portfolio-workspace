@@ -124,8 +124,9 @@ Portfolio Performance ID. If the maintainers ask to stop, remove the file and th
 deployment step.
 
 After building, sign in with your own PP account in the app. The login token is kept
-in `scratch/pp-dev-provider-state/token_storage` across managed launches, so the
-browser login is needed only once.
+in `scratch/pp-dev-provider-state/token_storage` (mode 600) across managed launches,
+so the browser login is needed only once. `scripts/dev.sh clean-data` removes it
+together with the rest of the managed private test data.
 
 ### Development API key
 

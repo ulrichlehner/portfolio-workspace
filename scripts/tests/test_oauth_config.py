@@ -15,15 +15,16 @@ class OAuthConfigTest(unittest.TestCase):
         self.data = b'{"clientId": "synthetic-public-client"}\n'
         with zipfile.ZipFile(self.jar, 'w') as archive:
             archive.writestr(ENTRY, self.data)
-        self.destination = root / ENTRY
+        self.destination = root / 'private' / 'oauth-config.json'
         self.digest = hashlib.sha256(self.data).hexdigest()
 
     def tearDown(self):
         self.temp.cleanup()
 
-    def test_install_verifies_and_writes(self):
+    def test_install_verifies_and_writes_outside_source_tree(self):
         self.assertTrue(install(self.jar, self.destination, self.digest))
         self.assertEqual(self.data, self.destination.read_bytes())
+        self.assertEqual(0o600, self.destination.stat().st_mode & 0o777)
         # Second run must not rewrite the file.
         self.assertFalse(install(self.jar, self.destination, self.digest))
 

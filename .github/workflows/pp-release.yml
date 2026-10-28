@@ -141,6 +141,22 @@ jobs:
             -DforceContextQualifier="$QUALIFIER" \
             --file portfolio-app/pom.xml
 
+      - name: Check OAuth registration is not shipped
+        run: |
+          # PP's OAuth client registration is deliberately not part of the
+          # public source and only official signed releases carry it. This
+          # unofficial build must not redistribute it.
+          found=$(find portfolio/portfolio-product/target/products -path '*/plugins/name.abuchen.portfolio_*.jar' | while read -r jar; do
+            if unzip -l "$jar" | grep -q 'name/abuchen/portfolio/oauth/impl/config.json'; then
+              echo "$jar"
+            fi
+          done)
+          if [ -n "$found" ]; then
+            echo "::error::OAuth registration found in the build: $found"
+            exit 1
+          fi
+          echo "No OAuth registration in the packaged application."
+
       - name: Package Linux archives
         run: |
           mkdir -p dist

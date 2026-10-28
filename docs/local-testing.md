@@ -93,18 +93,39 @@ scripts/dev.sh recover-data
 
 ### Built-in quote feed (OAuth)
 
-The built-in quote feed needs PP's OAuth client registration, which is not part of
-the public source. `scripts/dev.sh app` therefore calls
-`scripts/pp_oauth_config.py`: it reads `name/abuchen/portfolio/oauth/impl/config.json`
-from an installed official PP application, verifies its SHA-256 against the checksum
-pinned in the core `pom.xml`, and writes it to the gitignored source path. If no
-official app is found, the build still succeeds and only the built-in feed stays
-unconfigured. `scripts/dev.sh oauth-config` runs the same step manually.
+The built-in quote feed needs PP's OAuth client registration. That registration is
+**deliberately not part of the public source**: `name.abuchen.portfolio/src/name/abuchen/portfolio/oauth/impl/config.json`
+is gitignored since the initial OAuth commit, and the core `pom.xml` verifies its
+SHA-256 only in the release build (the check is skipped with `jarsigner.skip`, which
+is `true` for every non-release build). No CI secret injects it either. The
+maintainer therefore embeds it while building the signed official release, and only
+official artifacts carry it. The data service itself is operated by MSM Mannheimer
+Software-Manufaktur UG and its terms require use through the app with your own
+account.
 
-The file is a client registration of PP itself, not a personal credential, and it
-is never committed. After building, sign in with your own PP account in the app;
-the login tokens stay in the isolated development workspace. The launcher keeps
-wiping that workspace, so sign in again after a managed relaunch.
+Consequences for this workspace:
+
+- The registration is never committed, never copied into `portfolio/`, and never
+  packaged into a fork build or release artifact.
+- `scripts/dev.sh oauth-config` extracts it from an installed official PP
+  application into `scratch/pp-dev-secrets/oauth-config.json` (mode 600), verifying
+  the SHA-256 against the checksum pinned in the core `pom.xml`. Nothing is printed
+  but the status.
+- `scripts/dev.sh run-app` passes only the path to the app as
+  `-Dportfolio.oauth.configFile=...`. The fork reads that file at startup and falls
+  back to the embedded registration of an official build when the property is
+  absent, the file is missing or malformed.
+- The fork release workflow asserts that no `config.json` is shipped.
+
+This is a local development and self-hosting convenience, not a grant of any right.
+The registration belongs to the PP project; do not redistribute it, do not publish
+it, and do not use it for anything but your own PP installation with your own
+Portfolio Performance ID. If the maintainers ask to stop, remove the file and the
+deployment step.
+
+After building, sign in with your own PP account in the app. The login token is kept
+in `scratch/pp-dev-provider-state/token_storage` across managed launches, so the
+browser login is needed only once.
 
 ### Development API key
 

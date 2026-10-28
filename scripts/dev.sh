@@ -29,7 +29,7 @@ Usage: scripts/dev.sh <command>
   recover-data       select the previous generation for an offline launch
   clean-data         explicitly delete managed private portfolios and backups
   test-tools         synthetic workspace tooling tests in Docker
-  oauth-config       install the OAuth client config from an official PP app
+  oauth-config       extract the OAuth client config from an official PP app
   pdftext FILE.pdf   print the text of a PDF as PP converts it (PDFBox 3)
   shell              interactive shell in the container
   clean              delete the build output in portfolio/
@@ -113,6 +113,7 @@ private_data() {
 # Breakdown's own preferences (lookthrough.*) are carried over, so repeated
 # launches do not fetch every composition and company again.
 UI_STATE=.metadata/.plugins/name.abuchen.portfolio.ui
+CORE_STATE=.metadata/.plugins/name.abuchen.portfolio
 UI_PREFS=.metadata/.plugins/org.eclipse.core.runtime/.settings/name.abuchen.portfolio.ui.prefs
 
 save_provider_state() {
@@ -128,6 +129,12 @@ save_provider_state() {
     if [ -f "$workspace/$UI_PREFS" ]; then
         grep '^lookthrough\.' "$workspace/$UI_PREFS" > "$state/prefs" || true
     fi
+    # OAuth login of the built-in quote feed: keep the refresh token, otherwise
+    # every managed launch would ask for a new browser login.
+    if [ -f "$workspace/$CORE_STATE/token_storage" ] && [ ! -L "$workspace/$CORE_STATE/token_storage" ]; then
+        mv "$workspace/$CORE_STATE/token_storage" "$state/token_storage"
+        chmod 600 "$state/token_storage"
+    fi
 }
 
 restore_provider_state() {
@@ -140,6 +147,11 @@ restore_provider_state() {
     if [ -s "$state/prefs" ]; then
         mkdir -p "$(dirname "$workspace/$UI_PREFS")"
         { echo "eclipse.preferences.version=1"; cat "$state/prefs"; } > "$workspace/$UI_PREFS"
+    fi
+    if [ -f "$state/token_storage" ]; then
+        mkdir -p "$workspace/$CORE_STATE"
+        mv "$state/token_storage" "$workspace/$CORE_STATE/token_storage"
+        chmod 600 "$workspace/$CORE_STATE/token_storage"
     fi
 }
 
@@ -154,7 +166,6 @@ case "${1:-}" in
         ;;
     app)
         acquire_lock
-        python3 "$ROOT/scripts/pp_oauth_config.py" --pp "$PP"
         build_metadata before
         mvn_in_docker clean verify -DskipTests -Pdefault,package-distro
         build_metadata after
@@ -193,17 +204,24 @@ case "${1:-}" in
         # Development convenience: hand the app the path of the private key file,
         # never the key itself. The app installs it as a session key only when no
         # key is configured, and a link is refused.
-        dev_key_args=()
+        dev_args=()
         dev_key="$SCRATCH/eulerpool-api-key.txt"
         if [ -f "$dev_key" ] && [ ! -L "$dev_key" ]; then
-            dev_key_args=("-Dportfolio.lookthrough.developmentKeyFile=$dev_key")
+            dev_args=("-Dportfolio.lookthrough.developmentKeyFile=$dev_key")
+        fi
+        # The OAuth registration of the built-in quote feed is not part of the
+        # source or the build. Hand over only the path of a private copy that
+        # was extracted from an official PP application.
+        oauth_config="$SCRATCH/pp-dev-secrets/oauth-config.json"
+        if [ -f "$oauth_config" ] && [ ! -L "$oauth_config" ]; then
+            dev_args+=("-Dportfolio.oauth.configFile=$oauth_config")
         fi
         echo "Starting isolated development app; quit it to release the launcher lock."
         # Direct execution targets this build and keeps descriptor 9 alive.
         # WebDAV secrets were mounted only in the finished downloader container.
         exec "$APP/Contents/MacOS/PortfolioPerformance" -data "$SCRATCH/pp-dev-workspace" \
             -configuration "$SCRATCH/pp-dev-config" "${launch_args[@]}" \
-            --launcher.appendVmargs -vmargs "-Duser.home=$SCRATCH/pp-dev-home" "${dev_key_args[@]}" \
+            --launcher.appendVmargs -vmargs "-Duser.home=$SCRATCH/pp-dev-home" "${dev_args[@]}" \
             "-Declipse.p2.data.area=$SCRATCH/pp-dev-config/p2" \
             >"$SCRATCH/pp-dev-workspace/launcher.log" 2>&1
         ;;
@@ -216,7 +234,8 @@ case "${1:-}" in
         esac
         ;;
     oauth-config)
-        python3 "$ROOT/scripts/pp_oauth_config.py" --pp "$PP"
+        python3 "$ROOT/scripts/pp_oauth_config.py" --pp "$PP" \
+            --destination "$SCRATCH/pp-dev-secrets/oauth-config.json"
         ;;
     test-tools)
         image

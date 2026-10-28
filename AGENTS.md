@@ -251,6 +251,9 @@ look-through view. Upstream contributions keep the flow of Rule 3.
 - Pull requests into `release/fork` run the fork CI (`.github/workflows/main.yml`, job "Maven Build").
   Merge only with a green run and a green `scripts/dev.sh test`; CI does not replace the local check.
   An already open pull request does not get a run retroactively, close and reopen it to trigger one.
+- The fork mirrors the upstream tags. The CI profile `openapi-compat` compares the REST API against the
+  tag `rest-api-v1.0.0`, so a fork without tags fails in `name.abuchen.portfolio.rest`. After a fresh
+  clone or a new upstream tag: `git push origin --tags` in `portfolio/`.
 - Branch names, Conventional Commits and the rule against AI attribution apply to fork pull requests too.
 - A merge into `release/fork` builds and publishes nothing. Fork releases are built and published by
   `.github/workflows/pp-release.yml` in this workspace repository:

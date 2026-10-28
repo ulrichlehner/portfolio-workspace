@@ -4,6 +4,10 @@ context: |
   Features are for Portfolio Performance (Eclipse RCP, Java 21, Maven/Tycho). The code lives in the fork in
   portfolio/ and goes upstream as pull requests to portfolio-performance/portfolio. These OpenSpec artifacts
   stay in this workspace and never go upstream.
+  The fork also has the long-lived branch release/fork for features that exist only in the development fork.
+  Fork-only changes branch from release/fork and are merged with a pull request inside the fork; changes meant
+  for upstream branch from upstream/master. Fork releases are built from release/fork by the workspace
+  workflow pp-release.yml, see AGENTS.md, Rule 4.
   All builds and tests run in Docker via scripts/dev.sh. Never plan steps that install tools on the host.
   Everything is public: artifacts must not contain personal or financial data (names, IBANs, account numbers,
   amounts, holdings). Use anonymized examples only.
@@ -12,9 +16,11 @@ context: |
 rules:
   proposal:
     - Plan upstream pull requests that are small and focused on a single feature or fix
+    - State whether the change is fork-only or meant for upstream, and name the target branch
     - State what is out of scope
   tasks:
     - Include tests for business logic, run with scripts/dev.sh test
+    - For fork-only changes, include the pull request into release/fork; for upstream changes, the pull request into upstream/master
     - For PDF importers, include an anonymized test sample (see AGENTS.md, Rule 2)
 
 # Project context (optional)

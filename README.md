@@ -33,6 +33,10 @@ New features are planned with [OpenSpec](https://openspec.dev). The CLI runs in 
 
 The rules for agents and contributors are in [AGENTS.md](AGENTS.md). Start agents in this folder, not in `portfolio/`.
 
+Fork-only features live on the branch `release/fork` in the fork and reach it through a pull request inside
+the fork. A fork release is built from that branch by `.github/workflows/pp-release.yml` when a tag
+`x.y.z-fork.N` is pushed here. Details and the order of work are in AGENTS.md, Rule 4.
+
 ## AI-assisted development with OpenCode
 
 The default workflow uses one long-lived OpenCode session as the orchestrator and

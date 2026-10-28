@@ -20,7 +20,7 @@ portfolio-workspace/
 ├── .claude/ .agents/  OpenSpec commands and skills for Claude Code, Codex and others
 ├── bootstrap.sh       clones the fork into portfolio/ and adds the upstream remote
 ├── scratch/           private temporary files (gitignored), deleted after use
-└── portfolio/         the fork (gitignored), contains only upstream code
+└── portfolio/         the fork (gitignored): upstream code on master, fork-only features on release/fork
 ```
 
 Start agents in this folder, not in `portfolio/`, so these rules are loaded.
@@ -234,6 +234,41 @@ numbers, board members in the legal notice, BIC, SEPA creditor ID) is public and
   other author; credit comes from "Includes the work by @<user> done in #<pr>" in the commit message and the
   contributor list. Before closing such a PR, check that the test and sample arrived intact.
 - After merge: delete the branch, update `master` from upstream, delete the local branch with `git branch -D`.
+
+## Rule 4: Fork branches, fork pull requests and fork releases
+
+The fork has two long-lived branches. `master` stays equal to `upstream/master`. `release/fork` is the
+integration branch of the development fork and carries everything that exists only there, for example the
+look-through view. Upstream contributions keep the flow of Rule 3.
+
+- Fork-only work branches from `release/fork` and is merged back with a pull request inside the fork:
+  `gh pr create --repo ulrichlehner/portfolio --base release/fork --head <branch>`.
+  Work that belongs upstream branches from `upstream/master` and gets the PR described in Rule 3.
+  Never open an upstream PR from `release/fork`.
+- `release/fork` is never rebased and never force-pushed; it changes only through merged pull requests.
+  Upstream changes arrive with a merge of `upstream/master` into `release/fork`. Feature branches are
+  rebased on `release/fork` before the PR.
+- Pull requests into `release/fork` run the fork CI (`.github/workflows/main.yml`, job "Maven Build").
+  Merge only with a green run and a green `scripts/dev.sh test`; CI does not replace the local check.
+  An already open pull request does not get a run retroactively, close and reopen it to trigger one.
+- Branch names, Conventional Commits and the rule against AI attribution apply to fork pull requests too.
+- A merge into `release/fork` builds and publishes nothing. Fork releases are built and published by
+  `.github/workflows/pp-release.yml` in this workspace repository:
+  - trigger: a tag `x.y.z-fork.N`, or a manual dispatch with `version` and optional `ref`
+    (default `release/fork`; a tag push may name another ref in `release/fork-ref`),
+  - the tag must exist first, the workflow creates the release with `--verify-tag`,
+  - the version base must equal the project version in `portfolio/portfolio-app/pom.xml`, and `N`
+    continues the highest existing `x.y.z-fork.N` tag,
+  - the build refuses to ship PP's OAuth registration, packages the Linux archives for `x86_64` and
+    `aarch64` with `.sha256` files, and writes the unofficial-build notice into the release notes.
+    macOS builds stay local (`scripts/dev.sh app`).
+- Order of work: merge into `release/fork`, push the tag in this workspace repository, watch the release
+  run, then report the tag. Publishing is an explicit step, so publish only when the user asks for it and
+  keep the notice unchanged.
+- Deployment is separate from the release. The VM reads `PP_SOURCE` and `PP_VERSION` from `~/stack/.env`
+  and `./infra update` rebuilds the image without cache, verifying the `.sha256` file. Changing the pinned
+  version is an explicit edit of that file, never an automatic side effect of a release.
+- After the merge, delete the feature branch locally and on the fork.
 
 ## PDF importer knowledge
 

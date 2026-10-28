@@ -258,6 +258,14 @@ numbers, board members in the legal notice, BIC, SEPA creditor ID) is public and
 2. `scripts/dev.sh run-app` starts it with its own workspace in `scratch/`, so the installed PP and its settings stay untouched.
 3. Test only with a copy of the user's portfolio file. Afterwards quit the app and run `scripts/dev.sh clean`.
 
+PP's OAuth client registration (`name/abuchen/portfolio/oauth/impl/config.json`) is
+deliberately absent from the source: it is gitignored, and only the signed official
+release embeds it (the `pom.xml` checksum check runs only with `jarsigner.skip=false`).
+Never commit it, copy it into `portfolio/`, package it into a fork build or publish it.
+`scripts/dev.sh oauth-config` extracts a verified copy to `scratch/pp-dev-secrets/`,
+and the app reads only its path via `-Dportfolio.oauth.configFile`. The fork release
+workflow asserts that no registration is shipped.
+
 The managed WebDAV workflow is documented in `docs/local-testing.md`. Its private
 configuration is `scratch/pp-dev-secrets/webdav.json` (mode 600); it requires
 confirmed server-side read-only access. Never put its contents in chat or Git.

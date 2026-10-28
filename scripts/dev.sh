@@ -29,6 +29,7 @@ Usage: scripts/dev.sh <command>
   recover-data       select the previous generation for an offline launch
   clean-data         explicitly delete managed private portfolios and backups
   test-tools         synthetic workspace tooling tests in Docker
+  oauth-config       install the OAuth client config from an official PP app
   pdftext FILE.pdf   print the text of a PDF as PP converts it (PDFBox 3)
   shell              interactive shell in the container
   clean              delete the build output in portfolio/
@@ -153,6 +154,7 @@ case "${1:-}" in
         ;;
     app)
         acquire_lock
+        python3 "$ROOT/scripts/pp_oauth_config.py" --pp "$PP"
         build_metadata before
         mvn_in_docker clean verify -DskipTests -Pdefault,package-distro
         build_metadata after
@@ -212,6 +214,9 @@ case "${1:-}" in
             recover-data) private_data recover ;;
             clean-data) private_data cleanup ;;
         esac
+        ;;
+    oauth-config)
+        python3 "$ROOT/scripts/pp_oauth_config.py" --pp "$PP"
         ;;
     test-tools)
         image

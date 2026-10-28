@@ -91,6 +91,21 @@ scripts/dev.sh keep-data
 scripts/dev.sh recover-data
 ```
 
+### Built-in quote feed (OAuth)
+
+The built-in quote feed needs PP's OAuth client registration, which is not part of
+the public source. `scripts/dev.sh app` therefore calls
+`scripts/pp_oauth_config.py`: it reads `name/abuchen/portfolio/oauth/impl/config.json`
+from an installed official PP application, verifies its SHA-256 against the checksum
+pinned in the core `pom.xml`, and writes it to the gitignored source path. If no
+official app is found, the build still succeeds and only the built-in feed stays
+unconfigured. `scripts/dev.sh oauth-config` runs the same step manually.
+
+The file is a client registration of PP itself, not a personal credential, and it
+is never committed. After building, sign in with your own PP account in the app;
+the login tokens stay in the isolated development workspace. The launcher keeps
+wiping that workspace, so sign in again after a managed relaunch.
+
 ### Development API key
 
 If `scratch/eulerpool-api-key.txt` exists as a regular file, `run-app` passes only

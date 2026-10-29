@@ -56,13 +56,15 @@ Measurements run with the synthetic demo portfolio (4 180 companies, seven funds
 
 The virtual tree (`SWT.VIRTUAL` with an `ILazyTreeContentProvider`, rows created on demand) is implemented when the table apply is a relevant share, set here as at least 150 ms, or the total restore still exceeds 300 ms on the VM after the cache. A spike validates selection, expansion, top item and column labels before the view switches to it. If the spike cannot keep those semantics inside this change, the eager tree stays and the measured numbers are recorded instead of shipping a half-working lazy tree.
 
+Measurement result (29.10.2026, macOS, synthetic seven-fund portfolio, 4 180 companies): presentation 26-57 ms, table apply 4-31 ms, treemap 4-16 ms, analysis 9 ms on the first result and up to 2 499 ms once all compositions arrived. The table apply stayed far below the threshold, so the eager tree stays; the cache addresses the dominating analysis.
+
 Alternatives rejected: paging or capping the company list would hide data; a batched insertion keeps the total time and only spreads it.
 
 ### Decision 4: Refresh action outside the collapsing toolbar
 
 `LookThroughView.addViewButtons` keeps the two selectors; the refresh action moves to `addButtons`, which fills the right action toolbar of `AbstractFinanceView`. That toolbar is outside `ToolBarPlusChevronLayout`, so it can never be moved into the chevron. `updateActionEnablement` updates both toolbars.
 
-The grouping selector keeps the constant label `Messages.LookThroughBreakdownBy`; its tooltip becomes `Aufteilung nach: <current>` and the menu keeps the checkmark. Its width no longer changes with the selection. The chart selector keeps its current label: its labels are short and the refresh action no longer disappears. The view title keeps naming the grouping; a residual width change of the title only moves the selectors, never the actions.
+The grouping selector keeps the constant label `Messages.LookThroughBreakdownBy`; its tooltip becomes `Aufteilung nach: <current>` and the menu keeps the checkmark. Its width no longer changes with the selection. The chart selector keeps its current label: its labels are short and the refresh action no longer disappears. The view title is constant (`Aufschlüsselung`); the grouping is named by the selector tooltip and the first table column. That removes the last width change from the header and keeps the refresh action visible in narrow windows.
 
 Alternatives rejected: a fixed pixel width for the selector needs a custom toolbar control to override the text-based item width; truncating the selected value in the label hides the state instead of showing it in the tooltip.
 

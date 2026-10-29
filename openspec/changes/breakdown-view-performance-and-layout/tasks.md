@@ -50,3 +50,8 @@
 - [x] 7.3 Hide the pane page selector and the empty title row when there is a single page; verified in the app: the pane starts directly below the status row with the warning line, no page selector button and no gap.
 - [x] 7.4 Show the cached result regardless of unsaved changes and adjust the cache tests; verified with the cache unit tests; the dirty gate and its test are removed.
 - [x] 7.5 Run `scripts/dev.sh test` and the look-through UI tests, verify the app, commit `8a9088dcf` and open pull request #4 into `release/fork`; the fork CI run `Maven Build` passed in 5m35s and the pull request was merged as `ff91ebb18`.
+
+## 8. Second review follow-up
+
+- [x] 8.1 Make the chart selector icon-only (treemap, bars, table for the overlap) with the chart name in the tooltip; verified by code and tests: the chart selector is an image-only `DropDown` with the name in the tooltip; the build check is pending because the development app held the build lock, and the user reported the previous state as good.
+- [x] 8.2 Run `scripts/dev.sh test` and the look-through UI tests, verify the app, commit `9a32c0207` and open pull request #5 into `release/fork`; the fork CI run `Maven Build` passed in 7m9s and the pull request was merged as `83151632e`.

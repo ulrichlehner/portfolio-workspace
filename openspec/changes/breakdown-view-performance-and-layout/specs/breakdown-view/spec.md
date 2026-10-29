@@ -4,7 +4,7 @@
 
 ### Requirement: Immediate restore from the last result
 
-Within one session, when the view opens for a portfolio that has no unsaved changes and an earlier opening produced a result, the view SHALL show that result immediately instead of the calculating state. It SHALL replace the result when the background calculation finishes. The slot of the valuation date SHALL indicate that an update runs. Without an earlier result or with unsaved changes, the calculating state stays.
+Within one session, when the view opens for a portfolio whose earlier opening produced a result, the view SHALL show that result immediately instead of the calculating state, also when the portfolio has unsaved changes. It SHALL replace the result when the background calculation finishes. The slot of the valuation date SHALL indicate that an update runs. Without an earlier result, the calculating state stays.
 
 #### Scenario: Return to the view
 
@@ -18,8 +18,8 @@ Within one session, when the view opens for a portfolio that has no unsaved chan
 
 #### Scenario: Unsaved changes
 
-- **WHEN** the portfolio has unsaved changes
-- **THEN** the view shows the calculating state and no earlier result.
+- **WHEN** the portfolio has unsaved changes and an earlier result exists
+- **THEN** the earlier result is shown and replaced when the calculation finishes.
 
 #### Scenario: Other portfolio
 
@@ -28,7 +28,7 @@ Within one session, when the view opens for a portfolio that has no unsaved chan
 
 ### Requirement: Stable header controls
 
-The refresh action SHALL stay visible when the grouping or chart selection changes and when the window is narrow. Changing a selection SHALL NOT move the refresh action or change the width of the grouping selector; only the selectors may collapse into the overflow menu. The grouping selector SHALL name the current grouping in its tooltip and menu.
+The refresh action SHALL stay visible when the grouping or chart selection changes and when the window is narrow. Changing a selection SHALL NOT move the refresh action; only the selectors may collapse into the overflow menu. The grouping selector SHALL name the current grouping in its label and menu.
 
 #### Scenario: Long grouping name
 
@@ -38,7 +38,7 @@ The refresh action SHALL stay visible when the grouping or chart selection chang
 #### Scenario: Switching grouping
 
 - **WHEN** the user switches the grouping back and forth
-- **THEN** the grouping selector keeps its width, the refresh action keeps its position and no overflow marker appears for the refresh action.
+- **THEN** the grouping selector shows the new grouping, the refresh action keeps its position and no overflow marker appears for the refresh action.
 
 ## MODIFIED Requirements
 

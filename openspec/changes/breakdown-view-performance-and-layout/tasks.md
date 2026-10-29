@@ -42,3 +42,11 @@
 ## Workflow follow-up
 
 - Archive the change after the pull request is merged.
+
+## 7. Review follow-up
+
+- [x] 7.1 Show the current grouping in the selector label again; verify in the app that `Aufteilung nach: Unternehmen` appears, switching updates it, and the refresh action keeps its position.
+- [x] 7.2 Replace the `>` and `v` characters with a painted disclosure triangle; verified in the app with the pane open: the row shows a painted down triangle instead of a text character; the right-pointing state uses the same paint method when the pane is closed.
+- [x] 7.3 Hide the pane page selector and the empty title row when there is a single page; verified in the app: the pane starts directly below the status row with the warning line, no page selector button and no gap.
+- [x] 7.4 Show the cached result regardless of unsaved changes and adjust the cache tests; verified with the cache unit tests; the dirty gate and its test are removed.
+- [x] 7.5 Run `scripts/dev.sh test` and the look-through UI tests, verify the app, commit `8a9088dcf` and open pull request #4 into `release/fork`; the fork CI run `Maven Build` passed in 5m35s and the pull request was merged as `ff91ebb18`.

@@ -40,11 +40,11 @@ Alternatives rejected: keeping the whole view alive would change `PortfolioPart`
 
 ### Decision 2: Show the cached model and mark it as updating
 
-When the cache delivers a model and the portfolio has no unsaved changes (`getPart().getClientInput().isDirty()`), the view applies the model immediately: summary, charts, table and status. It does not show the calculating state. The background calculation runs regardless and replaces the model when it arrives.
+When the cache delivers a model, the view applies it immediately: summary, charts, table and status. It does not show the calculating state. The background calculation runs regardless and replaces the model when it arrives. A first version skipped the cache while the portfolio was dirty, but review showed that this made the cache miss in practice because the dirty flag also covers changes that do not invalidate the breakdown; the updating indicator covers the brief staleness.
 
 While the cached model is shown and the new one has not arrived, the valuation-date slot of the header shows an indeterminate `ProgressBar` (`SWT.INDETERMINATE`) with the existing calculating text as tooltip. The slot already uses a `StackLayout` sized by its largest child, so the header does not move.
 
-With unsaved changes, or without an entry, the current calculating state stays and the cache entry is cleared: unsaved edits make the stored numbers wrong.
+Without an entry, the current calculating state stays.
 
 Alternatives rejected: a silent replacement without any indicator would present possibly stale prices as current; a new text line would need a new key in 19 locales for no additional information.
 
@@ -64,7 +64,7 @@ Alternatives rejected: paging or capping the company list would hide data; a bat
 
 `LookThroughView.addViewButtons` keeps the two selectors; the refresh action moves to `addButtons`, which fills the right action toolbar of `AbstractFinanceView`. That toolbar is outside `ToolBarPlusChevronLayout`, so it can never be moved into the chevron. `updateActionEnablement` updates both toolbars.
 
-The grouping selector keeps the constant label `Messages.LookThroughBreakdownBy`; its tooltip becomes `Aufteilung nach: <current>` and the menu keeps the checkmark. Its width no longer changes with the selection. The chart selector keeps its current label: its labels are short and the refresh action no longer disappears. The view title is constant (`Aufschlüsselung`); the grouping is named by the selector tooltip and the first table column. That removes the last width change from the header and keeps the refresh action visible in narrow windows.
+The grouping selector shows the current grouping (`Aufteilung nach: <current>`) in its label and menu, as requested in review. Its width changes with the selection, but the refresh action sits in the action toolbar and keeps its position. The view title is constant (`Aufschlüsselung`), so the header keeps room for the action in narrow windows.
 
 Alternatives rejected: a fixed pixel width for the selector needs a custom toolbar control to override the text-based item width; truncating the selected value in the label hides the state instead of showing it in the tooltip.
 
@@ -72,7 +72,7 @@ Alternatives rejected: a fixed pixel width for the selector needs a custom toolb
 
 `LookThroughDataStatus` gains a builder for the pane header that returns text and tooltip from the storage text, the company data line and the assumed-company line. Persistent storage joins the three facts with ` · ` on one line and puts each fact on its own line in the tooltip. Session-only storage or a disk failure keeps the limitation as a separate line with the warning icon, and the summary line carries company data and assumed count only.
 
-The pane drops from three wrapping labels to one summary label plus an optional warning label, with margins of 2 pixels. No new message keys are needed: the existing texts are joined in code.
+The pane drops from three wrapping labels to one summary label plus an optional warning label, with margins of 2 pixels. No new message keys are needed: the existing texts are joined in code. With a single page the pane hides its page selector and its empty title row, so the content starts right below the status row; the status row uses a painted disclosure triangle instead of a text character.
 
 ### Decision 6: Tests and platform check
 
@@ -80,11 +80,11 @@ The cache and the summary line are SWT-free and get unit tests. The header chang
 
 ## Risks / Trade-offs
 
-- Stale numbers for a moment after quote updates. Mitigated by the visible indeterminate progress and by always running the calculation.
+- Stale numbers for a moment after a change. Mitigated by the visible indeterminate progress and by always running the calculation.
 - The cache holds one result and one model per portfolio, a few megabytes with thousands of companies. Mitigated by the `WeakHashMap` and by replacing the entry on every presentation.
 - Cached labels can lag behind enrichment until the first new presentation. Accepted; the background presentation replaces them within the same update.
 - A virtual tree changes selection and expansion behavior in subtle ways. Mitigated by the spike and by the explicit fallback.
-- The constant selector label hides the current grouping from the toolbar. Mitigated by the tooltip, the checked menu entry, the view title and the first table column, which names the grouping.
+- The visible grouping in the selector changes its width again. Mitigated by the refresh action outside the chevron and by the constant title.
 - Linux and macOS lay out toolbars and table columns differently. Mitigated by checking both.
 
 ## Migration Plan

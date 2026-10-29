@@ -83,3 +83,14 @@ The data status pane SHALL list each held fund, and each held security whose cla
 #### Scenario: Security not yet classified
 - **WHEN** an API key is configured and the first pass has not reached the security yet
 - **THEN** the row states that it was not retrieved yet, and the row disappears once the security is classified as a directly held share.
+
+## MODIFIED Requirements
+
+### Requirement: Table columns
+
+The table SHALL show a rank column first for top-level company or group rows by total and name the second column after the selected grouping. Contributions SHALL show their source in the second column below their company. Rows whose total rounds to zero in the currency SHALL be hidden and not ranked.
+
+#### Scenario: Ranked groups
+
+- **WHEN** the user groups by sector
+- **THEN** the first column is the rank, the second reads "Sector / company", sectors carry ranks 1, 2, 3 by total, and Unknown, Pending and coverage category rows carry no rank.

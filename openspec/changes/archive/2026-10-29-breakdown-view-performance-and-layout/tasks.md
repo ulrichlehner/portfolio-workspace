@@ -55,3 +55,8 @@
 
 - [x] 8.1 Make the chart selector icon-only (treemap, bars, table for the overlap) with the chart name in the tooltip; verified by code and tests: the chart selector is an image-only `DropDown` with the name in the tooltip; the build check is pending because the development app held the build lock, and the user reported the previous state as good.
 - [x] 8.2 Run `scripts/dev.sh test` and the look-through UI tests, verify the app, commit `9a32c0207` and open pull request #5 into `release/fork`; the fork CI run `Maven Build` passed in 7m9s and the pull request was merged as `83151632e`.
+
+## 9. Rank column first
+
+- [x] 9.1 Move the rank column to position one and keep it non-removable; enforce rank and then grouping name as the leading columns for stored configurations; the app check is pending because the development app held the build lock; the column order is enforced in code and for stored configurations.
+- [x] 9.2 Run `scripts/dev.sh test` and the look-through UI tests, verify the app, commit `3bfdfb38a` and open pull request #6 into `release/fork`; the fork CI run `Maven Build` passed in 7m26s and the pull request was merged as `4a2aecec2`.
